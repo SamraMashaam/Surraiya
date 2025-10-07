@@ -1,0 +1,93 @@
+.focus-container {
+  min-height: 100vh;
+  background-color: #fdfdfd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.focus-title {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Settings Card */
+.settings-card {
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.settings-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.settings-select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.settings-subtext {
+  margin: 10px 0 0 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Timer Circle */
+.timer-circle {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.timer-text {
+  position: absolute;
+}
+
+/* Mode Label */
+.mode-label {
+  margin-bottom: 15px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #fff;
+}
+
+.reset-btn {
+  background: #ddd;
+  color: #333;
+}
+
+/* Cycle Info */
+.cycle-info {
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #444;
+}
