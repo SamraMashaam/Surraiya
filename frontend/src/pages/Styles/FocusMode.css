@@ -1,0 +1,134 @@
+.focus-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #1f2937 55%, #10b981 100%);;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.focus-title {
+  color: #6ee7b7;
+  margin-bottom: 10px;
+}
+
+/* Settings Card */
+.settings-card {
+  background: #a7f3d0;
+  padding: 15px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.settings-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.settings-select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #065f46;
+}
+
+.settings-subtext {
+  margin: 10px 0 0 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Timer Circle */
+.timer-circle {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #e5e5e5;
+  margin-bottom: 20px;
+  background: transparent;
+  border: 4px solid var(--glow-color, rgba(255, 255, 255, 0.8));
+  box-shadow: 0 0 15px 3px var(--glow-color, rgba(255, 255, 255, 0.4));
+  overflow: hidden;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+/* Animated liquid layer */
+.timer-circle::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: var(--fill, 0%);
+  background: linear-gradient(
+    to top,
+    var(--liquid-color),
+    rgba(255, 255, 255, 0.15)
+  );
+  border-radius: 40%;
+  animation: wave 4s linear infinite;
+  transform: translateX(-25%);
+  transition: height 1s ease-out, background 0.3s ease-in-out;
+  filter: blur(1px);
+}
+
+/* Gentle wave animation */
+@keyframes wave {
+  0% {
+    transform: translateX(-25%) translateY(0);
+  }
+  50% {
+    transform: translateX(-15%) translateY(3px);
+  }
+  100% {
+    transform: translateX(-25%) translateY(0);
+  }
+}
+
+.timer-text {
+  position: absolute;
+  color: #f8fafc;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+}
+
+
+/* Mode Label */
+.mode-label {
+  margin-bottom: 15px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.reset-btn {
+  background: #ddd;
+  color: #333;
+}
+
+/* Cycle Info */
+.cycle-info {
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #1f2937;
+}

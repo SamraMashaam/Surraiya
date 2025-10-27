@@ -1,13 +1,19 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import DashBoard from "./pages/DashBoard";
 import FocusMode from "./pages/FocusMode";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/" element={<Home />} />
         <Route path="/focus" element={<FocusMode />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
       </Routes>
     </Router>
   );

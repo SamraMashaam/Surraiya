@@ -1,0 +1,106 @@
+/* Container layout */
+.dashboard {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color:  #1f2937;
+  color: #333;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background-color:  #10b981;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1px solid #e0e0e0;
+}
+
+.profile {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  border: 5px solid #1f2937;
+}
+
+.profile-name {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+/* Sidebar menu */
+.menu {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.menu li {
+  padding: 12px;
+  margin: 8px 0;
+  background-color: #e8f0fe;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu li:hover {
+  background-color: #d0e1fd;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.welcome {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: #a7f3d0;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: #a7f3d0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 3px 6px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.stat-card h3 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.stat-card p {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.mood-graph {
+  grid-column: 1 / -1; /* stretches across all columns */
+  height: 300px;
+  background:  #1f2937;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
