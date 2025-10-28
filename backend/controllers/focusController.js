@@ -32,20 +32,25 @@ export const getSessionsByUser = async (req, res) => {
 };
 
 // UPDATE FocusSession
+// UPDATE FocusSession
 export const updateSession = async (req, res) => {
   try {
     const updated = await FocusSession.findOneAndUpdate(
       { sessionId: req.params.id },
-      req.body,
-      { new: true }
+      { $set: req.body },
+      { new: true, upsert: false } // don't auto-create
     );
-    if (!updated)
+
+    if (!updated) {
       return res.status(404).json({ message: "Session not found" });
+    }
+
     res.json(updated);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // DELETE FocusSession
 export const deleteSession = async (req, res) => {
