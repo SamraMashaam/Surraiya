@@ -8,24 +8,28 @@ self.addEventListener("activate", (event) => {
 
 console.log("SW active, ready for messages");
 
-
 let timer = null;
 let remainingTime = 0;
 let mode = "work";
 let sessionActive = false;
 
-// Handle messages from React frontend
+// Send current state to all clients
+function notifyReact(type, data) {
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({ type, data });
+    });
+  });
+}
+
 self.addEventListener("message", (event) => {
   const { type, data } = event.data;
-    if (type === "PING") notifyReact("PONG", { msg: "I hear you" });
-  if (type === "START_TIMER") {
-    startTimer(data);
-  } else if (type === "PAUSE_TIMER") {
-    pauseTimer();
-  } else if (type === "RESET_TIMER") {
-    resetTimer();
-  } else if (type === "REQUEST_STATE") {
-    // Send current timer state back to React
+
+  if (type === "PING") notifyReact("PONG", { msg: "I hear you" });
+  if (type === "START_TIMER") startTimer(data);
+  if (type === "PAUSE_TIMER") pauseTimer();
+  if (type === "RESET_TIMER") resetTimer();
+  if (type === "REQUEST_STATE") {
     notifyReact("STATE_SYNC", { remainingTime, mode, sessionActive });
   }
 });
@@ -40,9 +44,8 @@ function startTimer({ duration, modeType }) {
   notifyReact("STATE_SYNC", { remainingTime, mode, sessionActive });
 
   timer = setInterval(() => {
-    remainingTime -= 1;
+    remainingTime--;
 
-    // Send periodic sync updates
     if (remainingTime % 5 === 0) {
       notifyReact("STATE_SYNC", { remainingTime, mode, sessionActive });
     }
@@ -50,6 +53,7 @@ function startTimer({ duration, modeType }) {
     if (remainingTime <= 0) {
       clearInterval(timer);
       sessionActive = false;
+      notifyReact("STATE_SYNC", { remainingTime: 0, mode, sessionActive });
       showNotification(mode);
       notifyReact("SESSION_END", { mode });
     }
@@ -80,14 +84,6 @@ function showNotification(mode) {
 
   self.registration.showNotification("Focus Mode", {
     body: messages[mode],
-    icon: "/logo192.png", // add this icon in public/
-  });
-}
-
-function notifyReact(type, data) {
-  self.clients.matchAll().then((clients) => {
-    clients.forEach((client) => {
-      client.postMessage({ type, data });
-    });
+    icon: "/logo192.png",
   });
 }
