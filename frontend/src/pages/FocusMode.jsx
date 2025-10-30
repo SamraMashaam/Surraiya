@@ -21,8 +21,6 @@ function FocusMode() {
     return Math.max(saved.duration - elapsed, 0);
   });
   const [pausedTime, setPausedTime] = useState(null);
-
-
   const [user, setUser] = useState(null);
   // Use stored activeSessionId if present, otherwise create a new one
   const storedActiveId = localStorage.getItem("activeSessionId");

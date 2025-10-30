@@ -59,6 +59,14 @@ function DashBoard() {
     navigate("/focus");
   };
 
+  const handleSetting = () => {
+    navigate("/settings")
+  };
+
+  const handleHome = () => {
+    navigate("/")
+  };
+
   if (!user) return null;
 
   return (
@@ -77,7 +85,8 @@ function DashBoard() {
           <li onClick={handleStartFocus}>Focus Session</li>
           <li>Stats</li>
           <li>Planner</li>
-          <li>Settings</li>
+          <li onClick={handleSetting}>Settings</li>
+          <li onClick={handleHome}>Home</li>
         </ul>
       </div>
 

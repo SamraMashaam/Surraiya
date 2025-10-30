@@ -1,0 +1,132 @@
+.inst-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #1f2937, #10b981);
+  padding: 40px 20px;
+}
+
+.inst-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #6ee7b7;
+  padding: 40px;
+  border-radius: 10px;
+  color: #1f2937;
+  box-shadow: 0 10px 10px rgba(0,0,0,0.5);
+}
+
+.inst-header {
+  margin-bottom: 30px;
+  color: #1f2937;
+}
+
+.inst-desc {
+  font-size: 18px;
+  color: #525252;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.inst-box {
+  padding: 30px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  background: linear-gradient(to bottom, #1f2937, #10b981);
+  color: #6ee7b7;
+}
+
+.center {
+  text-align: center;
+}
+
+.primary-btn {
+  padding: 15px 40px;
+  font-size: 18px;
+  background:#1f2937;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.primary-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.file-info {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.inst-list {
+  padding-left: 25px;
+  line-height: 2;
+}
+
+.inst-section {
+  margin-bottom: 40px;
+}
+
+.step-card {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  background:#b9e4d3;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.step-number {
+  background: #4d555d;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.code-box {
+  background: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.copy-btn {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: #777d85;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.copy-btn.copied {
+  background: #424e45;
+}
+
+.footer-cta {
+  margin-top: 40px;
+  padding: 30px;
+  background:#1f2937;
+  color: white;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.white-btn {
+  padding: 12px 30px;
+  font-size: 18px;
+  background: white;
+  color: #464c53;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Stay Focused</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      padding-top: 0px;
+    }
+    .container {
+      max-width: 600px;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.1em;
+      margin-bottom: 15px;
+    }
+    .site-name {
+      font-weight: bold;
+    }
+    .buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Remember to stay focused!</h1>
+    <p><span class="site-name" id="siteName">This site</span> has been blocked for the duration of the focus session.</p>
+    <p>You can do it!</p>
+    <p>
+      If you need to use this site for your work, you can remove it from the blocklist. 
+      It will remain unblocked until you add it back from the settings page.
+    </p>
+    <div class="buttons">
+      <button class="dashboard-btn" id="dashboardBtn">
+        Back to my dashboard
+      </button>
+      <button class="unblock-btn" id="unblockBtn">
+        Unblock site
+      </button>
+    </div>
+  </div>
+
+  <script src="focus.js"></script>
+</body>
+</html>

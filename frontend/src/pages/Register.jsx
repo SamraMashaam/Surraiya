@@ -34,7 +34,7 @@ const Register = () => {
       {/* Left Section - Image */}
       <div
         className="register-left"
-        style={{ backgroundImage: "url('/register.jpeg')" }}
+        style={{ backgroundImage: "url('/register.png')" }}
       >
         <div className="overlay"></div>
       </div>

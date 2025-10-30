@@ -1,0 +1,140 @@
+.settings-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(to top, #1f2937, #11cc8e );
+}
+
+.settings-box {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  color:#1f2937;
+  border-radius: 10px;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+  
+}
+
+.back-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #26f0ac;
+  color: #1f2937;
+}
+
+.back-btn:hover {
+  color: #26f0ac;
+  background-color: #0d583c;
+}
+
+.desc-text {
+  margin-bottom: 30px;
+}
+
+.sync-banner,
+.error-banner {
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.sync-banner {
+  background-color: #eef6ff;
+}
+
+.error-banner {
+  background-color: #ffe6e6;
+}
+
+.add-form {
+  margin-bottom: 40px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.site-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.add-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+  background-color: #1f2937;
+  color: #23dfa0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: #151c27;
+}
+
+.add-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.blocked-title {
+  margin-bottom: 20px;
+  color:#26f0ac;
+}
+
+.loading-text {
+  text-align: center;
+  padding: 40px;
+}
+
+.empty-box {
+  text-align: center;
+  padding: 40px;
+  border-radius: 5px;
+}
+
+.site-list {
+  list-style: none;
+  padding: 0;
+}
+
+.site-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background:  #aad6c7;
+}
+
+.remove-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background:#1a835c;
+  color: white;
+  font-size: 14px;
+}
+
+.remove-btn:hover {
+  background:#0d583c;
+}
+

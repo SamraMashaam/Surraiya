@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "Distraction Blocker",
+  "version": "1.0",
+  "description": "Block distracting websites.",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "storage",
+    "<all_urls>"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "distractionblocker@Suraiyya",
+      "strict_min_version": "91.0"
+    }
+  },
+  "web_accessible_resources": [
+    "focus.html"
+  ],
+  "content_scripts": [
+  {
+    "matches": ["<all_urls>"],
+    "js": ["content-script.js"]
+  }
+]
+
+}

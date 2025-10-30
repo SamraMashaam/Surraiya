@@ -96,7 +96,8 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(31, 41, 55, 0.25);
+  background-color: rgba(31, 41, 55);
+  opacity: 15%;
 }
 
 /* RESPONSIVE */

@@ -25,7 +25,10 @@ function Login() {
       // Store token + user info locally
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-
+      window.postMessage({
+        type: "USER_ID",
+        userId: user.id || user._id
+      });
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
@@ -70,7 +73,7 @@ function Login() {
       </div>
 
       {/* RIGHT IMAGE SECTION */}
-      <div className="login-right" style={{ backgroundImage: "url('/login.jpg')" }}>
+      <div className="login-right" style={{ backgroundImage: "url('/login.png')" }}>
         <div className="overlay"></div>
       </div>
     </div>

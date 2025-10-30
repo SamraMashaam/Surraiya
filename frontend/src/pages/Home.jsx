@@ -84,10 +84,9 @@ const Home = () => {
         >
           <nav className="nav-links">
             <a href="/" className="nav-link">Home</a>
-            <a href="/dashboard" className="nav-link">DashBoard</a>
+            <a href="/dashboard" className="nav-link">Dashboard</a>
             <a href="/focus" className="nav-link">Focus Mode</a>
-            <a href="/" className="nav-link">Help</a>
-            <a href="/" className="nav-link">Contact</a>
+            <a href="/help" className="nav-link">Help</a>
           </nav>
         </motion.div>
       )}
@@ -111,7 +110,7 @@ const Home = () => {
                 </p>
               </div>
               <div className="hero-image">
-                <img src={"/home.webp"} alt="Startup Illustration" />
+                <img src={"/home1.jpg"} alt="Startup Illustration" />
               </div>
             </div>
           </section>
