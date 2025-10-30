@@ -8,6 +8,7 @@ import uploadRoute from "./routes/uploadRoute.js";
 import authRoutes from "./routes/authRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import blocklistRoutes from "./routes/blocklist.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/focus", focusRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/blocklist", blocklistRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/upload", uploadRoute);
 
