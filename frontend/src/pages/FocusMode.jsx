@@ -1,3 +1,4 @@
+/* global chrome, browser */
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
@@ -9,7 +10,7 @@ function FocusMode() {
   const [workLength, setWorkLength] = useState(saved?.workLength || 25);
   const [shortBreakLength, setShortBreakLength] = useState(saved?.shortBreakLength || 5);
   const [longBreakLength, setLongBreakLength] = useState(saved?.longBreakLength || 15);
-  const [mode, setMode] = useState(saved?.mode || "work");
+  const [mode, setMode] = useState(saved?.mode || "off");
   const [isRunning, setIsRunning] = useState(saved?.isRunning || false);
   const [cycleCount, setCycleCount] = useState(saved?.cycleCount || 0);
   const [startTime, setStartTime] = useState(saved?.startTime ? new Date(saved.startTime) : null);
@@ -40,6 +41,31 @@ function FocusMode() {
       Notification.requestPermission();
     }
   }, []);
+
+  useEffect(() => {
+    // Notify Chrome
+    if (window?.chrome?.runtime?.sendMessage) {
+      chrome.runtime.sendMessage({
+        action: "SET_FOCUS_MODE",
+        mode,
+      });
+    }
+
+    // Notify Firefox
+    if (window?.browser?.runtime?.sendMessage) {
+      browser.runtime.sendMessage({
+        action: "SET_FOCUS_MODE",
+        mode,
+      });
+    }
+
+    // Also broadcast on page for content-script bridge
+    window.postMessage(
+      { type: "FOCUS_MODE", mode },
+      window.location.origin
+    );
+  }, [mode]);
+
 
   // --- Persist state ---
   useEffect(() => {
@@ -100,7 +126,7 @@ function FocusMode() {
       if (!existingId) {
         // No existing session in storage -> create a new DB entry using current sessionId
         // Ensure sessionId state is set (in case it wasn't)
-        const idToCreate = sessionId || uuidv4();
+        const idToCreate = uuidv4();
         setSessionId(idToCreate);
 
         const createData = {
@@ -138,7 +164,7 @@ function FocusMode() {
 
   const handleSessionEnd = async () => {
     await saveSessionToDB(duration, true);
-    localStorage.removeItem("activeSessionId");
+    
     setIsRunning(false);
 
     if (mode === "work") {
@@ -160,10 +186,21 @@ function FocusMode() {
       setDuration(nextDuration);
       setTimeLeft(nextDuration);
     } else {
-      setMode("work");
+      // After finishing long break cycle, turn off mode
+      if (cycleCount + 1 >= 4) {
+        setIsRunning(false);
+        setCycleCount(0);
+        setStartTime(null);
+        setMode("off");
+        sendNotification("All cycles complete, Great job!"); 
+        localStorage.removeItem("activeSessionId");
+      } else {
+        setMode("work");
+        sendNotification("Break over! Back to work.");
+      }
       setDuration(workLength * 60);
       setTimeLeft(workLength * 60);
-      sendNotification("Break over! Back to work.");
+      
     }
 
     setStartTime(null);
@@ -177,7 +214,12 @@ function FocusMode() {
       setPausedTime(timeLeft);
       return;
     }
-
+    // Starting fresh → ensure mode becomes work
+    if (mode === "off") {
+      setMode("work");
+      setDuration(workLength * 60);
+      setTimeLeft(workLength * 60);
+    }
     // --- Resume timer ---
     const now = new Date();
     if (pausedTime !== null) {
@@ -200,7 +242,7 @@ function FocusMode() {
     localStorage.removeItem("activeSessionId");
     setSessionId(uuidv4());
     setIsRunning(false);
-    setMode("work");
+    setMode("off");
     setCycleCount(0);
     setStartTime(null);
     setDuration(workLength * 60);
@@ -216,7 +258,7 @@ function FocusMode() {
     setLongBreakLength(newLong);
     setDuration(newWorkLength * 60);
     setTimeLeft(newWorkLength * 60);
-    setMode("work");
+    setMode("off");
     setCycleCount(0);
     setStartTime(null);
     setIsRunning(false);
@@ -229,6 +271,7 @@ function FocusMode() {
   };
 
   const colors = {
+    off: "#e78888ff",
     work: "#a8dadc",
     shortBreak: "#abb3fbff",
     longBreak: "#c9b4dbff",
@@ -270,7 +313,8 @@ function FocusMode() {
       </div>
 
       <h2 className="mode-label" style={{ color: colors[mode] }}>
-        {mode === "work" ? "Focus Time" : mode === "shortBreak" ? "Short Break" : "Long Break"}
+        {mode === "work" ? "Focus Time" : mode === "shortBreak" ? "Short Break" : 
+        mode === "longBreak" ? "Long Break" : "Timer Off"}
       </h2>
 
       <div className="controls">

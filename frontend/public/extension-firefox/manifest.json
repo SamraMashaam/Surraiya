@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "Distraction Blocker",
+  "name": "Suraiyya - Distraction Blocker",
   "version": "1.0",
   "description": "Block distracting websites.",
   "permissions": [
@@ -26,6 +26,11 @@
     "matches": ["<all_urls>"],
     "js": ["content-script.js"]
   }
-]
+],
+"icons": {
+  "16": "s_logo.png",
+  "48": "s_logo.png",
+  "128": "s_logo.png"
+}
 
 }

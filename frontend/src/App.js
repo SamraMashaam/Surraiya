@@ -1,4 +1,6 @@
+/* global chrome, browser */
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 import DashBoard from "./pages/DashBoard";
 import FocusMode from "./pages/FocusMode";
 import Home from "./pages/Home";
@@ -10,6 +12,24 @@ import InstructionsPage from "./pages/InstructionsPage";
 
 
 function App() {
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (!stored) return;
+    const usr = JSON.parse(stored);
+    if (!usr) return;
+
+    const uid = usr.id || usr._id || usr.userId;
+    if (!uid) return;
+
+    // Send to Chrome
+    if (window.chrome?.runtime?.sendMessage) {
+      chrome.runtime.sendMessage({ action: "SET_USER_ID", userId: uid }, () => {});
+    }
+
+    // Send to Firefox bridge
+    window.postMessage({ type: "USER_ID", userId: uid }, window.location.origin);
+  }, []);
+
   return (
     <Router>
       <Routes>

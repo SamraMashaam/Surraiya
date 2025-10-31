@@ -88,6 +88,7 @@ function DashBoard() {
           <li onClick={handleSetting}>Settings</li>
           <li onClick={handleHome}>Home</li>
         </ul>
+        <img src="s_logo.png" style={{width: "90px", height: "90px", marginTop: "10px"}} alt="logo" />
       </div>
 
       {/* Main Content */}

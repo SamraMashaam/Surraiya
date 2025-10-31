@@ -1,6 +1,10 @@
 let USER_ID = null;
 let API_URL = null;
 let blockedSites = [];
+let FOCUS_MODE = "off";
+console.log("Initial FOCUS_MODE =", FOCUS_MODE);
+
+
 
 async function syncBlockedSites() {
   if (!USER_ID) return;
@@ -17,9 +21,10 @@ browser.webRequest.onBeforeRequest.addListener(
     const url = new URL(details.url);
     const domain = url.hostname.replace("www.", "");
 
-    if (blockedSites.includes(domain)) {
+    if (FOCUS_MODE === "work" && blockedSites.includes(domain)) {
       return { redirectUrl: browser.runtime.getURL(`focus.html?site=${domain}`) };
     }
+
   },
   { urls: ["<all_urls>"] },
   ["blocking"]
@@ -32,14 +37,23 @@ browser.runtime.onMessage.addListener((msg) => {
     browser.storage.local.set({ USER_ID });
     syncBlockedSites();
   }
-});
+  if (msg.action === "SET_FOCUS_MODE") {
+    FOCUS_MODE = msg.mode;
+    browser.storage.local.set({ FOCUS_MODE });
+  }
 
-// Restore user on startup
-browser.storage.local.get("USER_ID").then((res) => {
-  if (res.USER_ID) {
-    USER_ID = res.USER_ID;
+  if (msg.action === "SET_USER_ID") {
+    USER_ID = msg.userId;
+    browser.storage.local.set({ USER_ID });
     syncBlockedSites();
   }
 });
+
+browser.storage.local.get(["USER_ID", "FOCUS_MODE"]).then((res) => {
+  if (res.USER_ID) USER_ID = res.USER_ID;
+  if (res.FOCUS_MODE) FOCUS_MODE = res.FOCUS_MODE;
+  if (FOCUS_MODE === "work") syncBlockedSites();
+});
+
 
 setInterval(syncBlockedSites, 60000);

@@ -36,6 +36,8 @@
 .home-header {
   position: absolute;
   z-index: 20;
+  display: flex;
+  gap: 20px;
 }
 
 .home-title {

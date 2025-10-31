@@ -13,3 +13,17 @@ window.addEventListener("message", (event) => {
     });
   }
 });
+// Focus mode message from page
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "FOCUS_MODE") {
+    chrome.runtime?.sendMessage({
+      action: "SET_FOCUS_MODE",
+      mode: event.data.mode,
+    });
+
+    browser?.runtime?.sendMessage({
+      action: "SET_FOCUS_MODE",
+      mode: event.data.mode,
+    });
+  }
+});

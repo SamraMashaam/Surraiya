@@ -71,6 +71,7 @@ const Home = () => {
         }
         transition={{ duration: 0.8, ease: "easeInOut" }}
       >
+        <img src="s_logo.png" style={{width: "82px", height: "82px", marginTop: "10px"}} alt="logo" />
         <h1 className="home-title">Suraiyya</h1>
       </motion.div>
 

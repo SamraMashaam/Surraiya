@@ -22,12 +22,17 @@ export default function InstructionsPage() {
       const folder = type === "chrome" ? "extension-chrome" : "extension-firefox";
       const zip = new JSZip();
 
-      const files = ["manifest.json", "background.js", "focus.html", "focus.js", "content-script.js"];
+      const files = ["manifest.json", "background.js", "focus.html", "focus.js", "content-script.js", "s_logo.png"];
 
       for (const file of files) {
         const response = await fetch(`/${folder}/${file}`);
         if (!response.ok) throw new Error(`Missing file: ${file}`);
-        zip.file(file, await response.text());
+        if (file.endsWith(".png") || file.endsWith(".jpg") || file.endsWith(".ico")) {
+          const blob = await response.arrayBuffer();
+          zip.file(file, blob, { binary: true });
+        } else {
+          zip.file(file, await response.text());
+        }
       }
 
       const blob = await zip.generateAsync({ type: "blob" });

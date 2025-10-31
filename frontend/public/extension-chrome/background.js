@@ -1,23 +1,30 @@
 let USER_ID = null;
-let API_URL = null;
+let FOCUS_MODE = "off";
+
+async function clearRules() {
+  const existing = await chrome.declarativeNetRequest.getDynamicRules();
+  if (existing.length) {
+    await chrome.declarativeNetRequest.updateDynamicRules({
+      removeRuleIds: existing.map(r => r.id),
+      addRules: []
+    });
+  }
+}
 
 async function syncBlockedSites() {
-  if (!USER_ID) return;
-  API_URL = `http://localhost:5000/api/blocklist/${USER_ID}`;
+  if (!USER_ID || FOCUS_MODE !== "work") return;
 
+  const API_URL = `http://localhost:5000/api/blocklist/${USER_ID}`;
   const res = await fetch(API_URL);
-  const blockedSites = await res.json();
-  console.log("Sites: ", blockedSites);
+  const sites = await res.json();
+  console.log("Blocklist:", sites);
 
-  const existing = await chrome.declarativeNetRequest.getDynamicRules();
-  const removeIds = existing.map(r => r.id);
+  // Always clear first to avoid duplicate IDs
+  await clearRules();
 
-  if (!blockedSites.length) {
-    await chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: removeIds });
-    return;
-  }
+  if (!sites?.length) return;
 
-  const rules = blockedSites.map((site, i) => ({
+  const rules = sites.map((site, i) => ({
     id: i + 1,
     priority: 1,
     action: {
@@ -33,27 +40,39 @@ async function syncBlockedSites() {
   }));
 
   await chrome.declarativeNetRequest.updateDynamicRules({
-    removeRuleIds: removeIds,
     addRules: rules
   });
 }
 
-// Receive user ID
+// Receive messages
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.action === "SET_USER_ID") {
     USER_ID = msg.userId;
     chrome.storage.local.set({ USER_ID });
     syncBlockedSites();
   }
-});
 
-// Restore user on browser start
-chrome.storage.local.get(["USER_ID"], (res) => {
-  if (res.USER_ID) {
-    USER_ID = res.USER_ID;
-    syncBlockedSites();
+  if (msg.action === "SET_FOCUS_MODE") {
+    FOCUS_MODE = msg.mode;
+    chrome.storage.local.set({ FOCUS_MODE });
+
+    if (FOCUS_MODE !== "work") {
+      clearRules();
+    } else {
+      syncBlockedSites();
+    }
   }
 });
 
+// Restore state on wake
+chrome.storage.local.get(["USER_ID", "FOCUS_MODE"], (res) => {
+  USER_ID = res.USER_ID || null;
+  FOCUS_MODE = res.FOCUS_MODE || "off";
 
-setInterval(syncBlockedSites, 60000);
+  if (FOCUS_MODE === "work") syncBlockedSites();
+});
+
+// Keep rules synced every minute (only in work mode)
+setInterval(() => {
+  if (FOCUS_MODE === "work") syncBlockedSites();
+}, 60000);
