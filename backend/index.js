@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js";
 import focusRoutes from "./routes/focusRoutes.js";
 import uploadRoute from "./routes/uploadRoute.js";
 import authRoutes from "./routes/authRoutes.js";
+import sessionRoutes from "./routes/session.js";
 import path from "path";
 import { fileURLToPath } from "url";
 import blocklistRoutes from "./routes/blocklist.js";
@@ -25,6 +26,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/focus", focusRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/blocklist", blocklistRoutes);
+app.use("/api/session", sessionRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/upload", uploadRoute);
 
