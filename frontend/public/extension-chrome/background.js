@@ -1,6 +1,7 @@
 let USER_ID = null;
 let FOCUS_MODE = "off";
 
+
 async function clearRules() {
   const existing = await chrome.declarativeNetRequest.getDynamicRules();
   if (existing.length) {

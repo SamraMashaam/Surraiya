@@ -4,6 +4,7 @@ import axios from "axios";
 import "./Styles/Settings.css"; 
 
 export default function SettingsPage() {
+
   const [blockedSites, setBlockedSites] = useState([]);
   const [newSite, setNewSite] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,10 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [API_URL, setAPI_URL] = useState(null);
+
+        useEffect(() => {
+      document.title = "Settings";
+    }, []);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));

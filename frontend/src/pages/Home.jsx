@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "./Styles/Home.css";
 
 const Home = () => {
+
   const [activated, setActivated] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null); // tores logged-in user
   const navigate = useNavigate();
 
@@ -15,6 +15,10 @@ const Home = () => {
   const registerPage = () => navigate("/register");
   const dashboardPage = () => navigate("/dashboard");
   const focusPage = () => navigate("/focus");
+
+        useEffect(() => {
+      document.title = "Suraiyya - Home";
+    }, []);
 
   // Check if user is logged in on mount
   useEffect(() => {
@@ -86,7 +90,7 @@ const Home = () => {
           <nav className="nav-links">
             <a href="/" className="nav-link">Home</a>
             <a href="/dashboard" className="nav-link">Dashboard</a>
-            <a href="/focus" className="nav-link">Focus Mode</a>
+            <a href="/focus" target="_blank" className="nav-link">Focus Mode</a>
             <a href="/help" className="nav-link">Help</a>
           </nav>
         </motion.div>

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import JSZip from "jszip";
 import "./Styles/Instruction.css"; 
 
 export default function InstructionsPage() {
+      useEffect(() => {
+      document.title = "Instructions";
+    }, []);
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState("");
@@ -19,10 +22,10 @@ export default function InstructionsPage() {
     setDownloading(type);
 
     try {
-      const folder = type === "chrome" ? "extension-chrome" : "extension-firefox";
+      const folder = type === "chrome" ? "activityEx-chrome" : "activityEx-firefox";
       const zip = new JSZip();
 
-      const files = ["manifest.json", "background.js", "focus.html", "focus.js", "content-script.js", "s_logo.png"];
+      const files = ["manifest.json", "background.js", "focus.html", "focus.js", "activity-tracker.js", "s_logo.png", "popup.html"];
 
       for (const file of files) {
         const response = await fetch(`/${folder}/${file}`);
@@ -59,7 +62,7 @@ export default function InstructionsPage() {
         </div>
 
         <p className="inst-desc">
-          Follow the steps below to install and set up the Distraction Blocker browser extension.
+          Follow the steps below to install and set up the Focus Module browser extension.
         </p>
 
 

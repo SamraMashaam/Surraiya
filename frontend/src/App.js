@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import BlockPage from "./pages/BlockPage";
 import SettingsPage from "./pages/SettingsPage";
 import InstructionsPage from "./pages/InstructionsPage";
+import ActivityTracker from "./pages/ActivityTracker";
 
 
 function App() {
@@ -21,14 +22,13 @@ function App() {
     const uid = usr.id || usr._id || usr.userId;
     if (!uid) return;
 
-    // Send to Chrome
-    if (window.chrome?.runtime?.sendMessage) {
-      chrome.runtime.sendMessage({ action: "SET_USER_ID", userId: uid }, () => {});
-    }
-
-    // Send to Firefox bridge
-    window.postMessage({ type: "USER_ID", userId: uid }, window.location.origin);
+    // Send to extension through content-script bridge
+    window.postMessage(
+      { type: "USER_ID", userId: uid },
+      window.location.origin
+    );
   }, []);
+
 
   return (
     <Router>
@@ -41,6 +41,7 @@ function App() {
         <Route path="/blocked" element={<BlockPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/help" element={<InstructionsPage />} />
+        <Route path="/activity" element={<ActivityTracker />} />
       </Routes>
     </Router>
   );

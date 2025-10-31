@@ -13,6 +13,7 @@ import {
 } from "recharts";
 
 function DashBoard() {
+
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
@@ -26,6 +27,9 @@ function DashBoard() {
     { day: "Sun", mood: 4 },
   ];
 
+        useEffect(() => {
+      document.title = "Dashboard";
+    }, []);
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (!storedUser) {
@@ -56,7 +60,8 @@ function DashBoard() {
         }
       });
     }
-    navigate("/focus");
+    window.open("/focus", "_blank");
+
   };
 
   const handleSetting = () => {
@@ -65,6 +70,9 @@ function DashBoard() {
 
   const handleHome = () => {
     navigate("/")
+  };
+  const handleTracker = () => {
+    navigate("/activity")
   };
 
   if (!user) return null;
@@ -82,9 +90,8 @@ function DashBoard() {
           <h2 className="profile-name">{user.userName}</h2>
         </div>
         <ul className="menu">
-          <li onClick={handleStartFocus}>Focus Session</li>
-          <li>Stats</li>
-          <li>Planner</li>
+          <li onClick={handleStartFocus}>Focus Mode</li>
+          <li onClick={handleTracker}>Activity Tracker</li>
           <li onClick={handleSetting}>Settings</li>
           <li onClick={handleHome}>Home</li>
         </ul>

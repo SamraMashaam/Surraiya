@@ -1,0 +1,51 @@
+{
+  "manifest_version": 2,
+  "name": "Suraiyya Focus Module",
+  "version": "2.0",
+  "description": "Block distracting websites and track activity during focus sessions.",
+
+  "permissions": [
+    "storage",
+    "tabs",
+    "webRequest",
+    "webRequestBlocking",
+    "notifications",
+    "<all_urls>"
+  ],
+
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["activity-tracker.js"],
+      "run_at": "document_start"
+    }
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "suraiyya-focus@extension",
+      "strict_min_version": "91.0"
+    }
+  },
+
+  "web_accessible_resources": [
+    "focus.html",
+    "popup.html",
+    "s_logo.png"
+  ],
+
+  "icons": {
+    "16": "s_logo.png",
+    "48": "s_logo.png",
+    "128": "s_logo.png"
+  },
+
+  "browser_action": {
+    "default_icon": "s_logo.png"
+  }
+}

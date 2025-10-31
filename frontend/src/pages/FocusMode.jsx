@@ -5,6 +5,10 @@ import { v4 as uuidv4 } from "uuid";
 import "./Styles/FocusMode.css";
 
 function FocusMode() {
+    useEffect(() => {
+    document.title = "Focus Mode";
+  }, []);
+  
   // --- Load saved state if exists ---
   const saved = JSON.parse(localStorage.getItem("focusTimerState"));
   const [workLength, setWorkLength] = useState(saved?.workLength || 25);
@@ -43,21 +47,6 @@ function FocusMode() {
   }, []);
 
   useEffect(() => {
-    // Notify Chrome
-    if (window?.chrome?.runtime?.sendMessage) {
-      chrome.runtime.sendMessage({
-        action: "SET_FOCUS_MODE",
-        mode,
-      });
-    }
-
-    // Notify Firefox
-    if (window?.browser?.runtime?.sendMessage) {
-      browser.runtime.sendMessage({
-        action: "SET_FOCUS_MODE",
-        mode,
-      });
-    }
 
     // Also broadcast on page for content-script bridge
     window.postMessage(
@@ -283,7 +272,7 @@ function FocusMode() {
     <div className="focus-container">
       <h1 className="focus-title">Focus Mode</h1>
 
-      <div className="settings-card">
+      <div className="settings-cardf">
         <label className="settings-label">Session Length:</label>
         <select value={workLength} onChange={handleWorkLengthChange} className="settings-select">
           <option value={2}>2 min</option>

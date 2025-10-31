@@ -1,10 +1,13 @@
 // pages/Login.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Styles/Login.css";
 import axios from "axios";
 
 function Login() {
+      useEffect(() => {
+      document.title = "Login";
+    }, []);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
