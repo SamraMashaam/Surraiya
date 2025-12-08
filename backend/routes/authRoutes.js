@@ -36,6 +36,8 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       profilePic: "/home.jpg", // default profile image
       FSessionCount: 0,
+      petID: null,
+      currency: 0,
       friends: [],
     });
 
@@ -76,6 +78,8 @@ router.post("/login", async (req, res) => {
         name: user.userName,
         email: user.email,
         profilePic: user.profilePic,
+        petID: user.petID,
+        currency: user.currency,
         FSessionCount: user.FSessionCount,
       },
     });

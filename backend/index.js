@@ -7,6 +7,8 @@ import focusRoutes from "./routes/focusRoutes.js";
 import uploadRoute from "./routes/uploadRoute.js";
 import authRoutes from "./routes/authRoutes.js";
 import sessionRoutes from "./routes/session.js";
+import petRoutes from "./routes/petRoutes.js";
+import shopRoutes from "./routes/shopRoutes.js"
 import path from "path";
 import { fileURLToPath } from "url";
 import blocklistRoutes from "./routes/blocklist.js";
@@ -29,6 +31,8 @@ app.use("/api/blocklist", blocklistRoutes);
 app.use("/api/session", sessionRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/upload", uploadRoute);
+app.use("/api/pets", petRoutes);
+app.use("/api/shop", shopRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend server is running");
