@@ -1,0 +1,40 @@
+/* CSS for VirtualPet component (no Tailwind required) */
+
+/* Container fixed on bottom-right */
+.virtual-pet-wrapper {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+}
+
+.virtual-pet-container {
+  position: relative;
+  border-radius: 16px;
+  overflow: visible;
+  background: transparent;
+}
+
+.virtual-pet-base {
+  display: block;
+  user-select: none;
+}
+
+.virtual-pet-accessory {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 10;
+  max-width: 60%;
+  max-height: 60%;
+  user-select: none;
+}
+
+@keyframes sparkleEffect {
+  0%, 50% { transform: translate(-50%, -50%) scaleX(1); }
+  50.01%, 100% { transform: translate(-50%, -50%) scaleX(-1); }
+}
+
+.sparkle-animation {
+  animation: sparkleEffect 0.5s steps(1) infinite;
+}

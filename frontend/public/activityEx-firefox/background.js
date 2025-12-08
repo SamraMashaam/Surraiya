@@ -13,7 +13,7 @@ let notificationWindowId = null;
 // ============ ACTIVITY TRACKING ============
 function resetActivityTimer() {
   lastActivityTime = Date.now();
-  console.log("✅ Activity timer reset");
+  console.log("Activity timer reset");
 }
 
 function checkInactivity() {

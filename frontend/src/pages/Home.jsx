@@ -91,7 +91,9 @@ const Home = () => {
             <a href="/" className="nav-link">Home</a>
             <a href="/dashboard" className="nav-link">Dashboard</a>
             <a href="/focus" target="_blank" className="nav-link">Focus Mode</a>
+            <a href="/shop" className="nav-link">Pet Shop</a>
             <a href="/help" className="nav-link">Help</a>
+            
           </nav>
         </motion.div>
       )}

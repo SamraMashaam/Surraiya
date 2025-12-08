@@ -10,6 +10,8 @@ import BlockPage from "./pages/BlockPage";
 import SettingsPage from "./pages/SettingsPage";
 import InstructionsPage from "./pages/InstructionsPage";
 import ActivityTracker from "./pages/ActivityTracker";
+import VirtualPet from "./pages/VirtualPet";
+import ShopPage from "./pages/ShopPage";
 
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
 
 
   return (
+    <>
     <Router>
       <Routes>
         <Route path="/dashboard" element={<DashBoard />} />
@@ -42,8 +45,11 @@ function App() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/help" element={<InstructionsPage />} />
         <Route path="/activity" element={<ActivityTracker />} />
+        <Route path="/shop" element={<ShopPage />} />
       </Routes>
     </Router>
+    <VirtualPet />
+    </>
   );
 }
 
