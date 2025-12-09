@@ -12,9 +12,9 @@ const petSchema = new mongoose.Schema({
   },
 
   equippedAccessories: {
-    head: { type: String, default: null },
-    neck: { type: String, default: null },
-    tail: { type: String, default: null }
+    head: [{ type: String }],
+    neck: [{ type: String }],
+    tail: [{ type: String }]
   }
 });
 
