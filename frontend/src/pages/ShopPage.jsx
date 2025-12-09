@@ -10,6 +10,11 @@ export default function ShopPage() {
   const [accessories, setAccessories] = useState([]);
   const navigate = useNavigate();
 
+  const forceReloadPet = () => {
+    window.location.reload();
+  };
+
+
   /* ------------------- LOAD USER ------------------- */
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -22,16 +27,25 @@ export default function ShopPage() {
       try {
         const res = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
         const data = res.data;
-
-        setUser({
-          _id: data._id,
-          currency: data.currency || 0,
-          petId: data.petId || null,
-          ownedAccessories: data.ownedAccessories || []
+        console.log("data: ", data);
+        if(data.petID){
+          setUser({
+            _id: data._id,
+            currency: data.currency || 0,
+            petId: data.petID._id,
+            ownedAccessories: data.ownedAccessories || []
         });
+        }
+        else{
+          setUser({
+            _id: data._id,
+            currency: data.currency || 0,
+            petId: null,
+            ownedAccessories: data.ownedAccessories || []
+          });
+        }
 
         // fetch equipped pet if any
-        console.log("curent data: ", data.petID._id)
         if (data.petID) {
           const petRes = await axios.get(`http://localhost:5000/api/pets/${data.petID._id}`);
           console.log("curent pet: ", petRes.data)
@@ -79,7 +93,7 @@ export default function ShopPage() {
     if (filename.startsWith("bow_")) return "neck";
     return "tail";
   };
-
+  
  
   const buyPet = async (petSprite) => {
     try {
@@ -111,6 +125,43 @@ export default function ShopPage() {
 
       // update pet state
       setPet(data.pet);
+      forceReloadPet(); 
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const updatePet = async (petSprite) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/shop/equip/pet", {
+        userId: user._id,
+        petType: petSprite.split("_")[0],
+        baseSprite: petSprite
+      });
+      const data = res.data;
+      if (data.error) return alert(data.error);
+
+      // update React state
+      setUser(prev => {
+        const updatedUser = { 
+          ...prev, 
+          currency: data.currency, 
+          petId: data.pet._id 
+        };
+
+        // update localStorage
+        localStorage.setItem("user", JSON.stringify({
+          ...JSON.parse(localStorage.getItem("user")), // keep other fields like name, email
+          petID: updatedUser.petId,
+          currency: updatedUser.currency
+        }));
+
+        return updatedUser;
+      });
+
+      // update pet state
+      setPet(data.pet);
+      forceReloadPet(); 
     } catch (err) {
       console.error(err);
     }
@@ -128,9 +179,16 @@ export default function ShopPage() {
 
       setUser(prev => ({
         ...prev,
-        currency: data.user.currency,
+        currency: data.currency,
         ownedAccessories: [...(prev.ownedAccessories || []), acc]
       }));
+      console.log("user:", user);
+      const res2 = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${user.petId}`, {
+        userId: user._id,
+        accessory: acc
+      });
+      console.log("buy and equip pet: ", res2.data);
+      forceReloadPet(); 
     } catch (err) {
       console.error(err);
     }
@@ -138,6 +196,7 @@ export default function ShopPage() {
 
   const equipAccessory = async (acc) => {
     try {
+      console.log("user: ", user)
       const res = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${user.petId}`, {
         userId: user._id,
         accessory: acc
@@ -146,6 +205,7 @@ export default function ShopPage() {
       if (data.error) return alert(data.error);
 
       setPet(prev => ({ ...prev, equippedAccessories: data.pet.equippedAccessories }));
+      forceReloadPet(); 
     } catch (err) {
       console.error(err);
     }
@@ -161,6 +221,7 @@ export default function ShopPage() {
       if (data.error) return alert(data.error);
 
       setPet(prev => ({ ...prev, equippedAccessories: data.pet.equippedAccessories }));
+      forceReloadPet(); 
     } catch (err) {
       console.error(err);
     }
@@ -174,10 +235,9 @@ export default function ShopPage() {
     return (
       <div className="shop-item" key={petSprite}>
         <img src={`/pets/${petSprite}`} alt={petSprite} />
-        <p className="shop-item-name">{petSprite.replace(".png", "")}</p>
 
         {isActivePet ? (
-          <button className="equipped-btn">Equipped</button>
+          <button className="equipped-btn" onClick={() => updatePet(petSprite)}>Equipped</button>
         ) : (
           <button className="buy-btn" onClick={() => buyPet(petSprite)}>
             Buy ({price})
@@ -189,13 +249,14 @@ export default function ShopPage() {
 
   const renderAccessoryItem = (acc) => {
     const node = getAccessoryNode(acc);
-    const owns = (user.ownedAccessories || []).includes(acc);
-    const equipped = pet?.equippedAccessories?.[node] === acc;
+    // FIXED: pet.ownedAccessories is an object → check inside correct category
+    const owns = pet?.ownedAccessories?.[node]?.includes(acc);
 
+    // Equipped means the active equippedAccessories for that node matches
+    const equipped = pet?.equippedAccessories?.[node]?.includes(acc);
     return (
       <div className="shop-item" key={acc}>
         <img src={`/pets/${acc}`} alt={acc} />
-        <p className="shop-item-name">{acc.replace(".png", "")}</p>
 
         {!userHasPet ? (
           <p className="need-pet-msg">Choose a pet first</p>
@@ -217,6 +278,7 @@ export default function ShopPage() {
       </div>
     );
   };
+
 
   return (
     <div className="shop-container">

@@ -74,6 +74,9 @@ function DashBoard() {
   const handleTracker = () => {
     navigate("/activity")
   };
+  const handleShop = () => {
+    navigate("/shop")
+  };
 
   if (!user) return null;
 
@@ -92,6 +95,7 @@ function DashBoard() {
         <ul className="menu">
           <li onClick={handleStartFocus}>Focus Mode</li>
           <li onClick={handleTracker}>Activity Tracker</li>
+          <li onClick={handleShop}>Pet Shop</li>
           <li onClick={handleSetting}>Settings</li>
           <li onClick={handleHome}>Home</li>
         </ul>

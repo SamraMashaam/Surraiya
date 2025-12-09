@@ -41,9 +41,9 @@ export default function VirtualPet() {
         // Add equippedAccessories as top-level arrays for easier rendering
         setPet({
           ...petData,
-          head: petData.ownedAccessories?.head || [],
-          neck: petData.ownedAccessories?.neck || [],
-          tail: petData.ownedAccessories?.tail || [],
+          head: petData.equippedAccessories?.head || [],
+          neck: petData.equippedAccessories?.neck || [],
+          tail: petData.equippedAccessories?.tail || [],
         });
       } catch (err) {
         console.error(err);
@@ -53,9 +53,6 @@ export default function VirtualPet() {
     loadUserPet();
   }, []);
 
-  /* --------------------------------------------------------
-      Show nothing until both petTypes AND user pet are loaded
-  ---------------------------------------------------------*/
   if (!petTypes) return null;
 
   if (!pet) return (
@@ -85,7 +82,7 @@ export default function VirtualPet() {
     return list.map((sprite, i) => (
       <img
         key={`${category}-${i}`}
-        src={`/pets/accessories/${sprite}`}
+        src={`/pets/${sprite}`}
         alt={sprite}
         className="virtual-pet-accessory"
         style={{
