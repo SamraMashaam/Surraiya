@@ -92,6 +92,8 @@ const Home = () => {
             <a href="/dashboard" className="nav-link">Dashboard</a>
             <a href="/focus" target="_blank" className="nav-link">Focus Mode</a>
             <a href="/shop" className="nav-link">Pet Shop</a>
+            <a href="/idea" className="nav-link">Idea Parking Lot</a>
+            <a href="/task" className="nav-link">Tasks</a>
             <a href="/help" className="nav-link">Help</a>
             
           </nav>

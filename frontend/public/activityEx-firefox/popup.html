@@ -29,7 +29,7 @@
       margin: 0 0 30px 0;
       opacity: 0.9;
     }
-      img{
+    img{
       width: 70px;
       height: 70px;
       margin-top: 10px;
@@ -38,6 +38,20 @@
       font-size: 16px; 
       margin-bottom: 25px;
     }
+    /* Add style for the button */
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: white;
+      color: #1f2937;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #f0f0f0;
+    }
   </style>
 </head>
 <body>
@@ -45,6 +59,8 @@
     <img src="s_logo.png" alt="logo" />
     <p>You've been inactive for 1 minute!</p>
     <p class="sub">Time to get back to work</p>
+    <!-- Added the button here -->
+    <button id="dismissBtn">I'm Back!</button>
   </div>
   <script src="popup.js"></script>
 </body>

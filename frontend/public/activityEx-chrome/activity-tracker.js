@@ -46,7 +46,7 @@ function sendActivityToBackground(type) {
       type: type
     });
   } catch (err) {
-    console.log('Failed to send activity');
+    console.log('Failed to send activity', err);
   }
 }
 

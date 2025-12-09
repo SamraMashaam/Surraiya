@@ -91,21 +91,16 @@
   margin-top: 10px;
 }
 
-/* Buttons (future use) */
-.buy-button {
-  margin-top: 12px;
-  width: 100%;
-  padding: 10px;
-  font-size: 15px;
-  font-weight: bold;
-  color: white;
-  background: #4CAF50;
+button {
+  padding: 12px 30px;
+  font-size: 16px;
+  background-color: #1f2937;
+  color: #23dfa0;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
-.buy-button:hover {
-  background: #45a049;
+.button:hover {
+  background-color: #151c27;
 }

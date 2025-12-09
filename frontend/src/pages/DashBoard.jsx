@@ -77,6 +77,9 @@ function DashBoard() {
   const handleShop = () => {
     navigate("/shop")
   };
+  const handleIdea = () => {
+    navigate("/idea")
+  };
 
   if (!user) return null;
 
@@ -96,10 +99,11 @@ function DashBoard() {
           <li onClick={handleStartFocus}>Focus Mode</li>
           <li onClick={handleTracker}>Activity Tracker</li>
           <li onClick={handleShop}>Pet Shop</li>
+          <li onClick={handleIdea}>Idea Parking Lot</li>
           <li onClick={handleSetting}>Settings</li>
           <li onClick={handleHome}>Home</li>
         </ul>
-        <img src="s_logo.png" style={{width: "90px", height: "90px", marginTop: "10px"}} alt="logo" />
+        {/* <img src="s_logo.png" style={{width: "90px", height: "90px", marginTop: "10px"}} alt="logo" /> */}
       </div>
 
       {/* Main Content */}

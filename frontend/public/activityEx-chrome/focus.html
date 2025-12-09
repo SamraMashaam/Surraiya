@@ -54,10 +54,35 @@
     button:hover {
       background: #1f2937;
     }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     img{
       width: 90px;
       height: 90px;
       margin-top: 10px;
+    }
+    .countdown-container {
+      background-color: #7ab5a0;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      border: 2px solid #2f3f55;
+    }
+    .countdown-message {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+    .countdown-timer {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 15px 0;
+      color: #1f2937;
+    }
+    .hidden {
+      display: none;
     }
     
   </style>
@@ -72,7 +97,14 @@
       If you need to use this site for your work, you can remove it from the blocklist. 
       It will remain unblocked until you add it back from the settings page.
     </p>
-    <div class="buttons">
+    
+    <div class="countdown-container hidden" id="countdownContainer">
+      <p class="countdown-message">The site will be unblocked once the timer runs out. You can still cancel if you think this might distract you.</p>
+      <div class="countdown-timer" id="countdownTimer">1:00</div>
+      <button id="cancelBtn">Cancel Unblock</button>
+    </div>
+    
+    <div class="buttons" id="mainButtons">
       <button class="dashboard-btn" id="dashboardBtn">
         Back to my dashboard
       </button>

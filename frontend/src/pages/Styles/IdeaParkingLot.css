@@ -1,0 +1,121 @@
+.idea-body{
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #1f2937, #10b981);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.idea-body h3{
+    color: #32dba3;
+    font-size: 20px;
+}
+
+.idea-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+  font-family: "Arial";
+}
+
+.idea-title {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+.idea-input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.idea-input-box textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  resize: vertical;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.add-btn {
+  width: fit-content;
+  padding: 8px 14px;
+  background: #38a170;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #2f855a;
+}
+
+.idea-list {
+  margin-top: 25px;
+}
+
+.empty-msg {
+  text-align: center;
+  opacity: 0.6;
+}
+
+.idea-item {
+  background: #2a3a50;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  color: #e1f3f2;
+  flex-direction: column;
+}
+
+.idea-text {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.idea-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #1a9260;
+  color: white;
+}
+
+.delete-btn {
+  background: #e53e3e;
+  color: white;
+}
+
+.save-btn {
+  background: #38a169;
+  color: white;
+}
+
+.cancel-btn {
+  background: #718096;
+  color: white;
+}
+
+.edit-box {
+  width: 100%;
+  height: 80px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}

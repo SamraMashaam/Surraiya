@@ -130,6 +130,8 @@ function FocusMode() {
         await axios.post("http://localhost:5000/api/focus", createData);
         localStorage.setItem("activeSessionId", idToCreate);
         console.log("Created new session:", idToCreate);
+
+       
       } else {
         // Update the existing session id (use the canonical existingId)
         await axios.put(`http://localhost:5000/api/focus/${existingId}`, data);
@@ -137,7 +139,18 @@ function FocusMode() {
         // make sure component state matches storage
         if (existingId !== sessionId) setSessionId(existingId);
       }
-    } catch (err) {
+      const amount = Math.round(durationSeconds / 60);
+      console.log("amount: ", amount)
+      const res = await axios.put(`http://localhost:5000/api/users/${user.id}/currency`, {amount});
+      console.log("Currency update: ", res.data.user);
+
+      let stored = JSON.parse(localStorage.getItem("user"));
+
+      stored.currency = res.data.user.currency;
+
+      localStorage.setItem("user", JSON.stringify(stored));
+      console.log("Local Currency:", stored.currency);
+          } catch (err) {
       console.error("DB sync error:", err);
     }
   };
@@ -271,6 +284,7 @@ function FocusMode() {
   return (
     <div className="focus-container">
       <h1 className="focus-title">Focus Mode</h1>
+      <h3>Complete Focus Sessions to earn coins!</h3>
 
       <div className="settings-cardf">
         <label className="settings-label">Session Length:</label>

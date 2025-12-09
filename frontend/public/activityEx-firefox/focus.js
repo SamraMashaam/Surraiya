@@ -11,22 +11,50 @@ console.log('Blocked site:', blockedSite);
 
 document.getElementById('siteName').textContent = blockedSite;
 
-document.getElementById('dashboardBtn').addEventListener('click', function() {
-  console.log('Dashboard button clicked');
-  window.location.href = 'http://localhost:3000';
-});
+let countdownInterval = null;
+let remainingSeconds = 60;
 
-document.getElementById('unblockBtn').addEventListener('click', async function() {
-  console.log('Unblock button clicked for:', blockedSite);
-  
-  if (!confirm(`Are you sure you want to unblock ${blockedSite}?`)) {
-    console.log('User cancelled unblock');
-    return;
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function showCountdown() {
+  document.getElementById('mainButtons').classList.add('hidden');
+  document.getElementById('countdownContainer').classList.remove('hidden');
+  remainingSeconds = 60;
+  document.getElementById('countdownTimer').textContent = formatTime(remainingSeconds);
+  startCountdown();
+}
+
+function hideCountdown() {
+  document.getElementById('mainButtons').classList.remove('hidden');
+  document.getElementById('countdownContainer').classList.add('hidden');
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
   }
+}
+
+function startCountdown() {
+  countdownInterval = setInterval(() => {
+    remainingSeconds--;
+    document.getElementById('countdownTimer').textContent = formatTime(remainingSeconds);
+    
+    if (remainingSeconds <= 0) {
+      clearInterval(countdownInterval);
+      performUnblock();
+    }
+  }, 1000);
+}
+
+async function performUnblock() {
+  console.log('Performing unblock for:', blockedSite);
   
-  const btn = document.getElementById('unblockBtn');
-  btn.disabled = true;
-  btn.textContent = 'Unblocking...';
+  const cancelBtn = document.getElementById('cancelBtn');
+  cancelBtn.disabled = true;
+  cancelBtn.textContent = 'Unblocking...';
   
   try {
     console.log('Sending DELETE request to:', `${API_URL}/${encodeURIComponent(blockedSite)}`);
@@ -39,23 +67,38 @@ document.getElementById('unblockBtn').addEventListener('click', async function()
     if (res.ok) {
       chrome.runtime.sendMessage({ action: 'syncBlocklist' }, function(response) {
         console.log('Sync triggered:', response);
-        alert(`${blockedSite} has been unblocked!`);
-        window.location.href = `https://${blockedSite}`;
       });
       alert(`${blockedSite} has been unblocked!`);
       console.log('Redirecting to:', `https://${blockedSite}`);
       window.location.href = `https://${blockedSite}`;
     } else {
       alert('Failed to unblock site. Please try again.');
-      btn.disabled = false;
-      btn.textContent = 'Unblock site';
+      hideCountdown();
+      cancelBtn.disabled = false;
+      cancelBtn.textContent = 'Cancel Unblock';
     }
   } catch (err) {
     console.error('Error unblocking site:', err);
     alert('Failed to unblock site. Please try again.');
-    btn.disabled = false;
-    btn.textContent = 'Unblock site';
+    hideCountdown();
+    cancelBtn.disabled = false;
+    cancelBtn.textContent = 'Cancel Unblock';
   }
+}
+
+document.getElementById('dashboardBtn').addEventListener('click', function() {
+  console.log('Dashboard button clicked');
+  window.location.href = 'http://localhost:3000';
+});
+
+document.getElementById('unblockBtn').addEventListener('click', function() {
+  console.log('Unblock button clicked for:', blockedSite);
+  showCountdown();
+});
+
+document.getElementById('cancelBtn').addEventListener('click', function() {
+  console.log('Cancel button clicked');
+  hideCountdown();
 });
 
 console.log('Event listeners attached');
