@@ -107,7 +107,13 @@ export default function IdeaParkingLot() {
           <p className="empty-msg">No ideas yet. Start writing!</p>
         ) : (
           ideas.map(idea => (
-            <div className="idea-item" key={idea._id}>
+            <div style={{
+      background: '#111827',
+      borderRadius: '0.75rem',
+      padding: '2rem',
+      border: '2px solid #34d399',
+      color: 'white'
+    }} className="idea-item" key={idea._id}>
 
               {editingId === idea._id ? (
                 <>

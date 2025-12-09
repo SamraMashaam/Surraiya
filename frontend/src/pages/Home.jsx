@@ -94,6 +94,7 @@ const Home = () => {
             <a href="/shop" className="nav-link">Pet Shop</a>
             <a href="/idea" className="nav-link">Idea Parking Lot</a>
             <a href="/task" className="nav-link">Tasks</a>
+            <a href="/mood" className="nav-link">Mood Journal</a>
             <a href="/help" className="nav-link">Help</a>
             
           </nav>

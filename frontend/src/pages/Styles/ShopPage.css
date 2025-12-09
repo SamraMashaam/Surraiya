@@ -45,9 +45,9 @@
 
 /* Product Card */
 .shop-item {
-  background: #7bdbb5;
+  background: #111827;
   padding: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid #34d399;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
   text-align: center;
   transition: all 0.25s ease;
@@ -94,13 +94,14 @@
 button {
   padding: 12px 30px;
   font-size: 16px;
-  background-color: #1f2937;
+  background-color: #2a3b52;
   color: #23dfa0;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.button:hover {
-  background-color: #151c27;
+button:hover {
+  color: #2a3b52;
+  background-color: #23dfa0;
 }

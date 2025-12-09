@@ -13,6 +13,7 @@ import ActivityTracker from "./pages/ActivityTracker";
 import VirtualPet from "./pages/VirtualPet";
 import ShopPage from "./pages/ShopPage";
 import IdeaParkingLot from "./pages/IdeaParkingLot";
+import MoodPage from "./pages/MoodPage";
 import Task from "./pages/Task";
 
 
@@ -50,6 +51,7 @@ function App() {
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/idea" element={<IdeaParkingLot />} />
         <Route path="/task" element={<Task />} />
+        <Route path="/mood" element={<MoodPage />} />
       </Routes>
     </Router>
     <VirtualPet />

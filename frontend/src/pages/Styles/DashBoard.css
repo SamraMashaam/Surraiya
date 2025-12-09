@@ -1,7 +1,7 @@
 /* Container layout */
 .dashboard {
   display: flex;
-  height: 100vh;
+  overflow-y: auto;
   font-family: Arial, sans-serif;
   background-color:  #1f2937;
   color: #333;
@@ -20,7 +20,6 @@
 
 .profile {
   text-align: center;
-  margin-bottom: 30px;
 }
 
 .profile-img {
@@ -46,7 +45,8 @@
 .menu li {
   padding: 12px;
   margin: 8px 0;
-  background-color: #e8f0fe;
+  background: #111827;
+  color: #34d399;
   text-align: center;
   cursor: pointer;
   transition: background 0.2s;
@@ -54,13 +54,14 @@
 
 .menu li:hover {
   background-color: #d0e1fd;
+  color: #111827;
 }
 
 /* Main content */
 .main-content {
   flex: 1;
   padding: 40px;
-  overflow-y: auto;
+
 }
 
 .welcome {
