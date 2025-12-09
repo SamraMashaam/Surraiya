@@ -152,7 +152,7 @@ export const updateCurrency = async (req, res) => {
     const user = await User.findById(req.params.userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    user.currency = req.body.amount;
+    user.currency = user.currency + req.body.amount;
     await user.save();
 
     res.json({ message: "Currency updated", user });
