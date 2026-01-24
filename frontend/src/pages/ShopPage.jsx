@@ -15,7 +15,6 @@ export default function ShopPage() {
   };
 
 
-  /* ------------------- LOAD USER ------------------- */
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (!storedUser) {
@@ -59,7 +58,7 @@ export default function ShopPage() {
     fetchUser();
   }, [navigate]);
 
-  /* ------------------- STATIC SPRITES ------------------- */
+
   useEffect(() => {
     setPets([
       "cat_white.png",
@@ -87,7 +86,6 @@ export default function ShopPage() {
   console.log("ID ",storedUser.petID);
   const userHasPet = storedUser.petID != null;
 
-  /* ------------------- HELPERS ------------------- */
   const getAccessoryNode = (filename) => {
     if (filename.startsWith("hat_")) return "head";
     if (filename.startsWith("bow_")) return "neck";
@@ -115,7 +113,7 @@ export default function ShopPage() {
 
         // update localStorage
         localStorage.setItem("user", JSON.stringify({
-          ...JSON.parse(localStorage.getItem("user")), // keep other fields like name, email
+          ...JSON.parse(localStorage.getItem("user")), 
           petID: updatedUser.petId,
           currency: updatedUser.currency
         }));
@@ -141,7 +139,6 @@ export default function ShopPage() {
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      // update React state
       setUser(prev => {
         const updatedUser = { 
           ...prev, 
@@ -151,7 +148,7 @@ export default function ShopPage() {
 
         // update localStorage
         localStorage.setItem("user", JSON.stringify({
-          ...JSON.parse(localStorage.getItem("user")), // keep other fields like name, email
+          ...JSON.parse(localStorage.getItem("user")), 
           petID: updatedUser.petId,
           currency: updatedUser.currency
         }));
@@ -227,7 +224,6 @@ export default function ShopPage() {
     }
   };
 
-  /* ------------------- RENDER ------------------- */
   const renderPetItem = (petSprite) => {
     const isActivePet = userHasPet && pet?.baseSprite === petSprite;
     const price = userHasPet ? 250 : 0;
@@ -249,10 +245,8 @@ export default function ShopPage() {
 
   const renderAccessoryItem = (acc) => {
     const node = getAccessoryNode(acc);
-    // FIXED: pet.ownedAccessories is an object → check inside correct category
     const owns = pet?.ownedAccessories?.[node]?.includes(acc);
 
-    // Equipped means the active equippedAccessories for that node matches
     const equipped = pet?.equippedAccessories?.[node]?.includes(acc);
     return (
       <div className="shop-item" key={acc}>

@@ -14,7 +14,6 @@ import VirtualPet from "./pages/VirtualPet";
 import ShopPage from "./pages/ShopPage";
 import IdeaParkingLot from "./pages/IdeaParkingLot";
 import MoodPage from "./pages/MoodPage";
-import Task from "./pages/Task";
 
 
 function App() {
@@ -50,7 +49,6 @@ function App() {
         <Route path="/activity" element={<ActivityTracker />} />
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/idea" element={<IdeaParkingLot />} />
-        <Route path="/task" element={<Task />} />
         <Route path="/mood" element={<MoodPage />} />
       </Routes>
     </Router>

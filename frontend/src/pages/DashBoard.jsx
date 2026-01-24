@@ -83,9 +83,6 @@ function DashBoard() {
   const handleMood = () => {
     navigate("/mood")
   };
-  const handleTask = () => {
-    navigate("/task")
-  };
 
   if (!user) return null;
 
@@ -106,7 +103,6 @@ function DashBoard() {
           <li onClick={handleTracker}>Activity Tracker</li>
           <li onClick={handleShop}>Pet Shop</li>
           <li onClick={handleIdea}>Idea Parking Lot</li>
-          <li onClick={handleTask}>Task Manager</li>
           <li onClick={handleMood}>Mood Journal</li>
           <li onClick={handleSetting}>Settings</li>
           <li onClick={handleHome}>Home</li>

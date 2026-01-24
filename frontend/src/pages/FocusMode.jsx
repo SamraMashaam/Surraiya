@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import "./Styles/FocusMode.css";
+import { useNavigate } from "react-router-dom";
 
 function FocusMode() {
     useEffect(() => {
@@ -19,6 +20,11 @@ function FocusMode() {
   const [cycleCount, setCycleCount] = useState(saved?.cycleCount || 0);
   const [startTime, setStartTime] = useState(saved?.startTime ? new Date(saved.startTime) : null);
   const [duration, setDuration] = useState(saved?.duration || workLength * 60);
+  const [ideas, setIdeas] = useState([]);
+  const [newIdea, setNewIdea] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editingText, setEditingText] = useState("");
+  const navigate = useNavigate();
 
   const [timeLeft, setTimeLeft] = useState(() => {
     if (!saved?.startTime) return duration;
@@ -281,62 +287,202 @@ function FocusMode() {
 
   const progress = ((duration - timeLeft) / duration) * 100;
 
-  return (
-    <div className="focus-container">
-      <h1 className="focus-title">Focus Mode</h1>
-      <h3>Complete Focus Sessions to earn coins!</h3>
+  const user1 = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    if (!user1) {
+      navigate("/login");
+      return;
+    }
 
-      <div className="settings-cardf">
-        <label className="settings-label">Session Length:</label>
-        <select value={workLength} onChange={handleWorkLengthChange} className="settings-select">
-          <option value={2}>2 min</option>
-          <option value={15}>15 min</option>
-          <option value={20}>20 min</option>
-          <option value={25}>25 min</option>
-          <option value={30}>30 min</option>
-          <option value={45}>45 min</option>
-          <option value={60}>60 min</option>
-        </select>
-        <p className="settings-subtext">
-          Short Break: {shortBreakLength} min | Long Break: {longBreakLength} min
+    async function loadIdeas() {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/tasks/${user1.id}`);
+        setIdeas(res.data.tasks);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadIdeas();
+  }, [user1]);
+
+
+  async function addIdea() {
+    if (newIdea.trim() === "") return;
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/tasks", {
+        userId: user1.id,
+        text: newIdea
+      });
+
+      setIdeas(prev => [res.data.task, ...prev]);
+      setNewIdea("");
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function deleteIdea(id) {
+    try {
+        await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+        setIdeas(prev => prev.filter(i => i._id !== id));
+        const amount = 5;
+        console.log("amount: ", amount)
+        const res = await axios.put(`http://localhost:5000/api/users/${user1.id}/currency`, {amount});
+        console.log("task Currency update: ", res.data.user);
+      
+        let stored = JSON.parse(localStorage.getItem("user"));
+    
+        stored.currency = res.data.user.currency;
+      
+        localStorage.setItem("user", JSON.stringify(stored));
+        console.log("Local task Currency:", stored.currency);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+
+  function startEditing(idea) {
+    setEditingId(idea._id);
+    setEditingText(idea.text);
+  }
+
+
+  async function saveEdit() {
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/tasks/${editingId}`,
+        { text: editingText }
+      );
+
+      setIdeas(prev =>
+        prev.map(i => (i._id === editingId ? res.data.task : i))
+      );
+
+      setEditingId(null);
+      setEditingText("");
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  return (
+    <div className="page-wrapper">
+      {/* LEFT SIDE - Timer */}
+      <div className="focus-container">
+        <h1 className="focus-title">Focus Mode</h1>
+        <h3>Complete Focus Sessions to earn coins!</h3>
+        <div className="settings-cardf">
+          <label className="settings-label">Session Length:</label>
+          <select value={workLength} onChange={handleWorkLengthChange} className="settings-select">
+            <option value={2}>2 min</option>
+            <option value={15}>15 min</option>
+            <option value={20}>20 min</option>
+            <option value={25}>25 min</option>
+            <option value={30}>30 min</option>
+            <option value={45}>45 min</option>
+            <option value={60}>60 min</option>
+          </select>
+          <p className="settings-subtext">
+            Short Break: {shortBreakLength} min | Long Break: {longBreakLength} min
+          </p>
+        </div>
+        <div
+          className="timer-circle"
+          style={{
+            "--fill": `${progress}%`,
+            "--liquid-color": colors[mode],
+            "--glow-color": colors[mode],
+            borderColor: colors[mode],
+            boxShadow: `0 0 20px 4px ${colors[mode]}55`,
+          }}
+        >
+          <span className="timer-text">{formatTime(timeLeft)}</span>
+        </div>
+        <h2 className="mode-label" style={{ color: colors[mode] }}>
+          {mode === "work" ? "Focus Time" : mode === "shortBreak" ? "Short Break" : 
+          mode === "longBreak" ? "Long Break" : "Timer Off"}
+        </h2>
+        <div className="controls">
+          <button
+            onClick={handleStartPause}
+            className="btn"
+            style={{ background: colors[mode] }}
+          >
+            {isRunning ? "Pause" : "Start"}
+          </button>
+          <button onClick={handleReset} className="btn reset-btn">
+            Reset
+          </button>
+        </div>
+        <p className="cycle-info">
+          Completed cycles: {cycleCount} <br />
+          Current Pomodoro: {(cycleCount % 4) + 1} of 4
         </p>
       </div>
 
-      <div
-        className="timer-circle"
-        style={{
-          "--fill": `${progress}%`,
-          "--liquid-color": colors[mode],
-          "--glow-color": colors[mode],
-          borderColor: colors[mode],
-          boxShadow: `0 0 20px 4px ${colors[mode]}55`,
-        }}
-      >
-        <span className="timer-text">{formatTime(timeLeft)}</span>
+      {/* RIGHT SIDE - Tasks */}
+      <div className="idea-body">
+        <div className="idea-container">
+          <h1 className="idea-title">What's The Agenda?</h1>
+          <h3 className="idea-title">Complete tasks on time to earn coins!</h3>
+          {/* Input Bar */}
+          <div className="idea-input-box">
+            <textarea
+              value={newIdea}
+              onChange={(e) => setNewIdea(e.target.value)}
+              placeholder="I should..."
+            />
+            <button className="add-btn" onClick={addIdea}>Add Task</button>
+          </div>
+          {/* Ideas List */}
+          <div style={{
+            background: '#111827',
+            borderRadius: '0.75rem',
+            padding: '2rem',
+            border: '1px solid #34d399',
+            color: 'white'
+          }} className="idea-list">
+            {ideas.length === 0 ? (
+              <p className="empty-msg">No tasks set yet</p>
+            ) : (
+              ideas.map(idea => (
+                <div className="idea-item" key={idea._id}>
+                  {editingId === idea._id ? (
+                    <>
+                      <textarea
+                        className="edit-box"
+                        value={editingText}
+                        onChange={(e) => setEditingText(e.target.value)}
+                      />
+                      <button className="save-btn" onClick={saveEdit}>Save</button>
+                      <button className="cancel-btn" onClick={() => setEditingId(null)}>
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="idea-text">{idea.text}</p>
+                      <div className="idea-actions">
+                        <button className="edit-btn" onClick={() => startEditing(idea)}>
+                          Edit
+                        </button>
+                        <button className="delete-btn" onClick={() => deleteIdea(idea._id)}>
+                          Task Complete
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
-
-      <h2 className="mode-label" style={{ color: colors[mode] }}>
-        {mode === "work" ? "Focus Time" : mode === "shortBreak" ? "Short Break" : 
-        mode === "longBreak" ? "Long Break" : "Timer Off"}
-      </h2>
-
-      <div className="controls">
-        <button
-          onClick={handleStartPause}
-          className="btn"
-          style={{ background: colors[mode] }}
-        >
-          {isRunning ? "Pause" : "Start"}
-        </button>
-        <button onClick={handleReset} className="btn reset-btn">
-          Reset
-        </button>
-      </div>
-
-      <p className="cycle-info">
-        Completed cycles: {cycleCount} <br />
-        Current Pomodoro: {(cycleCount % 4) + 1} of 4
-      </p>
     </div>
   );
 }

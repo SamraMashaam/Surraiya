@@ -8,9 +8,6 @@ export default function VirtualPet() {
   const [pet, setPet] = useState(null);
   const [sparkle, setSparkle] = useState(false);
 
-  /* --------------------------------------------------------
-      LOAD petTypes.json (sprite metadata)
-  ---------------------------------------------------------*/
   useEffect(() => {
     fetch("/pets/petTypes.json")
       .then(res => res.json())
@@ -18,9 +15,7 @@ export default function VirtualPet() {
       .catch(err => console.error(err));
   }, []);
 
-  /* --------------------------------------------------------
-      FETCH USER → then fetch their PET
-  ---------------------------------------------------------*/
+
   useEffect(() => {
     async function loadUserPet() {
       try {
@@ -69,9 +64,6 @@ export default function VirtualPet() {
     height: typeMeta.height || 200
   };
 
-  /* --------------------------------------------------------
-      RENDER ACCESSORIES (head, neck, tail)
-  ---------------------------------------------------------*/
   function renderAccessory(category) {
     const list = pet[category];
     if (!list || list.length === 0) return null;
@@ -97,9 +89,7 @@ export default function VirtualPet() {
     ));
   }
 
-  /* --------------------------------------------------------
-      JSX OUTPUT
-  ---------------------------------------------------------*/
+
   return (
     <div className="virtual-pet-wrapper" style={{ width: containerSize.width, height: containerSize.height }}>
       <div className="virtual-pet-container" style={{ width: containerSize.width, height: containerSize.height }}>
