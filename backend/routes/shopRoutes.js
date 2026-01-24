@@ -4,7 +4,6 @@ import Pet from "../models/Pet.js";
 
 const router = express.Router();
 
-/* -------------------- Helper: Cost Logic -------------------- */
 function getPetCost(user) {
   return user.petID ? 250 : 0; // first pet → free
 }
@@ -20,7 +19,6 @@ function getAccessoryNode(filename) {
 }
 
 
-/* -------------------- BUY PET -------------------- */
 router.post("/buy/pet", async (req, res) => {
   try {
     const { userId, petType, baseSprite } = req.body;
@@ -28,7 +26,6 @@ router.post("/buy/pet", async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Cost depends on whether user already has a pet
     const cost = getPetCost(user);
     console.log("cost: ",cost);
 
@@ -36,7 +33,6 @@ router.post("/buy/pet", async (req, res) => {
       return res.status(400).json({ error: "Not enough coins" });
     }
 
-    // Deduct currency (unless cost is zero)
     user.currency -= cost;
 
     let pet;
@@ -52,7 +48,6 @@ router.post("/buy/pet", async (req, res) => {
       user.petID = pet._id;
       await user.save();
     } else {
-      // User already has a pet → update existing
       pet = await Pet.findByIdAndUpdate(
         user.petID,
         { petType, baseSprite },
@@ -100,7 +95,6 @@ router.post("/equip/pet", async (req, res) => {
   }
 });
 
-/* -------------------- BUY ACCESSORY -------------------- */
 router.post("/buy/accessory", async (req, res) => {
   try {
     const { userId, accessory } = req.body;
@@ -113,7 +107,6 @@ router.post("/buy/accessory", async (req, res) => {
 
     const cost = getAccessoryCost();
 
-    // Determine which category it belongs to → head, neck, or tail
     const category = getAccessoryNode(accessory);
 
     // Check if already owned
@@ -148,7 +141,6 @@ router.post("/buy/accessory", async (req, res) => {
 });
 
 
-/* -------------------- EQUIP ACCESSORY -------------------- */
 router.post("/equip/accessory/:petId", async (req, res) => {
   try {
     const { userId, accessory } = req.body;
@@ -184,7 +176,6 @@ router.post("/equip/accessory/:petId", async (req, res) => {
   }
 });
 
-/* -------------------- UNEQUIP ACCESSORY -------------------- */
 router.post("/unequip/accessory/:petId", async (req, res) => {
   try {
     const { accessory } = req.body;
@@ -217,8 +208,6 @@ router.post("/unequip/accessory/:petId", async (req, res) => {
   }
 });
 
-/* -------------------- GET SHOP DATA (recommended) -------------------- */
-// frontend can use this to know what is owned, equipped, coin count, etc.
 router.get("/status/:userId", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId).populate("petId");

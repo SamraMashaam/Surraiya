@@ -2,9 +2,7 @@ import express from "express";
 const router = express.Router();
 import Idea from "../models/Idea.js";
 
-/* ------------------------------
-    CREATE NEW IDEA
---------------------------------*/
+
 router.post("/", async (req, res) => {
   try {
     const { userId, text } = req.body;
@@ -22,9 +20,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-/* ------------------------------
-    GET IDEAS FOR A USER
---------------------------------*/
+
 router.get("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -38,9 +34,7 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-/* ------------------------------
-    DELETE AN IDEA
---------------------------------*/
+
 router.delete("/:ideaId", async (req, res) => {
   try {
     const { ideaId } = req.params;
@@ -54,9 +48,7 @@ router.delete("/:ideaId", async (req, res) => {
   }
 });
 
-/* ------------------------------
-    EDIT / UPDATE IDEA TEXT
---------------------------------*/
+
 router.put("/:ideaId", async (req, res) => {
   try {
     const { ideaId } = req.params;

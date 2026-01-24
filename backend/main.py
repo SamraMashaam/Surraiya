@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017/")
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URL)
 db = client.mood_journal
 entries_collection = db.entries
