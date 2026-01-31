@@ -151,13 +151,11 @@ h3{
 }
 
 .idea-body {
-  flex: 1;
+  flex: 0.5;
   background: linear-gradient(to bottom, #1f2937 55%, #10b981 100%) !important;
-  color: white;
   position: relative;
   overflow: hidden;
   padding: 20px;
-  border-left: #32dba3 2px solid;
 }
 
 .idea-body h3 {
@@ -207,6 +205,7 @@ h3{
 
 .add-btn:hover {
   background: #2f855a;
+  color: white;
 }
 
 .idea-list {
@@ -219,18 +218,17 @@ h3{
 }
 
 .idea-item {
-  background: #2a3a50;
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 8px;
   display: flex;
-  color: #e1f3f2;
   flex-direction: column;
 }
 
 .idea-text {
   margin-bottom: 10px;
   font-size: 16px;
+  color: #27395c;
 }
 
 .idea-actions {
@@ -252,9 +250,17 @@ h3{
   background: #1a9260;
   color: white;
 }
+.edit-btn:hover {
+  background: #116341;
+  color: white;
+}
 
 .delete-btn {
   background: #e53e3e;
+  color: white;
+}
+.delete-btn:hover {
+  background: #992525;
   color: white;
 }
 
@@ -262,9 +268,17 @@ h3{
   background: #38a169;
   color: white;
 }
+.save-btn:hover {
+  background: #2c8355;
+  color: white;
+}
 
 .cancel-btn {
   background: #718096;
+  color: white;
+}
+.cancel-btn:hover {
+  background: #434d5c;
   color: white;
 }
 

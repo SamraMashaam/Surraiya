@@ -25,7 +25,6 @@ function FocusMode() {
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
   const navigate = useNavigate();
-
   const [timeLeft, setTimeLeft] = useState(() => {
     if (!saved?.startTime) return duration;
     const elapsed = (Date.now() - new Date(saved.startTime)) / 1000;
@@ -38,6 +37,7 @@ function FocusMode() {
   const [sessionId, setSessionId] = useState(storedActiveId || uuidv4());
 
   const timerRef = useRef(null);
+  const notificationsSent = useRef({ fifty: false, ninety: false });
 
   // --- Restore user ---
   useEffect(() => {
@@ -85,6 +85,21 @@ function FocusMode() {
       const elapsed = (Date.now() - startTime.getTime()) / 1000;
       const remaining = Math.max(duration - elapsed, 0);
       setTimeLeft(remaining);
+
+      const progressPercent = ((duration - remaining) / duration) * 100;
+      if (mode === "work") {
+        // 50% notification
+        if (progressPercent >= 50 && !notificationsSent.current.fifty) {
+          sendProgressNotification(50);
+          notificationsSent.current.fifty = true;
+        }
+        
+        // 90% notification
+        if (progressPercent >= 90 && !notificationsSent.current.ninety) {
+          sendProgressNotification(90);
+          notificationsSent.current.ninety = true;
+        }
+      }
 
       if (remaining <= 0) {
         clearInterval(timerRef.current);
@@ -170,49 +185,89 @@ function FocusMode() {
     }
   };
 
-  const handleSessionEnd = async () => {
-    await saveSessionToDB(duration, true);
+  const sendProgressNotification = (percentage) => {
+    let message = "";
     
-    setIsRunning(false);
+    if (percentage === 50) {
+      const messages = [
+        "Halfway there! You're doing amazing!",
+        "50% complete! Keep up the great work!",
+        "You're crushing it! Halfway done!",
+        "Nice progress! You're halfway through!",
+        "Keep that momentum going! Half done!"
+      ];
+      message = messages[Math.floor(Math.random() * messages.length)];
+    } else if (percentage === 90) {
+      const messages = [
+        "Almost there! Just a few more minutes!",
+        "90% done! You've got this!",
+        "Final stretch! Stay focused!",
+        "So close! Finish strong!",
+        "Nearly complete! Keep pushing!"
+      ];
+      message = messages[Math.floor(Math.random() * messages.length)];
+    }
+    
+    if (message) {
+      sendNotification(message);
+    }
+  };
 
-    if (mode === "work") {
-      const newCycle = cycleCount + 1;
-      setCycleCount(newCycle);
+const handleSessionEnd = async () => {
+  await saveSessionToDB(duration, true);
+  
+  setIsRunning(false);
 
-      let nextMode, nextDuration;
-      if (newCycle % 4 === 0) {
-        nextMode = "longBreak";
-        nextDuration = longBreakLength * 60;
-        sendNotification("Work complete! Time for a long break.");
-      } else {
-        nextMode = "shortBreak";
-        nextDuration = shortBreakLength * 60;
-        sendNotification("Work complete! Time for a short break.");
-      }
+  if (mode === "work") {
+    const newCycle = cycleCount + 1;
+    setCycleCount(newCycle);
 
-      setMode(nextMode);
-      setDuration(nextDuration);
-      setTimeLeft(nextDuration);
+    let nextMode, nextDuration;
+    if (newCycle % 4 === 0) {
+      nextMode = "longBreak";
+      nextDuration = longBreakLength * 60;
+      sendNotification("Work complete! Time for a long break.");
     } else {
-      // After finishing long break cycle, turn off mode
-      if (cycleCount + 1 >= 4) {
-        setIsRunning(false);
-        setCycleCount(0);
-        setStartTime(null);
-        setMode("off");
-        sendNotification("All cycles complete, Great job!"); 
-        localStorage.removeItem("activeSessionId");
-      } else {
-        setMode("work");
-        sendNotification("Break over! Back to work.");
-      }
-      setDuration(workLength * 60);
-      setTimeLeft(workLength * 60);
-      
+      nextMode = "shortBreak";
+      nextDuration = shortBreakLength * 60;
+      sendNotification("Work complete! Time for a short break.");
     }
 
-    setStartTime(null);
-  };
+    setMode(nextMode);
+    setDuration(nextDuration);
+    setTimeLeft(nextDuration);
+    
+    // AUTO-START THE BREAK TIMER
+    const now = new Date();
+    setStartTime(now);
+    setIsRunning(true);
+    notificationsSent.current = { fifty: false, ninety: false }; // Reset notification flags
+    
+  } else {
+    // After finishing break
+    if (mode === "longBreak") {
+      // After long break, complete the cycle
+      setIsRunning(false);
+      setCycleCount(0);
+      setStartTime(null);
+      setMode("off");
+      sendNotification("All cycles complete, Great job!"); 
+      localStorage.removeItem("activeSessionId");
+    } else {
+      // After short break, go back to work
+      setMode("work");
+      setDuration(workLength * 60);
+      setTimeLeft(workLength * 60);
+      sendNotification("Break over! Back to work.");
+      
+      // AUTO-START THE NEXT WORK TIMER
+      const now = new Date();
+      setStartTime(now);
+      setIsRunning(true);
+      notificationsSent.current = { fifty: false, ninety: false }; // Reset notification flags
+    }
+  }
+};
 
   const handleStartPause = () => {
     if (isRunning) {
@@ -238,6 +293,7 @@ function FocusMode() {
       setStartTime(now);
     }
     setIsRunning(true);
+    notificationsSent.current = { fifty: false, ninety: false };
   };
 
 
@@ -255,6 +311,7 @@ function FocusMode() {
     setStartTime(null);
     setDuration(workLength * 60);
     setTimeLeft(workLength * 60);
+    notificationsSent.current = { fifty: false, ninety: false };
   };
 
   const handleWorkLengthChange = (e) => {
@@ -440,22 +497,21 @@ function FocusMode() {
             <button className="add-btn" onClick={addIdea}>Add Task</button>
           </div>
           {/* Ideas List */}
-          <div style={{
-            background: '#111827',
-            borderRadius: '0.75rem',
-            padding: '2rem',
-            border: '1px solid #34d399',
-            color: 'white'
-          }} className="idea-list">
+          <div className="idea-list">
             {ideas.length === 0 ? (
               <p className="empty-msg">No tasks set yet</p>
             ) : (
               ideas.map(idea => (
-                <div className="idea-item" key={idea._id}>
+                <div className="idea-item" style={{
+                  backgroundColor: '#56af86'
+                }} key={idea._id}>
                   {editingId === idea._id ? (
                     <>
                       <textarea
                         className="edit-box"
+                        style={{
+                          width: '95%'
+                        }}
                         value={editingText}
                         onChange={(e) => setEditingText(e.target.value)}
                       />
