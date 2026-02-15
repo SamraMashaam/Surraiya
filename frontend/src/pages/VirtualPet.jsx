@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import "./Styles/VirtualPet.css";
 import axios from "axios";
 
-export default function VirtualPet() {
+export default function VirtualPet({ pet, user }) {
+  console.log("VirtualPet received pet:", pet);
   const [petTypes, setPetTypes] = useState(null);
-  const [user, setUser] = useState(null);
-  const [pet, setPet] = useState(null);
   const [sparkle, setSparkle] = useState(false);
 
   useEffect(() => {
@@ -16,37 +15,37 @@ export default function VirtualPet() {
   }, []);
 
 
-  useEffect(() => {
-    async function loadUserPet() {
-      try {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        if (storedUser == null) return;
-        const userRes = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
-        const currentUser = userRes.data;
-        setUser(currentUser);
+  // useEffect(() => {
+  //   async function loadUserPet() {
+  //     try {
+  //       const storedUser = JSON.parse(localStorage.getItem("user"));
+  //       if (storedUser == null) return;
+  //       const userRes = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
+  //       const currentUser = userRes.data;
+  //       setUser(currentUser);
 
-        if (!currentUser.petID) {
-          console.log("User has no pet yet");
-          return;
-        }
+  //       if (!currentUser.petID) {
+  //         console.log("User has no pet yet");
+  //         return;
+  //       }
 
-        const petRes = await axios.get(`http://localhost:5000/api/pets/${currentUser.petID._id}`);
-        const petData = petRes.data;
+  //       const petRes = await axios.get(`http://localhost:5000/api/pets/${currentUser.petID._id}`);
+  //       const petData = petRes.data;
 
-        // Add equippedAccessories as top-level arrays for easier rendering
-        setPet({
-          ...petData,
-          head: petData.equippedAccessories?.head || [],
-          neck: petData.equippedAccessories?.neck || [],
-          tail: petData.equippedAccessories?.tail || [],
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
+  //       // Add equippedAccessories as top-level arrays for easier rendering
+  //       setPet({
+  //         ...petData,
+  //         head: petData.equippedAccessories?.head || [],
+  //         neck: petData.equippedAccessories?.neck || [],
+  //         tail: petData.equippedAccessories?.tail || [],
+  //       });
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   }
 
-    loadUserPet();
-  }, []);
+  //   loadUserPet();
+  // }, []);
 
   if (!petTypes) return null;
 
@@ -64,30 +63,30 @@ export default function VirtualPet() {
     height: typeMeta.height || 200
   };
 
-  function renderAccessory(category) {
-    const list = pet[category];
-    if (!list || list.length === 0) return null;
-
-    const node = typeMeta.nodes?.[category];
-    if (!node) return null;
-
-    return list.map((sprite, i) => (
-      <img
-        key={`${category}-${i}`}
-        src={`/pets/${sprite}`}
-        alt={sprite}
-        className="virtual-pet-accessory"
-        style={{
-          position: "absolute",
-          left: node.x,
-          top: node.y,
-          height: "75px",
-          pointerEvents: "none",
-        }}
-        draggable={false}
-      />
-    ));
-  }
+function renderAccessory(category) {
+  const list = pet.equippedAccessories?.[category] || [];
+  if (!list || list.length === 0) return null;
+  
+  const node = typeMeta.nodes?.[category];
+  if (!node) return null;
+  
+  return list.map((sprite, i) => (
+    <img
+      key={`${category}-${i}`}
+      src={`/pets/${sprite}`}
+      alt={sprite}
+      className="virtual-pet-accessory"
+      style={{
+        position: "absolute",
+        left: node.x,
+        top: node.y,
+        height: "75px",
+        pointerEvents: "none",
+      }}
+      draggable={false}
+    />
+  ));
+}
 
 
   return (

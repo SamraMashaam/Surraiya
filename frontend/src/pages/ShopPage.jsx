@@ -3,16 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Styles/ShopPage.css";
 
-export default function ShopPage() {
-  const [user, setUser] = useState(null);
-  const [pet, setPet] = useState(null); // user's active pet
+export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser, pet, user }) {
   const [pets, setPets] = useState([]);
   const [accessories, setAccessories] = useState([]);
   const navigate = useNavigate();
-
-  const forceReloadPet = () => {
-    window.location.reload();
-  };
 
 
   useEffect(() => {
@@ -27,16 +21,16 @@ export default function ShopPage() {
         const res = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
         const data = res.data;
         console.log("data: ", data);
-        if(data.petID){
-          setUser({
+        
+         if(data.petID){
+          setGlobalUser({
             _id: data._id,
             currency: data.currency || 0,
             petId: data.petID._id,
             ownedAccessories: data.ownedAccessories || []
-        });
-        }
-        else{
-          setUser({
+          });
+        } else {
+          setGlobalUser({
             _id: data._id,
             currency: data.currency || 0,
             petId: null,
@@ -44,11 +38,11 @@ export default function ShopPage() {
           });
         }
 
-        // fetch equipped pet if any
+        // Update GLOBAL pet state
         if (data.petID) {
           const petRes = await axios.get(`http://localhost:5000/api/pets/${data.petID._id}`);
-          console.log("curent pet: ", petRes.data)
-          setPet(petRes.data);
+          console.log("Current pet: ", petRes.data);
+          setGlobalPet(petRes.data);
         }
       } catch (err) {
         console.error(err);
@@ -103,8 +97,7 @@ export default function ShopPage() {
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      // update React state
-      setUser(prev => {
+      setGlobalUser(prev => {
         const updatedUser = { 
           ...prev, 
           currency: data.currency, 
@@ -121,9 +114,7 @@ export default function ShopPage() {
         return updatedUser;
       });
 
-      // update pet state
-      setPet(data.pet);
-      forceReloadPet(); 
+      setGlobalPet(data.pet); 
     } catch (err) {
       console.error(err);
     }
@@ -139,26 +130,24 @@ export default function ShopPage() {
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      setUser(prev => {
-        const updatedUser = { 
-          ...prev, 
-          currency: data.currency, 
-          petId: data.pet._id 
-        };
+        setGlobalUser(prev => {
+          const updatedUser = { 
+            ...prev, 
+            currency: data.currency, 
+            petId: data.pet._id 
+          };
 
-        // update localStorage
-        localStorage.setItem("user", JSON.stringify({
-          ...JSON.parse(localStorage.getItem("user")), 
-          petID: updatedUser.petId,
-          currency: updatedUser.currency
-        }));
+          localStorage.setItem("user", JSON.stringify({
+            ...JSON.parse(localStorage.getItem("user")), 
+            petID: updatedUser.petId,
+            currency: updatedUser.currency
+          }));
 
         return updatedUser;
       });
 
       // update pet state
-      setPet(data.pet);
-      forceReloadPet(); 
+      setGlobalPet(data.pet);
     } catch (err) {
       console.error(err);
     }
@@ -174,18 +163,29 @@ export default function ShopPage() {
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      setUser(prev => ({
-        ...prev,
-        currency: data.currency,
-        ownedAccessories: [...(prev.ownedAccessories || []), acc]
-      }));
+      setGlobalUser(prev => {
+          const updatedUser = { 
+            ...prev, 
+            currency: data.currency, 
+            petId: data.pet._id 
+          };
+
+          localStorage.setItem("user", JSON.stringify({
+            ...JSON.parse(localStorage.getItem("user")), 
+            petID: updatedUser.petId,
+            currency: updatedUser.currency
+          }));
+
+        return updatedUser;
+      });
+
       console.log("user:", user);
       const res2 = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${user.petId}`, {
         userId: user._id,
         accessory: acc
       });
       console.log("buy and equip pet: ", res2.data);
-      forceReloadPet(); 
+      setGlobalPet(data.pet); 
     } catch (err) {
       console.error(err);
     }
@@ -201,8 +201,23 @@ export default function ShopPage() {
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      setPet(prev => ({ ...prev, equippedAccessories: data.pet.equippedAccessories }));
-      forceReloadPet(); 
+      setGlobalUser(prev => {
+          const updatedUser = { 
+            ...prev, 
+            currency: data.currency, 
+            petId: data.pet._id 
+          };
+
+          localStorage.setItem("user", JSON.stringify({
+            ...JSON.parse(localStorage.getItem("user")), 
+            petID: updatedUser.petId,
+            currency: updatedUser.currency
+          }));
+
+        return updatedUser;
+      });
+      
+      setGlobalPet(data.pet); 
     } catch (err) {
       console.error(err);
     }
@@ -217,8 +232,8 @@ export default function ShopPage() {
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      setPet(prev => ({ ...prev, equippedAccessories: data.pet.equippedAccessories }));
-      forceReloadPet(); 
+      setGlobalPet(prev => ({ ...prev, equippedAccessories: data.pet.equippedAccessories }));
+      setGlobalPet(data.pet);
     } catch (err) {
       console.error(err);
     }

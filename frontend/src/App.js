@@ -1,6 +1,7 @@
 /* global chrome, browser */
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import DashBoard from "./pages/DashBoard";
 import FocusMode from "./pages/FocusMode";
 import Home from "./pages/Home";
@@ -17,6 +18,8 @@ import MoodPage from "./pages/MoodPage";
 
 
 function App() {
+  const [pet, setPet] = useState(null);
+  const [user, setUser] = useState(null);
   useEffect(() => {
     const stored = localStorage.getItem("user");
     if (!stored) return;
@@ -34,6 +37,34 @@ function App() {
   }, []);
 
 
+  // Load user and pet once at app level
+useEffect(() => {
+  async function loadUserPet() {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (!storedUser) return;
+
+      const userRes = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
+      const currentUser = userRes.data;
+      setUser(currentUser);
+
+      console.log("Current user:", currentUser); 
+
+      if (!currentUser.petID) {
+        console.log("No petID found"); 
+        return;
+      }
+
+      const petRes = await axios.get(`http://localhost:5000/api/pets/${currentUser.petID._id}`);
+      console.log("Loaded pet:", petRes.data); 
+      setPet(petRes.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  loadUserPet();
+}, []);
+
   return (
     <>
     <Router>
@@ -47,12 +78,12 @@ function App() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/help" element={<InstructionsPage />} />
         <Route path="/activity" element={<ActivityTracker />} />
-        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop" element={<ShopPage  pet={pet} setPet={setPet} user={user} setUser={setUser}  />} />
         <Route path="/idea" element={<IdeaParkingLot />} />
         <Route path="/mood" element={<MoodPage />} />
       </Routes>
     </Router>
-    <VirtualPet />
+    <VirtualPet pet={pet} user={user}/>
     </>
   );
 }
