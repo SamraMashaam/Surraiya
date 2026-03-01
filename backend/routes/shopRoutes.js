@@ -46,6 +46,7 @@ router.post("/buy/pet", async (req, res) => {
       });
 
       user.petID = pet._id;
+      user.ownedPets.push(baseSprite);
       await user.save();
     } else {
       pet = await Pet.findByIdAndUpdate(
@@ -53,6 +54,10 @@ router.post("/buy/pet", async (req, res) => {
         { petType, baseSprite },
         { new: true }
       );
+      if (!user.ownedPets.includes(baseSprite)) {
+        user.ownedPets.push(baseSprite);
+      }
+      
       await user.save();
     }
 
@@ -84,6 +89,10 @@ router.post("/equip/pet", async (req, res) => {
         { petType, baseSprite },
         { new: true }
       );
+      if (!user.ownedPets.includes(baseSprite)) {
+        user.ownedPets.push(baseSprite);
+      }
+      await user.save();
     }
     console.log("Pet Equipped: ", pet)
     res.json({

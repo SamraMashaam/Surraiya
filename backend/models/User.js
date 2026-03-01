@@ -15,6 +15,7 @@
 // export default mongoose.model("User", userSchema);
 
 import mongoose from "mongoose";
+import { type } from "os";
 
 const userSchema = new mongoose.Schema({
   userName: { type: String, required: true },
@@ -36,7 +37,7 @@ const userSchema = new mongoose.Schema({
     ref: "Pet",
     default: null, // user may not own a pet yet
   },
-
+  ownedPets: [{ type: String }],
   currency: {
     type: Number,
     default: 0,

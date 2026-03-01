@@ -3,9 +3,7 @@ import {
   createPet,
   getPet,
   updatePet,
-  deletePet,
-  equipAccessory,
-  unequipAccessory
+  deletePet
 } from "../controllers/petController.js";
 
 const router = express.Router();
@@ -21,10 +19,5 @@ router.put("/:id", updatePet);
 
 router.delete("/:id", deletePet);
 
-
-router.post("/:id/equip", equipAccessory);
-
-
-router.post("/:id/unequip", unequipAccessory);
 
 export default router;
