@@ -27,14 +27,14 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
             _id: data._id,
             currency: data.currency || 0,
             petId: data.petID._id,
-            ownedAccessories: data.ownedAccessories || []
+            ownedPets: data.ownedPets || []
           });
         } else {
           setGlobalUser({
             _id: data._id,
             currency: data.currency || 0,
             petId: null,
-            ownedAccessories: data.ownedAccessories || []
+            ownedPets: data.ownedPets || []
           });
         }
 
@@ -133,7 +133,6 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
         setGlobalUser(prev => {
           const updatedUser = { 
             ...prev, 
-            currency: data.currency, 
             petId: data.pet._id 
           };
 
@@ -242,13 +241,17 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
   const renderPetItem = (petSprite) => {
     const isActivePet = userHasPet && pet?.baseSprite === petSprite;
     const price = userHasPet ? 250 : 0;
+    const owned = user?.ownedPets?.includes(petSprite);
 
     return (
       <div className="shop-item" key={petSprite}>
         <img src={`/pets/${petSprite}`} alt={petSprite} />
 
         {isActivePet ? (
-          <button className="equipped-btn" onClick={() => updatePet(petSprite)}>Equipped</button>
+          <button className="equipped-btn">Equipped</button>
+        ) : owned? (
+          <button className="equipped-btn" onClick={() => updatePet(petSprite)}>Equip</button>
+          
         ) : (
           <button className="buy-btn" onClick={() => buyPet(petSprite)}>
             Buy ({price})
