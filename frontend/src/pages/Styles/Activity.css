@@ -4,19 +4,19 @@
 .blocker-container {
   min-height: 100vh;
   padding: 40px 20px;
-  background: linear-gradient(to bottom, #1f2937 55%, #10b981 100%);
-  color: #e5e7eb; /* Light gray text */
+  background: linear-gradient(to bottom, #2e2952 55%, #827397 100%);
+  color: #e9d5da;
 }
 
 /* Main Settings Panel */
 .settings-panel {
   max-width: 900px;
   margin: 0 auto;
-  background-color: #374151; /* Darker gray card */
+  background-color: #4d4c7d;
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  border: 1px solid #4b5563;
+  border: 1px solid #827397;
 }
 
 /* Header */
@@ -28,14 +28,14 @@
 .blocker-title {
   font-size: 3em;
   margin: 0 0 10px 0;
-  background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+  background: linear-gradient(135deg, #f1dbaa 0%, #e9d5da 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .blocker-subtitle {
   font-size: 1.2em;
-  color: #9ca3af; /* Muted text color */
+  color: #e9d5da;
   margin: 0;
 }
 
@@ -56,20 +56,20 @@
 .settings-card {
   padding: 30px;
   border-radius: 15px;
-  background-color: #1f2937; /* Even darker card */
-  border: 2px solid #4b5563;
+  background-color: #2e2952;
+  border: 2px solid #827397;
   margin-bottom: 30px;
 }
 .settings-card h2 {
   margin-top: 0;
   margin-bottom: 15px;
   font-size: 1.8em;
-  color: #a7f3d0; /* Light green accent */
+  color: #f1dbaa;
 }
 .settings-card p {
   margin: 0 0 20px 0;
   font-size: 1em;
-  color: #9ca3af;
+  color: #e9d5da;
 }
 
 /* Status Text */
@@ -77,8 +77,8 @@
   font-weight: bold;
   font-size: 1.3em;
 }
-.status-active { color: #34d399; }
-.status-inactive { color: #9ca3af; }
+.status-active { color: #f1dbaa; }
+.status-inactive { color: #e9d5da; }
 
 /* Flex Containers */
 .flex-container {
@@ -103,16 +103,16 @@
   transform: scale(1.05);
 }
 .btn:disabled {
-  background-color: #4b5563;
+  background-color: #4d4c7d;
   cursor: not-allowed;
   transform: none;
-  color: #9ca3af;
+  color: #e9d5da;
 }
 
-.btn-start { background-color: #10b981; color: white; }
+.btn-start { background-color: #827397; color: white; }
 .btn-stop { background-color: #ef4444; color: white; }
-.btn-update { background-color: #3b82f6; color: white; }
-.btn-add { background-color: #10b981; color: white; }
+.btn-update { background-color: #4d4c7d; color: #f1dbaa; border: 1px solid #f1dbaa; }
+.btn-add { background-color: #827397; color: white; }
 .btn-remove { background-color: #ef4444; color: white; padding: 10px 25px; }
 
 /* Form Elements */
@@ -122,14 +122,14 @@
   padding: 15px;
   font-size: 16px;
   border-radius: 10px;
-  border: 2px solid #4b5563;
-  background-color: #374151;
-  color: #e5e7eb;
+  border: 2px solid #827397;
+  background-color: #4d4c7d;
+  color: #e9d5da;
   outline: none;
   transition: border-color 0.2s;
 }
 .form-input:focus {
-  border-color: #10b981;
+  border-color: #f1dbaa;
 }
 
 .form-input-number {
@@ -137,15 +137,15 @@
   padding: 10px;
   font-size: 18px;
   border-radius: 8px;
-  border: 2px solid #4b5563;
+  border: 2px solid #827397;
   text-align: center;
   font-weight: bold;
-  background-color: #374151;
-  color: #e5e7eb;
+  background-color: #4d4c7d;
+  color: #e9d5da;
 }
 .form-input-number:focus {
   outline: none;
-  border-color: #10b981;
+  border-color: #f1dbaa;
 }
 
 /* Blocklist UL/LI */
@@ -158,8 +158,8 @@
   padding: 20px;
   margin-bottom: 12px;
   border-radius: 10px;
-  background-color: #4b5563;
-  border: 1px solid #6b7280;
+  background-color: #4d4c7d;
+  border: 1px solid #827397;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -170,18 +170,18 @@
   font-size: 1.1em;
   font-weight: 600;
   word-break: break-all;
-  color: #d1d5db;
+  color: #e9d5da;
 }
 
 .blocklist-empty {
   text-align: center;
   padding: 50px;
   border-radius: 10px;
-  background-color: #374151;
-  border: 2px dashed #6b7280;
+  background-color: #4d4c7d;
+  border: 2px dashed #827397;
 }
 .blocklist-empty p {
   font-size: 1.2em;
   margin: 0;
-  color: #9ca3af;
+  color: #e9d5da;
 }

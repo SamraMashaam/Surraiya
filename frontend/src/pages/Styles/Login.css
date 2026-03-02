@@ -7,7 +7,7 @@
 /* LEFT SECTION */
 .login-left {
   width: 50%;
-  background: linear-gradient(to bottom, #10b981, #475569, #1f2937);
+  background: linear-gradient(to bottom, #827397, #4d4c7d, #2e2952);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,18 +19,19 @@
 .login-title {
   font-size: 2.5rem;
   font-weight: bold;
-  color: white;
+  color: #f1dbaa;
   margin-bottom: 1.5rem;
 }
 
 /* FORM */
 .login-form {
-  background-color: #34d399;
+  background-color: #4d4c7d;
   padding: 2rem;
   border-radius: 0.75rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
+  border: 1px solid #827397;
 }
 
 .form-group {
@@ -40,7 +41,7 @@
 
 .form-label {
   display: block;
-  color: #374151;
+  color: #f1dbaa;
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -51,24 +52,25 @@
 .form-select {
   width: 90%;
   padding: 0.5rem 1rem;
-  background-color: #6ee7b7;
-  border: 1px solid #94a3b8;
+  background-color: #2e2952;
+  border: 1px solid #827397;
   border-radius: 0.5rem;
   font-size: 0.9rem;
+  color: #e9d5da;
   outline: none;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .form-input:focus,
 .form-select:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
-  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(241, 219, 170, 0.3);
+  border-color: #f1dbaa;
 }
 
 /* BUTTON */
 .login-btn {
   width: 100%;
-  background-color: #1f2937;
+  background-color: #827397;
   color: white;
   font-weight: 600;
   padding: 0.6rem 0;
@@ -79,7 +81,8 @@
 }
 
 .login-btn:hover {
-  background-color: #111827;
+  background-color: #2e2952;
+  color:#e9d5da;
 }
 
 /* RIGHT SECTION */
@@ -96,7 +99,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(31, 41, 55);
+  background-color: rgba(46, 41, 82);
   opacity: 15%;
 }
 

@@ -1,13 +1,14 @@
-.idea-body{
+.idea-body {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #1f2937, #10b981);
+  background: linear-gradient(to bottom right, #2e2952, #827397);
   color: white;
   position: relative;
   overflow: hidden;
 }
-.idea-body h3{
-    color: #32dba3;
-    font-size: 20px;
+
+.idea-body h3 {
+  color: #f1dbaa;
+  font-size: 20px;
 }
 
 .idea-container {
@@ -21,6 +22,7 @@
   text-align: center;
   font-size: 30px;
   margin-bottom: 20px;
+  color: #f1dbaa;
 }
 
 .idea-input-box {
@@ -35,22 +37,25 @@
   padding: 10px;
   resize: vertical;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #827397;
   font-size: 16px;
+  background-color: #2e2952;
+  color: #e9d5da;
 }
 
 .add-btn {
   width: fit-content;
   padding: 8px 14px;
-  background: #38a170;
-  color: white;
+  background: #827397;
+  color: #f1dbaa;
   border: none;
   border-radius: 6px;
   cursor: pointer;
 }
 
 .add-btn:hover {
-  background: #2f855a;
+  background: #4d4c7d;
+  color: #f1dbaa;
 }
 
 .idea-list {
@@ -60,21 +65,24 @@
 .empty-msg {
   text-align: center;
   opacity: 0.6;
+  color: #e9d5da;
 }
 
 .idea-item {
-  background: #2a3a50;
+  background: #4d4c7d;
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 8px;
   display: flex;
-  color: #e1f3f2;
+  color: #e9d5da;
   flex-direction: column;
+  border: 1px solid #827397;
 }
 
 .idea-text {
   margin-bottom: 10px;
   font-size: 16px;
+  color: #e9d5da;
 }
 
 .idea-actions {
@@ -93,8 +101,8 @@
 }
 
 .edit-btn {
-  background: #1a9260;
-  color: white;
+  background: #827397;
+  color: #f1dbaa;
 }
 
 .delete-btn {
@@ -103,13 +111,14 @@
 }
 
 .save-btn {
-  background: #38a169;
-  color: white;
+  background: #827397;
+  color: #f1dbaa;
 }
 
 .cancel-btn {
-  background: #718096;
-  color: white;
+  background: #4d4c7d;
+  color: #e9d5da;
+  border: 1px solid #827397;
 }
 
 .edit-box {
@@ -117,5 +126,7 @@
   height: 80px;
   padding: 8px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #827397;
+  background-color: #2e2952;
+  color: #e9d5da;
 }

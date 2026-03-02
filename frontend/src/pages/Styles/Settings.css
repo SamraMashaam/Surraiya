@@ -1,14 +1,14 @@
 .settings-container {
   min-height: 100vh;
   padding: 40px 20px;
-  background: linear-gradient(to top, #1f2937, #11cc8e );
+  background: linear-gradient(to top, #2e2952, #827397);
 }
 
 .settings-box {
   max-width: 800px;
   margin: 0 auto;
   padding: 40px;
-  color:#1f2937;
+  color: #e9d5da;
   border-radius: 10px;
 }
 
@@ -19,7 +19,6 @@
   margin-bottom: 30px;
   flex-wrap: wrap;
   gap: 15px;
-  
 }
 
 .back-btn {
@@ -27,17 +26,19 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #26f0ac;
-  color: #1f2937;
+  background-color: #f1dbaa;
+  color: #2e2952;
 }
 
 .back-btn:hover {
-  color: #26f0ac;
-  background-color: #0d583c;
+  background-color: #2e2952;
+  color: #f1dbaa;
+  border: 1px solid #f1dbaa;
 }
 
 .desc-text {
   margin-bottom: 30px;
+  color: #e9d5da;
 }
 
 .sync-banner,
@@ -49,11 +50,15 @@
 }
 
 .sync-banner {
-  background-color: #eef6ff;
+  background-color: #4d4c7d;
+  color: #f1dbaa;
+  border: 1px solid #827397;
 }
 
 .error-banner {
-  background-color: #ffe6e6;
+  background-color: #4c1d23;
+  color: #fca5a5;
+  border: 1px solid #ef4444;
 }
 
 .add-form {
@@ -69,42 +74,53 @@
   padding: 12px;
   font-size: 16px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid #827397;
+  background-color: #2e2952;
+  color: #e9d5da;
+  outline: none;
+}
+
+.site-input:focus {
+  border-color: #f1dbaa;
 }
 
 .add-btn {
   padding: 12px 30px;
   font-size: 16px;
-  background-color: #1f2937;
-  color: #23dfa0;
+  background-color: #827397;
+  color: #f1dbaa;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .add-btn:hover {
-  background-color: #151c27;
+  background-color: #4d4c7d;
 }
 
 .add-btn:disabled {
-  background-color: #ccc;
+  background-color: #4d4c7d;
+  color: #827397;
   cursor: not-allowed;
 }
 
 .blocked-title {
   margin-bottom: 20px;
-  color:#26f0ac;
+  color: #f1dbaa;
 }
 
 .loading-text {
   text-align: center;
   padding: 40px;
+  color: #e9d5da;
 }
 
 .empty-box {
   text-align: center;
   padding: 40px;
   border-radius: 5px;
+  color: #e9d5da;
+  border: 2px dashed #827397;
 }
 
 .site-list {
@@ -121,7 +137,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
-  background:  #aad6c7;
+  background: #4d4c7d;
+  border: 1px solid #827397;
+  color: #e9d5da;
 }
 
 .remove-btn {
@@ -129,12 +147,11 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background:#1a835c;
+  background: #e53e3e;
   color: white;
   font-size: 14px;
 }
 
 .remove-btn:hover {
-  background:#0d583c;
+  background: #992525;
 }
-

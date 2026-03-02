@@ -73,6 +73,7 @@ function Login() {
             Login
           </button>
         </form>
+        <p style={{fontSize: "0.9rem", color: "#f1dbaa", marginTop: "1rem"}}>Don't have an account? <a href="/register" style={{color: "#e9d5da"}}>Sign up today</a></p>
       </div>
 
       {/* RIGHT IMAGE SECTION */}

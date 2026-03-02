@@ -2,7 +2,7 @@
   padding: 30px;
   max-width: 1300px;
   margin: 0 auto;
-  background: linear-gradient(to bottom, #1f2937 55%, #10b981 100%);
+  background: linear-gradient(to bottom, #2e2952 55%, #827397 100%);
   min-height: 100vh;
 }
 
@@ -12,11 +12,13 @@
   align-items: center;
   padding: 12px 18px;
   margin-bottom: 25px;
-  background: #61cfa3;
+  background: #4d4c7d;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   font-size: 22px;
   font-weight: bold;
+  color: #f1dbaa;
+  border: 1px solid #827397;
 }
 
 .currency-bar img {
@@ -29,7 +31,7 @@
   font-size: 26px;
   margin: 20px 0 10px 5px;
   font-weight: 700;
-  color: #7bdbb5;
+  color: #f1dbaa;
 }
 
 .shop-grid {
@@ -40,18 +42,20 @@
 }
 
 .shop-item {
-  background: #111827;
+  background: #4d4c7d;
   padding: 15px;
-  border: 1px solid #34d399;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #827397;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
   transition: all 0.25s ease;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 .shop-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+  border-color: #f1dbaa;
 }
 
 .shop-item img {
@@ -65,7 +69,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #1f2937 ;
+  color: #f1dbaa;
 }
 
 .shop-item-price {
@@ -73,7 +77,7 @@
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  color: #1f2937 ;
+  color: #e9d5da;
   font-weight: 600;
 }
 
@@ -86,14 +90,14 @@
 button {
   padding: 12px 30px;
   font-size: 16px;
-  background-color: #2a3b52;
-  color: #23dfa0;
-  border: none;
+  background-color: #2e2952;
+  color: #f1dbaa;
+  border: 1px solid #f1dbaa;
   border-radius: 5px;
   cursor: pointer;
 }
 
 button:hover {
-  color: #2a3b52;
-  background-color: #23dfa0;
+  background-color: #f1dbaa;
+  color: #2e2952;
 }

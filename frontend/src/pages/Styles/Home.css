@@ -1,6 +1,6 @@
 .home-container {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #1f2937, #10b981);
+  background: linear-gradient(to bottom right, #2e2952, #827397);
   color: white;
   position: relative;
   overflow: hidden;
@@ -18,8 +18,8 @@
 }
 
 .auth-btn {
-  background-color: #a7f3d0;
-  color: #065f46;
+  background-color: #f1dbaa;
+  color: #2e2952;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   border: none;
@@ -28,8 +28,8 @@
 }
 
 .auth-btn:hover {
-  background-color: #065f46;
-  color: #a7f3d0;
+  background-color: #2e2952;
+  color: #f1dbaa;
 }
 
 /* HEADER */
@@ -44,7 +44,7 @@
   font-size: 2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
-  color: #6ee7b7;
+  color: #f1dbaa;
 }
 
 @media (min-width: 640px) {
@@ -53,7 +53,6 @@
   }
 }
 
-
 /* NAVBAR */
 .navbar {
   position: absolute;
@@ -61,9 +60,9 @@
   left: 0;
   width: 100%;
   padding: 1rem 1.5rem;
-  border-top: 1px solid #a7f3d0;
-  border-bottom: 1px solid #a7f3d0;
-  box-shadow: 0 2px 10px #a7f3d0;
+  border-top: 1px solid #f1dbaa;
+  border-bottom: 1px solid #f1dbaa;
+  box-shadow: 0 2px 10px rgba(241, 219, 170, 0.3);
   z-index: 10;
 }
 
@@ -74,7 +73,7 @@
 }
 
 .menu-icon {
-  color: #a7f3d0;
+  color: #f1dbaa;
   cursor: pointer;
 }
 
@@ -99,14 +98,14 @@
   display: inline-block;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
-  color: #6ee7b7;
+  color: #f1dbaa;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .nav-link:hover {
-  background-color: #6ee7b7;
-  color: #111827;
+  background-color: #f1dbaa;
+  color: #2e2952;
 }
 
 /* MAIN CONTENT */
@@ -145,7 +144,7 @@
 }
 
 .hero-text p {
-  color: #d1fae5;
+  color: #e9d5da;
   font-size: 0.95rem;
 }
 
@@ -160,11 +159,11 @@
 
 /* INFO SECTION */
 .info-section {
-  background-color: #059669;
-  color: #111827;
+  background-color: #4d4c7d;
+  color: #e9d5da;
   padding: 3rem 1.5rem;
-  border-top: 5px solid #34d399;
-  border-bottom: 5px solid #34d399;
+  border-top: 5px solid #f1dbaa;
+  border-bottom: 5px solid #f1dbaa;
 }
 
 .info-grid {
@@ -192,18 +191,28 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 0.75rem;
+  color: #f1dbaa;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  color: #f1dbaa;
 }
 
 .info-text p {
   font-size: 1rem;
+  color: #e9d5da;
 }
 
 /* CALL TO ACTION */
 .cta-section {
-  background-color: #111827;
+  background-color: #2e2952;
   color: white;
   padding: 3rem 1.5rem;
   text-align: center;
+  border-top: 1px solid #827397;
 }
 
 .cta-content {
@@ -215,10 +224,11 @@
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 1rem;
+  color: #f1dbaa;
 }
 
 .cta-content p {
-  color: #a7f3d0;
+  color: #e9d5da;
   margin-bottom: 1.5rem;
 }
 
@@ -239,19 +249,20 @@
 }
 
 .cta-login {
-  background-color: #059669;
+  background-color: #827397;
   color: white;
 }
 
 .cta-login:hover {
-  background-color: #047857;
+  background-color: #4d4c7d;
+  color:#e9d5da;
 }
 
 .cta-register {
-  background-color: white;
-  color: #065f46;
+  background-color: #f1dbaa;
+  color: #2e2952;
 }
 
 .cta-register:hover {
-  background-color: #d1fae5;
+  background-color: #e9d5da;
 }

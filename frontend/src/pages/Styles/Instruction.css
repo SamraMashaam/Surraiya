@@ -1,27 +1,28 @@
 .inst-container {
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #1f2937, #10b981);
+  background: linear-gradient(to bottom right, #2e2952, #827397);
   padding: 40px 20px;
 }
 
 .inst-card {
   max-width: 900px;
   margin: 0 auto;
-  background: #6ee7b7;
+  background: #4d4c7d;
   padding: 40px;
   border-radius: 10px;
-  color: #1f2937;
+  color: #e9d5da;
   box-shadow: 0 10px 10px rgba(0,0,0,0.5);
+  border: 1px solid #827397;
 }
 
 .inst-header {
   margin-bottom: 30px;
-  color: #1f2937;
+  color: #f1dbaa;
 }
 
 .inst-desc {
   font-size: 18px;
-  color: #525252;
+  color: #e9d5da;
   margin-bottom: 40px;
   line-height: 1.6;
 }
@@ -30,8 +31,9 @@
   padding: 30px;
   border-radius: 8px;
   margin-bottom: 30px;
-  background: linear-gradient(to bottom, #1f2937, #10b981);
-  color: #6ee7b7;
+  background: linear-gradient(to bottom, #2e2952, #4d4c7d);
+  color: #f1dbaa;
+  border: 1px solid #827397;
 }
 
 .center {
@@ -41,28 +43,32 @@
 .primary-btn {
   padding: 15px 40px;
   font-size: 18px;
-  background:#1f2937;
-  color: white;
-  border: none;
+  background: #2e2952;
+  color: #f1dbaa;
+  border: 1px solid #f1dbaa;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .primary-btn:disabled {
-  background: #ccc;
+  background: #4d4c7d;
+  color: #827397;
+  border-color: #827397;
   cursor: not-allowed;
 }
 
 .file-info {
   font-size: 14px;
   margin-top: 15px;
+  color: #e9d5da;
 }
 
 .inst-list {
   padding-left: 25px;
   line-height: 2;
+  color: #e9d5da;
 }
 
 .inst-section {
@@ -73,14 +79,15 @@
   display: flex;
   gap: 15px;
   padding: 20px;
-  background:#b9e4d3;
+  background: #2e2952;
   border-radius: 8px;
   margin-bottom: 15px;
+  border: 1px solid #827397;
 }
 
 .step-number {
-  background: #4d555d;
-  color: white;
+  background: #827397;
+  color: #f1dbaa;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -88,19 +95,22 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 .code-box {
-  background: #e9ecef;
+  background: #2e2952;
+  color: #f1dbaa;
   padding: 2px 6px;
   border-radius: 3px;
+  border: 1px solid #827397;
 }
 
 .copy-btn {
   margin-top: 10px;
   padding: 6px 12px;
-  background: #777d85;
-  color: white;
+  background: #827397;
+  color: #f1dbaa;
   border: none;
   border-radius: 4px;
   font-size: 13px;
@@ -108,23 +118,25 @@
 }
 
 .copy-btn.copied {
-  background: #424e45;
+  background: #4d4c7d;
+  color: #e9d5da;
 }
 
 .footer-cta {
   margin-top: 40px;
   padding: 30px;
-  background:#1f2937;
+  background: #2e2952;
   color: white;
   border-radius: 8px;
   text-align: center;
+  border: 1px solid #827397;
 }
 
 .white-btn {
   padding: 12px 30px;
   font-size: 18px;
-  background: white;
-  color: #464c53;
+  background: #f1dbaa;
+  color: #2e2952;
   border: none;
   border-radius: 5px;
   font-weight: bold;

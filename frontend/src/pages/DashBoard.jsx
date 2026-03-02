@@ -16,18 +16,19 @@ function DashBoard() {
 
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [moodGraphData, setMoodGraphData] = useState([]); // State for graph data
 
-  const moodData = [
-    { day: "Mon", mood: 3 },
-    { day: "Tue", mood: 4 },
-    { day: "Wed", mood: 2 },
-    { day: "Thu", mood: 5 },
-    { day: "Fri", mood: 4 },
-    { day: "Sat", mood: 3 },
-    { day: "Sun", mood: 4 },
+  const fallbackData = [
+    { day: "Mon", mood: 0 },
+    { day: "Tue", mood: 0 },
+    { day: "Wed", mood: 0 },
+    { day: "Thu", mood: 0 },
+    { day: "Fri", mood: 0 },
+    { day: "Sat", mood: 0 },
+    { day: "Sun", mood: 0 },
   ];
 
-        useEffect(() => {
+  useEffect(() => {
       document.title = "Dashboard";
     }, []);
   useEffect(() => {
@@ -42,6 +43,30 @@ function DashBoard() {
       try {
         const res = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
         setUser(res.data);
+        const userData = res.data;
+
+        if (userData.moodLog && userData.moodLog.length > 0) {
+          // 1. Sort entries by date (Oldest -> Newest)
+          const sortedLog = [...userData.moodLog].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+          // 2. Take the last 7 entries (so the graph doesn't get overcrowded)
+          const recentEntries = sortedLog.slice(-7);
+
+          // 3. Map to Recharts format
+          const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+          
+          const processedData = recentEntries.map((entry) => {
+            const dateObj = new Date(entry.date);
+            return {
+              day: daysOfWeek[dateObj.getDay()], // Converts date to "Mon", "Tue"...
+              mood: entry.score || 3, // Use the score we added to the model (default to 3 if missing)
+            };
+          });
+
+          setMoodGraphData(processedData);
+        } else {
+          setMoodGraphData([]); // No data found
+        }
       } catch (err) {
         console.error("Error fetching user:", err);
       }
@@ -124,24 +149,31 @@ function DashBoard() {
           </div>
 
           <div className="mood-graph">
-            <h3 style={{ marginBottom: "15px", color: "#a7f3d0" }}>
+            <h3 style={{ marginBottom: "15px", color: "#f1dbaa" }}>
               Mood Tracker
             </h3>
             <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={moodData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#a7f3d0" />
-                <XAxis dataKey="day" tick={{ fill: "#a7f3d0" }} />
-                <YAxis domain={[0, 5]} tick={{ fill: "#a7f3d0" }} />
+              <LineChart 
+                data={moodGraphData.length > 0 ? moodGraphData : fallbackData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1dbaa" />
+                <XAxis dataKey="day" tick={{ fill: "#f1dbaa" }} />
+                <YAxis domain={[0, 5]} tick={{ fill: "#f1dbaa" }} />
                 <Tooltip />
                 <Line
                   type="monotone"
                   dataKey="mood"
-                  stroke="#2d9e69ff"
+                  stroke="#827397"
                   strokeWidth={3}
-                  dot={{ r: 5, fill: "#6cdfb8ff" }}
+                  dot={{ r: 5, fill: "#f1dbaa" }}
+                  
                 />
               </LineChart>
             </ResponsiveContainer>
+            {/* Helper text if no data exists */}
+            {moodGraphData.length === 0 && (
+              <p style={{ textAlign: "center", color: "#f3e8a7", fontSize: "0.8rem", marginTop: "10px" }}>
+                No mood entries yet. Go to Mood Journal to start!
+              </p> )}
           </div>
         </div>
       </div>

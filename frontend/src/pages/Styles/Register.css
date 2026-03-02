@@ -14,7 +14,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(31, 41, 55); 
+  background-color: rgba(46, 41, 82);
   opacity: 20%;
 }
 
@@ -24,7 +24,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to bottom, #1f2937, #475569, #10b981);
+  background: linear-gradient(to bottom, #2e2952, #4d4c7d, #827397);
   padding: 2rem;
 }
 
@@ -37,16 +37,17 @@
   font-size: 1.875rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: white;
+  color: #f1dbaa;
   text-align: center;
 }
 
 /* Form styles */
 .register-form {
-  background-color: #34d399; /* emerald-400 */
+  background-color: #4d4c7d;
   padding: 2rem;
   border-radius: 0.75rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #827397;
 }
 
 .form-group {
@@ -56,23 +57,26 @@
 .register-form input {
   width: 90%;
   padding: 0.5rem 1rem;
-  border: 1px solid #9ca3af;
+  border: 1px solid #827397;
   border-radius: 0.5rem;
-  background-color: #6ee7b7; /* emerald-300 */
+  background-color: #2e2952;
+  color: #e9d5da;
   outline: none;
   transition: box-shadow 0.2s ease;
 }
 
 .register-form input:focus {
-  box-shadow: 0 0 0 2px #3b82f6; /* blue-500 focus ring */
+  box-shadow: 0 0 0 2px rgba(241, 219, 170, 0.5);
+  border-color: #f1dbaa;
 }
 
 /* Role select dropdown */
 .role-select {
   width: 100%;
   padding: 0.5rem 1rem;
-  background-color: #6ee7b7;
-  border: 1px solid #9ca3af;
+  background-color: #2e2952;
+  color: #e9d5da;
+  border: 1px solid #827397;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
   outline: none;
@@ -81,7 +85,7 @@
 /* Submit button */
 .register-button {
   width: 100%;
-  background-color: #1f2937; /* gray-800 */
+  background-color: #827397;
   color: white;
   font-weight: 600;
   padding: 0.5rem;
@@ -92,5 +96,6 @@
 }
 
 .register-button:hover {
-  background-color: #111827; /* darker gray */
+  background-color: #2e2952;
+  color:#e9d5da;
 }

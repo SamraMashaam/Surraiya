@@ -111,7 +111,7 @@ export default function IdeaParkingLot() {
       background: '#111827',
       borderRadius: '0.75rem',
       padding: '2rem',
-      border: '2px solid #34d399',
+      border: '2px solid #e9d5da',
       color: 'white'
     }} className="idea-item" key={idea._id}>
 

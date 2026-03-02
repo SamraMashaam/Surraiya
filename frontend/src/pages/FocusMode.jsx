@@ -503,7 +503,7 @@ const handleSessionEnd = async () => {
             ) : (
               ideas.map(idea => (
                 <div className="idea-item" style={{
-                  backgroundColor: '#56af86'
+                  backgroundColor: '#e9d5da'
                 }} key={idea._id}>
                   {editingId === idea._id ? (
                     <>

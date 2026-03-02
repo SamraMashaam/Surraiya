@@ -115,11 +115,11 @@ export default function Task() {
 
       {/* Ideas List */}
       <div style={{
-      background: '#111827',
+      background: '#2e2952',
       borderRadius: '0.75rem',
       padding: '2rem',
-      border: '1px solid #34d399',
-      color: 'white'
+      border: '1px solid #f1dbaa',
+      color: '#e9d5da'
     }} className="idea-list">
         {ideas.length === 0 ? (
           <p className="empty-msg">No tasks set yet</p>

@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Smile, Frown, Angry, Zap, AlertCircle, Minus } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
 
-const API_URL = 'http://localhost:8000/api';
-const USER_ID = 'user123';         //user id here 
+const ANALYSIS_API_URL = 'http://localhost:8000/api';
+// Node Backend (Database/Graph)
+const NODE_API_URL = 'http://localhost:5000/api';
 
 export default function MoodPage() {
   const [view, setView] = useState('home');
@@ -10,22 +12,35 @@ export default function MoodPage() {
   const [monthlyStats, setMonthlyStats] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const USER_ID = storedUser ? storedUser.id : null
+
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
 
   useEffect(() => {
+    if (!storedUser) {
+      navigate('/login');
+      return;
+    }
+    
     if (view === 'entries') {
       fetchEntries();
     } else if (view === 'stats') {
       fetchMonthlyStats();
     }
-  }, [view]);
+  }, [view, navigate]);
 
   const fetchEntries = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/entries/${USER_ID}`);
+      // NOTE: If you want to see entries saved in Python, keep this.
+      // If you want to see entries saved in Node, you'd change this URL.
+      // For now, let's assume we keep reading history from Python 
+      // but write to BOTH so the graph works.
+      const response = await fetch(`${ANALYSIS_API_URL}/entries/${USER_ID}`);
       const data = await response.json();
       setEntries(data);
     } catch (error) {
@@ -38,7 +53,7 @@ export default function MoodPage() {
     setLoading(true);
     try {
       const response = await fetch(
-        `${API_URL}/entries/${USER_ID}/monthly?year=${currentYear}&month=${currentMonth}`
+        `${ANALYSIS_API_URL}/entries/${USER_ID}/monthly?year=${currentYear}&month=${currentMonth}`
       );
       const data = await response.json();
       setMonthlyStats(data);
@@ -53,16 +68,19 @@ export default function MoodPage() {
   <div
     style={{
       minHeight: '100vh',
-      background: 'linear-gradient(to bottom right, #1f2937, #10b981)',
+      background: 'linear-gradient(to bottom right, #2e2952, #827397)',
       fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: 'white'
+      color: 'white',
+      position: 'relative',
     }}
   >
     <nav
       style={{
-        background: '#020617',
-        borderBottom: '1px solid #34d399',
+        background: '#2e2952',
+        borderBottom: '1px solid #f1dbaa',
         padding: '1rem 2rem',
+        position: 'relative',
+        zIndex: 1,
       }}
     >
       <div
@@ -74,7 +92,7 @@ export default function MoodPage() {
           alignItems: 'center'
         }}
       >
-        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '600', color: '#6ee7b7' }}>
+        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: '600', color: '#f1dbaa' }}>
           Mood Journal
         </h1>
 
@@ -83,9 +101,9 @@ export default function MoodPage() {
             onClick={() => setView('home')}
             style={{
               padding: '0.5rem 1rem',
-              background: view === 'home' ? '#059669' : 'transparent',
-              color: view === 'home' ? 'white' : '#a7f3d0',
-              border: '1px solid #34d399',
+              background: view === 'home' ? '#827397' : 'transparent',
+              color: view === 'home' ? 'white' : '#e9d5da',
+              border: '1px solid #f1dbaa',
               borderRadius: '0.5rem',
               cursor: 'pointer',
               fontWeight: '500',
@@ -99,9 +117,9 @@ export default function MoodPage() {
             onClick={() => setView('entries')}
             style={{
               padding: '0.5rem 1rem',
-              background: view === 'entries' ? '#059669' : 'transparent',
-              color: view === 'entries' ? 'white' : '#a7f3d0',
-              border: '1px solid #34d399',
+              background: view === 'entries' ? '#827397' : 'transparent',
+              color: view === 'entries' ? 'white' : '#e9d5da',
+              border: '1px solid #f1dbaa',
               borderRadius: '0.5rem',
               cursor: 'pointer',
               fontWeight: '500',
@@ -115,9 +133,9 @@ export default function MoodPage() {
             onClick={() => setView('stats')}
             style={{
               padding: '0.5rem 1rem',
-              background: view === 'stats' ? '#059669' : 'transparent',
-              color: view === 'stats' ? 'white' : '#a7f3d0',
-              border: '1px solid #34d399',
+              background: view === 'stats' ? '#827397' : 'transparent',
+              color: view === 'stats' ? 'white' : '#e9d5da',
+              border: '1px solid #f1dbaa',
               borderRadius: '0.5rem',
               cursor: 'pointer',
               fontWeight: '500',
@@ -134,7 +152,9 @@ export default function MoodPage() {
       style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '2rem'
+        padding: '2rem',
+        position: 'relative',
+        zIndex: 1,
       }}
     >
       {view === 'home' && <NewEntryForm onEntryCreated={() => setView('entries')} />}
@@ -146,7 +166,7 @@ export default function MoodPage() {
 
 }
 
-function NewEntryForm({ onEntryCreated }) {
+function NewEntryForm({ userId, onEntryCreated }) {
   const [content, setContent] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -186,11 +206,11 @@ function NewEntryForm({ onEntryCreated }) {
   setError('');
 
   try {
-    const response = await fetch(`${API_URL}/entries`, {
+    const response = await fetch(`${ANALYSIS_API_URL}/entries`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        user_id: USER_ID,
+        user_id: userId,
         content: entryContent
       })
     });
@@ -198,7 +218,24 @@ function NewEntryForm({ onEntryCreated }) {
     if (!response.ok) throw new Error('Failed to create entry');
 
     const data = await response.json();
-    setResult(data);
+    const analysisData = data;
+
+    try {
+      await fetch(`${NODE_API_URL}/users/${userId}/mood`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          emotion: analysisData.emotion, // The emotion Python found (e.g., "joy")
+          content: entryContent,
+          date: new Date()
+        })
+      });
+      console.log("Mood saved to Node Graph successfully");
+    } catch (nodeError) {
+      console.error("Failed to save to graph:", nodeError);
+      
+    }
+    setResult(analysisData);
     setContent('');
     setSelectedEmoji(null); 
   } catch (err) {
@@ -210,14 +247,14 @@ function NewEntryForm({ onEntryCreated }) {
   return (
   <div
     style={{
-      background: '#111827',
+      background: '#4d4c7d',
       borderRadius: '0.75rem',
       padding: '2rem',
-      border: '1px solid #34d399',
+      border: '1px solid #f1dbaa',
       color: 'white'
     }}
   >
-    <h2 style={{ marginTop: 0, fontSize: '1.5rem', fontWeight: '600', color: '#6ee7b7' }}>
+    <h2 style={{ marginTop: 0, fontSize: '1.5rem', fontWeight: '600', color: '#f1dbaa' }}>
       How are you feeling today?
     </h2>
     
@@ -230,20 +267,20 @@ function NewEntryForm({ onEntryCreated }) {
           width: '100%',
           minHeight: '150px',
           padding: '1rem',
-          border: '1px solid #34d399',
+          border: '1px solid #f1dbaa',
           borderRadius: '0.5rem',
           fontSize: '1rem',
           fontFamily: 'inherit',
           resize: 'vertical',
           boxSizing: 'border-box',
-          background: '#020617',
-          color: '#e5fbee',
+          background: '#2e2952',
+          color: '#e9d5da',
           outline: 'none'
         }}
       />
       
       {error && (
-        <p style={{ color: '#a7f3d0', fontSize: '0.9rem', margin: '0.5rem 0' }}>
+        <p style={{ color: '#e9d5da', fontSize: '0.9rem', margin: '0.5rem 0' }}>
           {error}
         </p>
       )}
@@ -252,13 +289,13 @@ function NewEntryForm({ onEntryCreated }) {
     style={{
       marginTop: '1.5rem',
       paddingTop: '1.5rem',
-      borderTop: '1px solid #34d399'
+      borderTop: '1px solid #f1dbaa'
     }}
   >
     <p
       style={{
         fontSize: '0.9rem',
-        color: '#a7f3d0',
+        color: '#e9d5da',
         marginBottom: '1rem'
       }}
     >
@@ -275,11 +312,11 @@ function NewEntryForm({ onEntryCreated }) {
             style={{
               padding: '1rem',
               background:
-                selectedEmoji?.emotion === mood.emotion ? '#064e3b' : '#020617',
+                selectedEmoji?.emotion === mood.emotion ? '#2e2952' : '#2e2952',
               border:
                 selectedEmoji?.emotion === mood.emotion
-                  ? '2px solid #34d399'
-                  : '1px solid #34d399',
+                  ? '2px solid #f1dbaa'
+                  : '1px solid #f1dbaa',
               borderRadius: '0.75rem',
               cursor: 'pointer',
               display: 'flex',
@@ -290,16 +327,16 @@ function NewEntryForm({ onEntryCreated }) {
               transition: 'all 0.2s ease',
               boxShadow:
                 selectedEmoji?.emotion === mood.emotion
-                  ? '0 0 10px rgba(52, 211, 153, 0.6)'
+                  ? '0 0 10px rgba(241, 219, 170, 0.6)'
                   : 'none'
             }}
           >
-            <Icon size={32} strokeWidth={1.5} color="#6ee7b7" />
+            <Icon size={32} strokeWidth={1.5} color="#f1dbaa" />
             <span
               style={{
                 fontSize: '0.85rem',
                 fontWeight: '500',
-                color: '#e5fbee'
+                color: '#e9d5da'
               }}
             >
               {mood.label}
@@ -317,9 +354,9 @@ function NewEntryForm({ onEntryCreated }) {
         style={{
           marginTop: '1rem',
           padding: '0.75rem 2rem',
-          background: loading ? '#064e3b' : '#059669',
+          background: loading ? '#4d4c7d' : '#827397',
           color: 'white',
-          border: '1px solid #34d399',
+          border: '1px solid #f1dbaa',
           borderRadius: '0.5rem',
           cursor: loading ? 'not-allowed' : 'pointer',
           fontSize: '1rem',
@@ -336,19 +373,19 @@ function NewEntryForm({ onEntryCreated }) {
         style={{
           marginTop: '2rem',
           padding: '1.5rem',
-          background: '#020617',
+          background: '#2e2952',
           borderRadius: '0.75rem',
-          border: '1px solid #34d399',
+          border: '1px solid #f1dbaa',
         }}
       >
-        <h3 style={{ marginTop: 0, fontSize: '1.2rem', fontWeight: '600', color: '#6ee7b7' }}>
+        <h3 style={{ marginTop: 0, fontSize: '1.2rem', fontWeight: '600', color: '#f1dbaa' }}>
           We hear you.
         </h3>
         <div style={{ marginTop: '1rem' }}>
-          <p style={{ fontSize: '1rem', margin: '0.5rem 0', color: '#e5fbee' }}>
+          <p style={{ fontSize: '1rem', margin: '0.5rem 0', color: '#e9d5da' }}>
             <strong>It seems like today you're feeling:</strong> {result.emotion}
           </p>
-          <p style={{ fontSize: '1rem', margin: '0.5rem 0', color: '#e5fbee' }}>
+          <p style={{ fontSize: '1rem', margin: '0.5rem 0', color: '#e9d5da' }}>
             <strong>Confidence:</strong> {(result.confidence * 100).toFixed(1)}%
           </p>
           <div style={{ marginTop: '1rem' }}>
@@ -366,7 +403,7 @@ function NewEntryForm({ onEntryCreated }) {
                     style={{
                       flex: 1,
                       height: '20px',
-                      background: '#064e3b',
+                      background: '#4d4c7d',
                       borderRadius: '4px',
                       overflow: 'hidden'
                     }}
@@ -375,7 +412,7 @@ function NewEntryForm({ onEntryCreated }) {
                       style={{
                         height: '100%',
                         width: `${score * 100}%`,
-                        background: '#34d399'
+                        background: '#f1dbaa'
                       }}
                     />
                   </div>
@@ -384,7 +421,7 @@ function NewEntryForm({ onEntryCreated }) {
                       fontSize: '0.9rem',
                       width: '50px',
                       textAlign: 'right',
-                      color: '#a7f3d0'
+                      color: '#e9d5da'
                     }}
                   >
                     {(score * 100).toFixed(1)}%
@@ -408,15 +445,15 @@ function EntriesList({ entries, loading }) {
 
   if (!entries.length) {
     return (
-      <div style={{ background: 'white', borderRadius: '8px', padding: '2rem', textAlign: 'center' }}>
-        <p style={{ color: '#666' }}>No entries yet. Start journaling to see your entries here!</p>
+      <div style={{ background: '#4d4c7d', borderRadius: '8px', padding: '2rem', textAlign: 'center' }}>
+        <p style={{ color: '#e9d5da' }}>No entries yet. Start journaling to see your entries here!</p>
       </div>
     );
   }
 
   return (
   <div style={{ display: 'grid', gap: '1rem', color: 'white' }}>
-    <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#6ee7b7' }}>
+    <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#f1dbaa' }}>
       Your Entries
     </h2>
 
@@ -424,10 +461,10 @@ function EntriesList({ entries, loading }) {
       <div
         key={entry.id}
         style={{
-          background: '#111827',
+          background: '#4d4c7d',
           borderRadius: '0.75rem',
           padding: '1.5rem',
-          border: '1px solid #34d399'
+          border: '1px solid #f1dbaa'
         }}
       >
         <div
@@ -438,7 +475,7 @@ function EntriesList({ entries, loading }) {
             alignItems: 'center'
           }}
         >
-          <span style={{ fontSize: '0.9rem', color: '#a7f3d0' }}>
+          <span style={{ fontSize: '0.9rem', color: '#e9d5da' }}>
             {new Date(entry.date).toLocaleDateString('en-US', { 
               weekday: 'long', 
               year: 'numeric', 
@@ -450,12 +487,12 @@ function EntriesList({ entries, loading }) {
           <span
             style={{
               padding: '0.25rem 0.75rem',
-              background: '#064e3b',
+              background: '#2e2952',
               borderRadius: '20px',
               fontSize: '0.85rem',
               fontWeight: '600',
-              color: '#6ee7b7',
-              border: '1px solid #34d399',
+              color: '#f1dbaa',
+              border: '1px solid #f1dbaa',
               textTransform: 'capitalize'
             }}
           >
@@ -463,7 +500,7 @@ function EntriesList({ entries, loading }) {
           </span>
         </div>
 
-        <p style={{ lineHeight: '1.6', margin:  '0', color: '#e5fbee' }}>
+        <p style={{ lineHeight: '1.6', margin:  '0', color: '#e9d5da' }}>
           {entry.content}
         </p>
       </div>
@@ -480,8 +517,8 @@ function MonthlyStats({ stats, loading }) {
 
   if (!stats) {
     return (
-      <div style={{ background: 'white', borderRadius: '8px', padding: '2rem', textAlign: 'center' }}>
-        <p style={{ color: '#666' }}>No entries for this month yet.</p>
+      <div style={{ background: '#4d4c7d', borderRadius: '8px', padding: '2rem', textAlign: 'center' }}>
+        <p style={{ color: '#e9d5da' }}>No entries for this month yet.</p>
       </div>
     );
   }
@@ -497,19 +534,19 @@ function MonthlyStats({ stats, loading }) {
 
   return (
   <div style={{ display: 'grid', gap: '1.5rem', color: 'white' }}>
-    <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#6ee7b7' }}>
+    <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#f1dbaa' }}>
       Let's look back at your {getMonthName(stats.month)} so far:
     </h2>
     
     <div
       style={{
-        background: '#111827',
+        background: '#4d4c7d',
         borderRadius: '0.75rem',
         padding: '1.5rem',
-        border: '1px solid #34d399'
+        border: '1px solid #f1dbaa'
       }}
     >
-      <p style={{ fontSize: '0.9rem', color: '#a7f3d0', margin: '0 0 0.5rem 0' }}>
+      <p style={{ fontSize: '0.9rem', color: '#e9d5da', margin: '0 0 0.5rem 0' }}>
         Your dominant emotion has been:
       </p>
       <p
@@ -518,7 +555,7 @@ function MonthlyStats({ stats, loading }) {
           fontWeight: '700',
           margin: 0,
           textTransform: 'capitalize',
-          color: '#6ee7b7'
+          color: '#f1dbaa'
         }}
       >
         {stats.dominant_emotion}
@@ -534,32 +571,32 @@ function MonthlyStats({ stats, loading }) {
     >
       <div
         style={{
-          background: '#111827',
+          background: '#4d4c7d',
           borderRadius: '0.75rem',
           padding: '1.5rem',
-          border: '1px solid #34d399'
+          border: '1px solid #f1dbaa'
         }}
       >
-        <p style={{ fontSize: '0.9rem', color: '#a7f3d0', margin: '0 0 0.5rem 0' }}>
+        <p style={{ fontSize: '0.9rem', color: '#e9d5da', margin: '0 0 0.5rem 0' }}>
           Total Entries
         </p>
-        <p style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0, color: '#6ee7b7' }}>
+        <p style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0, color: '#f1dbaa' }}>
           {stats.total_entries}
         </p>
       </div>
       
       <div
         style={{
-          background: '#111827',
+          background: '#4d4c7d',
           borderRadius: '0.75rem',
           padding: '1.5rem',
-          border: '1px solid #34d399'
+          border: '1px solid #f1dbaa'
         }}
       >
-        <p style={{ fontSize: '0.9rem', color: '#a7f3d0', margin: '0 0 0.5rem 0' }}>
+        <p style={{ fontSize: '0.9rem', color: '#e9d5da', margin: '0 0 0.5rem 0' }}>
           Our average confidence:
         </p>
-        <p style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0, color: '#6ee7b7' }}>
+        <p style={{ fontSize: '1.25rem', fontWeight: '700', margin: 0, color: '#f1dbaa' }}>
           {(stats.average_confidence * 100).toFixed(0)}%
         </p>
       </div>
@@ -567,13 +604,13 @@ function MonthlyStats({ stats, loading }) {
 
     <div
       style={{
-        background: '#111827',
+        background: '#4d4c7d',
         borderRadius: '0.75rem',
         padding: '1.5rem',
-        border: '1px solid #34d399'
+        border: '1px solid #f1dbaa'
       }}
     >
-      <h3 style={{ marginTop: 0, fontSize: '1.2rem', fontWeight: '600', color: '#6ee7b7' }}>
+      <h3 style={{ marginTop: 0, fontSize: '1.2rem', fontWeight: '600', color: '#f1dbaa' }}>
         Emotion Breakdown
       </h3>
       <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
@@ -591,14 +628,14 @@ function MonthlyStats({ stats, loading }) {
                 <span style={{ fontWeight: '500', textTransform: 'capitalize' }}>
                   {emotion}
                 </span>
-                <span style={{ color: '#a7f3d0' }}>
+                <span style={{ color: '#e9d5da' }}>
                   {data.count} entries ({data.percentage}%)
                 </span>
               </div>
               <div
                 style={{
                   height: '8px',
-                  background: '#064e3b',
+                  background: '#2e2952',
                   borderRadius: '4px',
                   overflow: 'hidden'
                 }}
@@ -607,7 +644,7 @@ function MonthlyStats({ stats, loading }) {
                   style={{
                     height: '100%',
                     width: `${data.percentage}%`,
-                    background: '#34d399'
+                    background: '#f1dbaa'
                   }}
                 />
               </div>

@@ -15,6 +15,7 @@ import VirtualPet from "./pages/VirtualPet";
 import ShopPage from "./pages/ShopPage";
 import IdeaParkingLot from "./pages/IdeaParkingLot";
 import MoodPage from "./pages/MoodPage";
+import StarField from "./pages/StarField";
 
 
 function App() {
@@ -67,6 +68,7 @@ useEffect(() => {
 
   return (
     <>
+    <StarField />
     <Router>
       <Routes>
         <Route path="/dashboard" element={<DashBoard />} />
