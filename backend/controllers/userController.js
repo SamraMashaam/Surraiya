@@ -161,3 +161,42 @@ export const updateCurrency = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const addMoodEntry = async (req, res) => {
+  try {
+    const { emotion, content, date } = req.body;
+    
+    // Map emotions to a 1-5 score for the graph
+    const moodScores = {
+      joy: 5,
+      happy: 5,
+      excited: 5,
+      surprise: 4,
+      neutral: 3,
+      sadness: 2,
+      fear: 2,
+      anger: 1,
+      disgust: 1
+    };
+
+    // Default to 3 if emotion not found
+    const score = moodScores[emotion.toLowerCase()] || 3;
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Add to the log
+    user.moodLog.push({
+      date: date || new Date(),
+      emotion,
+      score,
+      content
+    });
+
+    await user.save();
+    res.json(user.moodLog);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
