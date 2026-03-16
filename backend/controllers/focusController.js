@@ -21,11 +21,13 @@ export const getSessions = async (req, res) => {
   }
 };
 
-// READ sessions for a specific user
 export const getSessionsByUser = async (req, res) => {
   try {
     const sessions = await FocusSession.find({ userId: req.params.userId });
-    res.json(sessions);
+    
+    const totalDuration = sessions.reduce((sum, session) => sum + (session.duration || 0), 0);
+    
+    res.json({ totalDuration });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -40,6 +42,12 @@ export const updateSession = async (req, res) => {
       { $set: req.body },
       { new: true, upsert: false } // don't auto-create
     );
+
+    const session = await FocusSession.findOne({ sessionId: req.params.id });
+    if (!session) return res.status(404).json({ error: "session not found" });
+  
+    session.duration = session.duration + 1;
+    await session.save();
 
     if (!updated) {
       return res.status(404).json({ message: "Session not found" });

@@ -8,6 +8,7 @@ import {
   buyPet,
   buyAccessory,
   updateCurrency,
+  updateFCount,
   addMoodEntry
 } from "../controllers/userController.js";
 
@@ -34,7 +35,7 @@ router.post("/:userId/buy-pet", buyPet);
 
 router.post("/:userId/buy-accessory", buyAccessory);
 
-
+router.put("/:userId/FSessionCount", updateFCount);
 router.put("/:userId/currency", updateCurrency);
 router.post("/:id/mood", addMoodEntry);
 

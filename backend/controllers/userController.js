@@ -162,6 +162,21 @@ export const updateCurrency = async (req, res) => {
   }
 };
 
+export const updateFCount = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.FSessionCount = user.FSessionCount + req.body.fcount;
+    await user.save();
+
+    res.json({ message: "FSessionCount updated", user });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export const addMoodEntry = async (req, res) => {
   try {
     const { emotion, content, date } = req.body;
