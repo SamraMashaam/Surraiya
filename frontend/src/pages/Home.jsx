@@ -1,9 +1,9 @@
 // pages/Home.jsx
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Styles/Home.css";
+
 
 const Home = () => {
 
@@ -36,6 +36,7 @@ const Home = () => {
   };
 
   return (
+    
     <div className="home-container" onClick={() => setActivated(true)}>
       {/* LOGIN / USERNAME DISPLAY */}
       {activated && (

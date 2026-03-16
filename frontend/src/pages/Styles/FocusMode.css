@@ -1,6 +1,11 @@
+body {
+  background: linear-gradient(to bottom, #2e2952 55%, #827397 100%);
+  min-height: 100vh;
+}
+
 .focus-container {
   flex: 1;
-  background: linear-gradient(to bottom, #2e2952 55%, #827397 100%);
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,7 +139,7 @@
   cursor: pointer;
   font-size: 1rem;
   background-color: #827397;
-  color: #f1dbaa;
+  color:  #4d4c7d;
 }
 
 .reset-btn {
@@ -154,41 +159,44 @@ h3 {
   color: #f1dbaa;
   font-size: 15px;
 }
+body {
+  background-color: #2e2952; /* matches your gradient's top color */
+}
 
-.idea-body {
+.task-body {
   flex: 0.5;
-  background: linear-gradient(to bottom, #2e2952 55%, #827397 100%) !important;
+  background: transparent; /* ✅ remove the gradient */
   position: relative;
-  overflow: hidden;
+  z-index: 1;
   padding: 20px;
 }
 
-.idea-body h3 {
+.task-body h3 {
   color: #f1dbaa;
   font-size: 20px;
 }
 
-.idea-container {
+.task-container {
   max-width: 700px;
   margin: auto;
   padding: 20px;
   font-family: "Arial";
 }
 
-.idea-title {
+.task-title {
   text-align: center;
   font-size: 30px;
   margin-bottom: 20px;
   color: #f1dbaa;
 }
 
-.idea-input-box {
+.task-input-box {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.idea-input-box textarea {
+.task-input-box textarea {
   width: 100%;
   height: 100px;
   padding: 10px;
@@ -215,7 +223,7 @@ h3 {
   color: #f1dbaa;
 }
 
-.idea-list {
+.task-list {
   margin-top: 25px;
 }
 
@@ -225,7 +233,7 @@ h3 {
   color: #e9d5da;
 }
 
-.idea-item {
+.task-item {
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 8px;
@@ -235,13 +243,13 @@ h3 {
   border: 1px solid #827397;
 }
 
-.idea-text {
+.task-text {
   margin-bottom: 10px;
   font-size: 16px;
   color: #e9d5da;
 }
 
-.idea-actions {
+.task-actions {
   display: flex;
   gap: 10px;
 }

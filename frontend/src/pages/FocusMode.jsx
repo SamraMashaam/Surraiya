@@ -31,7 +31,8 @@ function FocusMode() {
     return Math.max(saved.duration - elapsed, 0);
   });
   const [pausedTime, setPausedTime] = useState(null);
-  const [user, setUser] = useState(null);
+  const storedU = localStorage.getItem("user");
+  const [user, setUser] = useState(storedU || null);
   // Use stored activeSessionId if present, otherwise create a new one
   const storedActiveId = localStorage.getItem("activeSessionId");
   const [sessionId, setSessionId] = useState(storedActiveId || uuidv4());
@@ -122,11 +123,16 @@ function FocusMode() {
 
   const saveSessionToDB = async (durationSeconds, isFinal = false) => {
     if (!user) return;
+    const resolvedUserId = user.id || user._id || user.userId;
+
+    if (!resolvedUserId) {
+      console.error("saveSessionToDB: could not resolve userId from user object:", user);
+      return;
+    }
     try {
       const data = {
-        userId: user.id || user._id || user.userId,
+        userId: resolvedUserId,
         endTime: new Date(),
-        duration: Math.round(durationSeconds / 60),
         isActive: !isFinal,
       };
 
@@ -141,27 +147,30 @@ function FocusMode() {
 
         const createData = {
           sessionId: idToCreate,
-          userId: data.userId,
+          userId: resolvedUserId,
           startTime: startTime ? new Date(startTime) : new Date(),
           endTime: data.endTime,
           isActive: !isFinal,
-          duration: data.duration,
+          duration: Math.round(durationSeconds / 60),
         };
 
         await axios.post("http://localhost:5000/api/focus", createData);
         localStorage.setItem("activeSessionId", idToCreate);
         console.log("Created new session:", idToCreate);
-
+        const fcount = 1; 
+        const res1 = await axios.put(`http://localhost:5000/api/users/${user.id}/FSessionCount`, {fcount});
+        console.log("FCount update: ", res1.data.user);
        
       } else {
         // Update the existing session id (use the canonical existingId)
-        await axios.put(`http://localhost:5000/api/focus/${existingId}`, data);
+        const r2 = await axios.put(`http://localhost:5000/api/focus/${existingId}`, data);
         console.log("Updated session:", existingId);
+        console.log("Content:", r2.data);
         // make sure component state matches storage
         if (existingId !== sessionId) setSessionId(existingId);
       }
-      const amount = Math.round(durationSeconds / 60);
-      console.log("amount: ", amount)
+      const amount = (mode === "work") ? 1 : 0; 
+      console.log("amount: ", amount);
       const res = await axios.put(`http://localhost:5000/api/users/${user.id}/currency`, {amount});
       console.log("Currency update: ", res.data.user);
 
@@ -304,10 +313,10 @@ const handleSessionEnd = async () => {
       await saveSessionToDB(durationSec, true);
     }
     localStorage.removeItem("activeSessionId");
-    setSessionId(uuidv4());
     setIsRunning(false);
     setMode("off");
     setCycleCount(0);
+    setPausedTime(null);
     setStartTime(null);
     setDuration(workLength * 60);
     setTimeLeft(workLength * 60);
@@ -361,7 +370,7 @@ const handleSessionEnd = async () => {
     }
 
     loadIdeas();
-  }, [user1]);
+  }, [user1?.id]); 
 
 
   async function addIdea() {
@@ -483,12 +492,12 @@ const handleSessionEnd = async () => {
       </div>
 
       {/* RIGHT SIDE - Tasks */}
-      <div className="idea-body">
-        <div className="idea-container">
-          <h1 className="idea-title">What's The Agenda?</h1>
-          <h3 className="idea-title">Complete tasks on time to earn coins!</h3>
+      <div className="task-body">
+        <div className="task-container">
+          <h1 className="task-title">What's The Agenda?</h1>
+          <h3 className="task-title">Complete tasks on time to earn coins!</h3>
           {/* Input Bar */}
-          <div className="idea-input-box">
+          <div className="task-input-box">
             <textarea
               value={newIdea}
               onChange={(e) => setNewIdea(e.target.value)}
@@ -497,14 +506,12 @@ const handleSessionEnd = async () => {
             <button className="add-btn" onClick={addIdea}>Add Task</button>
           </div>
           {/* Ideas List */}
-          <div className="idea-list">
+          <div className="task-list">
             {ideas.length === 0 ? (
               <p className="empty-msg">No tasks set yet</p>
             ) : (
               ideas.map(idea => (
-                <div className="idea-item" style={{
-                  backgroundColor: '#e9d5da'
-                }} key={idea._id}>
+                <div className="task-item"  key={idea._id}>
                   {editingId === idea._id ? (
                     <>
                       <textarea
@@ -522,8 +529,8 @@ const handleSessionEnd = async () => {
                     </>
                   ) : (
                     <>
-                      <p className="idea-text">{idea.text}</p>
-                      <div className="idea-actions">
+                      <p className="task-text">{idea.text}</p>
+                      <div className="task-actions">
                         <button className="edit-btn" onClick={() => startEditing(idea)}>
                           Edit
                         </button>

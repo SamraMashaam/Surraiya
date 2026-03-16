@@ -6,11 +6,13 @@ import "./Styles/ShopPage.css";
 export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser, pet, user }) {
   const [pets, setPets] = useState([]);
   const [accessories, setAccessories] = useState([]);
+
   const navigate = useNavigate();
 
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
+    
     if (!storedUser) {
       navigate("/login");
       return;
@@ -77,6 +79,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
   if (!user) return null;
   const storedUser = JSON.parse(localStorage.getItem("user"));
+  const resolvedPetId = user?.petId ?? pet?._id ?? storedUser?.petID?._id ?? storedUser?.petID;
   console.log("ID ",storedUser.petID);
   const userHasPet = storedUser.petID != null;
 
@@ -155,6 +158,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
   const buyAccessory = async (acc) => {
     try {
+      const petId = resolvedPetId;
       const res = await axios.post(`http://localhost:5000/api/shop/buy/accessory`, {
         userId: user._id,
         accessory: acc
@@ -162,29 +166,30 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
       const data = res.data;
       if (data.error) return alert(data.error);
 
+      // Update currency immediately from buy response
       setGlobalUser(prev => {
-          const updatedUser = { 
-            ...prev, 
-            currency: data.currency, 
-            petId: data.pet._id 
-          };
-
-          localStorage.setItem("user", JSON.stringify({
-            ...JSON.parse(localStorage.getItem("user")), 
-            petID: updatedUser.petId,
-            currency: updatedUser.currency
-          }));
-
+        const updatedUser = {
+          ...prev,
+          currency: data.currency,
+          petId: petId
+        };
+        localStorage.setItem("user", JSON.stringify({
+          ...JSON.parse(localStorage.getItem("user")),
+          petID: petId,
+          currency: data.currency
+        }));
         return updatedUser;
       });
 
-      console.log("user:", user);
-      const res2 = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${user.petId}`, {
+      // Now equip using the resolved petId
+      const res2 = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${petId}`, {
         userId: user._id,
         accessory: acc
       });
-      console.log("buy and equip pet: ", res2.data);
-      setGlobalPet(data.pet); 
+      const data2 = res2.data;
+      if (data2.error) return alert(data2.error);
+
+      setGlobalPet(data2.pet);
     } catch (err) {
       console.error(err);
     }
@@ -192,31 +197,15 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
   const equipAccessory = async (acc) => {
     try {
-      console.log("user: ", user)
-      const res = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${user.petId}`, {
+      const petId = resolvedPetId;
+      const res = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${petId}`, {
         userId: user._id,
         accessory: acc
       });
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      setGlobalUser(prev => {
-          const updatedUser = { 
-            ...prev, 
-            currency: data.currency, 
-            petId: data.pet._id 
-          };
-
-          localStorage.setItem("user", JSON.stringify({
-            ...JSON.parse(localStorage.getItem("user")), 
-            petID: updatedUser.petId,
-            currency: updatedUser.currency
-          }));
-
-        return updatedUser;
-      });
-      
-      setGlobalPet(data.pet); 
+      setGlobalPet(data.pet);
     } catch (err) {
       console.error(err);
     }
@@ -224,14 +213,14 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
   const unequipAccessory = async (acc) => {
     try {
-      const res = await axios.post(`http://localhost:5000/api/shop/unequip/accessory/${user.petId}`, {
+      const petId = resolvedPetId;
+      const res = await axios.post(`http://localhost:5000/api/shop/unequip/accessory/${petId}`, {
         userId: user._id,
         accessory: acc
       });
       const data = res.data;
       if (data.error) return alert(data.error);
 
-      setGlobalPet(prev => ({ ...prev, equippedAccessories: data.pet.equippedAccessories }));
       setGlobalPet(data.pet);
     } catch (err) {
       console.error(err);

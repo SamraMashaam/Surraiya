@@ -17,6 +17,7 @@ function DashBoard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [moodGraphData, setMoodGraphData] = useState([]); // State for graph data
+  const [focusTotal, setFocusTotal] = useState(null);
 
   const fallbackData = [
     { day: "Mon", mood: 0 },
@@ -43,6 +44,9 @@ function DashBoard() {
       try {
         const res = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
         setUser(res.data);
+        const totalTime = await axios.get(`http://localhost:5000/api/focus/user/${storedUser.id}`);
+        setFocusTotal(totalTime.data.totalDuration);
+        console.log("focustotal: ", totalTime);
         const userData = res.data;
 
         if (userData.moodLog && userData.moodLog.length > 0) {
@@ -145,8 +149,10 @@ function DashBoard() {
           </div>
           <div className="stat-card">
             <h3>Total Time</h3>
-            <p>8h 30m</p>
-          </div>
+            <p>
+              {Math.floor((focusTotal || 0) / 60)}h {(focusTotal || 0) % 60}m
+            </p>
+        </div>
 
           <div className="mood-graph">
             <h3 style={{ marginBottom: "15px", color: "#f1dbaa" }}>

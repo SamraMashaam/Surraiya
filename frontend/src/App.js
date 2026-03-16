@@ -16,6 +16,8 @@ import ShopPage from "./pages/ShopPage";
 import IdeaParkingLot from "./pages/IdeaParkingLot";
 import MoodPage from "./pages/MoodPage";
 import StarField from "./pages/StarField";
+import VideoCall from "./pages/VideoCall";
+import Chat from "./pages/Chat";
 
 
 function App() {
@@ -83,6 +85,8 @@ useEffect(() => {
         <Route path="/shop" element={<ShopPage  pet={pet} setPet={setPet} user={user} setUser={setUser}  />} />
         <Route path="/idea" element={<IdeaParkingLot />} />
         <Route path="/mood" element={<MoodPage />} />
+        <Route path="/video" element={<VideoCall user={user} />} />
+        <Route path="/chat" element={<Chat user={user} />} />
       </Routes>
     </Router>
     <VirtualPet pet={pet} user={user}/>

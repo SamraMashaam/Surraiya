@@ -36,10 +36,6 @@ export default function MoodPage() {
   const fetchEntries = async () => {
     setLoading(true);
     try {
-      // NOTE: If you want to see entries saved in Python, keep this.
-      // If you want to see entries saved in Node, you'd change this URL.
-      // For now, let's assume we keep reading history from Python 
-      // but write to BOTH so the graph works.
       const response = await fetch(`${ANALYSIS_API_URL}/entries/${USER_ID}`);
       const data = await response.json();
       setEntries(data);
@@ -157,7 +153,7 @@ export default function MoodPage() {
         zIndex: 1,
       }}
     >
-      {view === 'home' && <NewEntryForm onEntryCreated={() => setView('entries')} />}
+      {view === 'home' && <NewEntryForm userId={USER_ID} onEntryCreated={() => setView('entries')} />}
       {view === 'entries' && <EntriesList entries={entries} loading={loading} />}
       {view === 'stats' && <MonthlyStats stats={monthlyStats} loading={loading} />}
     </main>
