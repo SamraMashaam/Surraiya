@@ -11,6 +11,7 @@ router.get('/conversations/:userId', async (req, res) => {
   try {
     const conversations = await Conversation.find({
       participants: req.params.userId,
+      deletedBy: { $ne: req.params.userId }, // hide conversations this user deleted
     })
       .populate('participants', 'userName email')
       .populate('lastMessage.sender', 'userName')
@@ -116,8 +117,13 @@ router.get('/users/search', async (req, res) => {
 
     if (!query?.trim()) return res.json([]);
 
+    // Fetch the current user's friends list
+    const currentUser = await User.findById(excludeId).select('friends');
+    if (!currentUser) return res.json([]);
+
+    // Search only within their friends
     const users = await User.find({
-      _id: { $ne: excludeId },
+      _id: { $in: currentUser.friends }, // only friends
       $or: [
         { userName: { $regex: query, $options: 'i' } },
         { email: { $regex: query, $options: 'i' } },
@@ -130,6 +136,51 @@ router.get('/users/search', async (req, res) => {
   } catch (err) {
     console.error('[Chat] search users error:', err);
     res.status(500).json({ error: 'Failed to search users' });
+  }
+});
+
+router.delete('/conversations/:conversationId', async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { userId } = req.body;
+
+    const conversation = await Conversation.findById(conversationId);
+    if (!conversation) {
+      return res.status(404).json({ error: 'Conversation not found' });
+    }
+
+    // Verify the user is a participant
+    const isParticipant = conversation.participants
+      .map((id) => id.toString())
+      .includes(userId);
+
+    if (!isParticipant) {
+      return res.status(403).json({ error: 'Not authorized' });
+    }
+
+    // Add user to deletedBy if not already there
+    if (!conversation.deletedBy.map((id) => id.toString()).includes(userId)) {
+      conversation.deletedBy.push(userId);
+      await conversation.save();
+    }
+
+    // Check if ALL participants have deleted it
+    const allDeleted = conversation.participants.every((participantId) =>
+      conversation.deletedBy
+        .map((id) => id.toString())
+        .includes(participantId.toString())
+    );
+
+    if (allDeleted) {
+      await Message.deleteMany({ conversationId });
+      await Conversation.findByIdAndDelete(conversationId);
+      console.log(`[Chat] Conversation ${conversationId} permanently deleted`);
+    }
+
+    res.json({ message: 'Conversation deleted successfully' });
+  } catch (err) {
+    console.error('[Chat] delete conversation error:', err);
+    res.status(500).json({ error: 'Failed to delete conversation' });
   }
 });
 

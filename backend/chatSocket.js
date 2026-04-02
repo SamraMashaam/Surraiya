@@ -1,5 +1,6 @@
 import Message from './models/Message.js';
 import Conversation from './models/Conversation.js';
+import User from './models/User.js';
 
 function initChatSocket(io) {
   io.on('connection', (socket) => {
@@ -32,28 +33,109 @@ function initChatSocket(io) {
       if (!conversationId || !senderId || !content?.trim()) return;
 
       try {
-        // Save message to MongoDB
+        // Fetch the conversation and sender's blocked list
+        const [conversation, sender] = await Promise.all([
+          Conversation.findById(conversationId).populate('participants', '_id'),
+          User.findById(senderId).select('blockedUsers friends'),
+        ]);
+
+        if (!conversation || !sender) return;
+
+        // For DMs — check if either user has blocked the other
+        if (conversation.type === 'dm') {
+          const otherParticipant = conversation.participants.find(
+            (p) => p._id.toString() !== senderId
+          );
+
+          if (otherParticipant) {
+            // Check if sender has blocked the other user
+            const isBlocked = sender.blockedUsers
+              ?.map((id) => id.toString())
+              .includes(otherParticipant._id.toString());
+
+            if (isBlocked) {
+              socket.emit('chat-blocked', {
+                conversationId,
+                message: 'You have blocked this user.',
+              });
+              return;
+            }
+
+            // Check if the other user has blocked the sender
+            const otherUser = await User.findById(otherParticipant._id)
+              .select('blockedUsers friends');
+            
+            const isBlockedByOther = otherUser?.blockedUsers
+              ?.map((id) => id.toString())
+              .includes(senderId);
+
+            if (isBlockedByOther) {
+              socket.emit('chat-blocked', {
+                conversationId,
+                message: 'You cannot send messages to this user.',
+              });
+              return;
+            }
+
+            // Check if they are still friends
+            const isFriend = sender.friends
+              ?.map((id) => id.toString())
+              .includes(otherParticipant._id.toString());
+
+            if (!isFriend) {
+              socket.emit('chat-blocked', {
+                conversationId,
+                message: 'You can only message friends.',
+              });
+              return;
+            }
+          }
+        }
+
+        // Save and broadcast message as normal
         const message = await Message.create({
           conversationId,
           sender: senderId,
           content: content.trim(),
-          readBy: [senderId], // sender has already read their own message
+          readBy: [senderId],
         });
 
-        // Populate sender info before broadcasting
         await message.populate('sender', 'userName email');
 
-        // Update the conversation's lastMessage snapshot
         await Conversation.findByIdAndUpdate(conversationId, {
+          // Remove sender from deletedBy so conversation reappears for them
+          $pull: { deletedBy: senderId },
           lastMessage: {
             content: message.content,
             sender: senderId,
             createdAt: message.createdAt,
           },
-          updatedAt: new Date(), // bump updatedAt so it sorts to top of list
+          updatedAt: new Date(),
         });
 
-        // Broadcast to everyone in the conversation room including sender
+        // Notify all participants in case any of them had deleted the conversation
+        const updatedConversation = await Conversation.findById(conversationId)
+          .populate('participants', 'userName email')
+          .populate('lastMessage.sender', 'userName');
+
+        updatedConversation.participants.forEach((participant) => {
+          // Find the socket for this participant
+          const participantSocketId = [...io.sockets.sockets.values()]
+            .find((s) => s.data.chatUserId === participant._id.toString())
+            ?.id;
+
+          if (participantSocketId) {
+            // Re-join the conversation room in case they left
+            io.sockets.sockets.get(participantSocketId)?.join(`chat:${conversationId}`);
+
+            // Notify them to re-fetch their conversations
+            io.to(participantSocketId).emit('chat-conversation-restored', {
+              conversationId,
+              conversation: updatedConversation,
+            });
+          }
+        });
+
         io.to(`chat:${conversationId}`).emit('chat-receive-message', {
           message,
           conversationId,

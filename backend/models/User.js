@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { type } from "os";
 
 const userSchema = new mongoose.Schema({
-  userName: { type: String, required: true },
+  userName: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
 
@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   },
 
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  blockedUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 
   FSessionCount: { type: Number, default: 0 },
 

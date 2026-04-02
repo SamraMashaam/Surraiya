@@ -33,6 +33,12 @@ const conversationSchema = new mongoose.Schema(
       },
       createdAt: Date,
     },
+    deletedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,
