@@ -14,8 +14,8 @@ export default function SettingsPage() {
   const [user, setUser] = useState(null);
   const [API_URL, setAPI_URL] = useState(null);
 
-        useEffect(() => {
-      document.title = "Settings";
+    useEffect(() => {
+      document.title = "Blocked Sites";
     }, []);
 
   useEffect(() => {
@@ -120,10 +120,9 @@ export default function SettingsPage() {
       <div className="settings-box">
         <div className="settings-header">
           <h1>Website Blocklist Settings</h1>
-          <button onClick={() => navigate("/dashboard")} className="back-btn">Dashboard</button>
-          <button onClick={() => navigate("/help")} className="back-btn">Instructions</button>
+          <button onClick={() => navigate("/help")} className="back-btn">Set up Focus Module</button>
         </div>
-
+        <p className="desc-text">Use the Suraiyya Focus Module to access distaction blocking for better focus.</p>
         <p className="desc-text">Add websites you want to block</p>
         <p className="desc-text">Use only their domain names (example: youtube.com)</p>
 

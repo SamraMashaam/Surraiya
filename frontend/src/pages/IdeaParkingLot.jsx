@@ -12,7 +12,9 @@ export default function IdeaParkingLot() {
 
   // Load user from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
-  
+  useEffect(() => {
+      document.title = "Idea Parking Lot";
+    }, []);
 
   useEffect(() => {
     if (!user) {
@@ -90,7 +92,7 @@ export default function IdeaParkingLot() {
     <div className="idea-container">
 
       <h1 className="idea-title">Idea Parking Lot</h1>
-
+      <h2 >Getting side-tracked? Write down your ideas here, and revisit them when you're free.</h2>
       {/* Input Bar */}
       <div className="idea-input-box">
         <textarea

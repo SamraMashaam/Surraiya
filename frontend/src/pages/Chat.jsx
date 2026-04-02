@@ -7,6 +7,9 @@ import NewConversation from '../components/NewConversation';
 export default function Chat({ user: propUser }) {
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [user, setUser] = useState(propUser || null);
+  useEffect(() => {
+      document.title = "Chat Room";
+    }, []);
 
   // Load user from localStorage if not passed as prop
   useEffect(() => {
@@ -34,6 +37,7 @@ export default function Chat({ user: propUser }) {
     error,
     typingUsers,
     unreadCounts,
+    blockedConversations,
     selectConversation,
     sendMessage,
     sendTyping,
@@ -41,6 +45,7 @@ export default function Chat({ user: propUser }) {
     createGroup,
     searchUsers,
     getConversationName,
+    deleteConversation,
   } = useChat({ user });
 
   // ─── Not logged in ────────────────────────────────────────────────────────────
@@ -80,6 +85,8 @@ export default function Chat({ user: propUser }) {
         typingUsers={typingUsers}
         getConversationName={getConversationName}
         user={user}
+        blockedConversations={blockedConversations}
+        onDeleteConversation={deleteConversation}
       />
 
       {/* New conversation modal */}
@@ -106,9 +113,12 @@ const styles = {
   page: {
     display: 'flex',
     width: '100vw',
-    height: '100vh',
+    height: '92vh',
     backgroundColor: '#2e2952',
     overflow: 'hidden',
+    position: 'fixed',
+    top: '50px',
+    left: 0,
   },
   centered: {
     display: 'flex',
@@ -117,6 +127,8 @@ const styles = {
     width: '100vw',
     height: '100vh',
     backgroundColor: '#2e2952',
+    top: 0,
+    left: 0,
   },
   notLoggedIn: {
     color: '#6b7280',

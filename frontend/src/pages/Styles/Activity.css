@@ -19,6 +19,21 @@
   border: 1px solid #827397;
 }
 
+.setting-btn {
+  background: transparent;
+  color: #f1dbaa;
+  margin-top: 10px;
+  border: 1px solid #f1dbaa;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.setting-btn:hover {
+  background: rgba(255, 220, 107, 0.1);
+  color: #f1dbaa;
+}
+
 /* Header */
 .blocker-header {
   text-align: center;

@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useVideoCall } from '../hooks/useVideoCall';
 import VideoGrid from '../components/VideoGrid';
 import CallControls from '../components/CallControls';
 
 export default function VideoCall({ user }) {
   const [codeInput, setCodeInput] = useState('');
-
+  useEffect(() => {
+      document.title = "BD Video Call";
+    }, []);
   const {
     localStream,
     peers,
@@ -110,13 +112,10 @@ const styles = {
     height: '100vh',
     backgroundColor: '#0f0f1a',
     overflow: 'hidden',
+    position: 'fixed', // add this — locks it to viewport, no scroll possible
+    top: 0,
+    left: 0,
   },
-  gridWrapper: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-
-  // ── Lobby layout ──
   lobby: {
     display: 'flex',
     alignItems: 'center',
@@ -124,6 +123,10 @@ const styles = {
     width: '100vw',
     height: '100vh',
     backgroundColor: '#2e2952',
+    overflow: 'hidden',
+    position: 'fixed', // add this
+    top: 0,
+    left: 0,
   },
   card: {
     backgroundColor: '#13131f',

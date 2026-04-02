@@ -9,7 +9,9 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
   const navigate = useNavigate();
 
-
+  useEffect(() => {
+        document.title = "Shop";
+      }, []);
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     

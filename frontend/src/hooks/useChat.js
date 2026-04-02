@@ -13,6 +13,7 @@ export function useChat({ user }) {
   const [error, setError] = useState('');
   const [typingUsers, setTypingUsers] = useState({}); // { conversationId: [{ userId, userName }] }
   const [unreadCounts, setUnreadCounts] = useState({}); // { conversationId: count }
+  const [blockedConversations, setBlockedConversations] = useState({});
 
   const typingTimeoutRef = useRef({}); // debounce typing indicators
   const activeConversationRef = useRef(null); // stable ref for socket handlers
@@ -45,22 +46,64 @@ export function useChat({ user }) {
       }
 
       // Update lastMessage preview in conversation list
-      setConversations((prev) =>
-        prev
-          .map((c) =>
-            c._id === conversationId
-              ? {
-                  ...c,
-                  lastMessage: {
-                    content: message.content,
-                    sender: message.sender,
-                    createdAt: message.createdAt,
-                  },
-                }
-              : c
-          )
-          .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-      );
+      setConversations((prev) => {
+        const exists = prev.find((c) => c._id === conversationId);
+
+        if (exists) {
+          // Just update the lastMessage
+          return prev
+            .map((c) =>
+              c._id === conversationId
+                ? {
+                    ...c,
+                    lastMessage: {
+                      content: message.content,
+                      sender: message.sender,
+                      createdAt: message.createdAt,
+                    },
+                  }
+                : c
+            )
+            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        } else {
+          // Conversation was deleted by this user but a new message arrived
+          // Re-fetch it from the API and add it back to the list
+          axios.get(`${API_URL}/api/chat/conversations/${user._id}`)
+            .then((res) => setConversations(res.data))
+            .catch((err) => console.error('[useChat] refetch error:', err));
+          return prev;
+        }
+      });
+    });
+
+    socket.on('chat-blocked', ({ conversationId, message }) => {
+      setBlockedConversations((prev) => ({
+        ...prev,
+        [conversationId]: message,
+      }));
+    });
+
+    socket.on('chat-conversation-restored', ({ conversationId, conversation }) => {
+      setConversations((prev) => {
+        const exists = prev.find((c) => c._id === conversationId);
+        if (exists) {
+          // Already in list — just update lastMessage
+          return prev
+            .map((c) => c._id === conversationId ? conversation : c)
+            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        } else {
+          // Was deleted — restore it to the top of the list
+          return [conversation, ...prev];
+        }
+      });
+
+      // Increment unread count if it's not the active conversation
+      if (activeConversationRef.current?._id !== conversationId) {
+        setUnreadCounts((prev) => ({
+          ...prev,
+          [conversationId]: (prev[conversationId] || 0) + 1,
+        }));
+      }
     });
 
     socket.on('chat-user-typing', ({ conversationId, userId, userName }) => {
@@ -89,6 +132,8 @@ export function useChat({ user }) {
       socket.off('chat-user-typing');
       socket.off('chat-user-stop-typing');
       socket.off('chat-error');
+      socket.off('chat-blocked');
+      socket.off('chat-conversation-restored');
       socket.disconnect();
     };
   }, [user?._id]);
@@ -258,6 +303,26 @@ export function useChat({ user }) {
     return other?.userName || 'Unknown User';
   }, [user?._id]);
 
+  const deleteConversation = useCallback(async (conversationId) => {
+    try {
+      await axios.delete(`${API_URL}/api/chat/conversations/${conversationId}`, {
+        data: { userId: user?._id || user?.id },
+      });
+
+      // Remove from conversations list
+      setConversations((prev) => prev.filter((c) => c._id !== conversationId));
+
+      // Clear active conversation if it's the one being deleted
+      if (activeConversationRef.current?._id === conversationId) {
+        setActiveConversation(null);
+        setMessages([]);
+      }
+    } catch (err) {
+      console.error('[useChat] delete conversation error:', err);
+      setError('Failed to delete conversation');
+    }
+  }, [user?._id, user?.id]);
+
   return {
     conversations,
     activeConversation,
@@ -267,6 +332,7 @@ export function useChat({ user }) {
     error,
     typingUsers,
     unreadCounts,
+    blockedConversations,
     selectConversation,
     sendMessage,
     sendTyping,
@@ -275,5 +341,6 @@ export function useChat({ user }) {
     searchUsers,
     getConversationName,
     fetchConversations,
+    deleteConversation, 
   };
 }

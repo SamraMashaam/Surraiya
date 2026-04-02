@@ -132,7 +132,7 @@ export default function ConversationList({
       </div>
       <button
       style={styles.videoButton}
-      onClick={() => navigate('/video')}
+      onClick={() => window.open("/video", "_blank")}
       title='Start video call'
     >
       <><Video/>  Arrange Video Call</>

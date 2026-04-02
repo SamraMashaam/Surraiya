@@ -1,5 +1,6 @@
 /* global chrome */
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Styles/Activity.css"; 
 
 // Hardcode your extension ID here
@@ -11,6 +12,7 @@ function ActivityTracker() {
   }, []);
 
   const [error, setError] = useState("");
+  const navigate = useNavigate();
   const [sessionActive, setSessionActive] = useState(false);
   const [inactivityThreshold, setInactivityThreshold] = useState(1);
   const [tempThreshold, setTempThreshold] = useState(1);
@@ -81,6 +83,7 @@ function ActivityTracker() {
       console.error("Failed to update threshold:", err);
     }
   };
+
   
   return (
     <div className="blocker-container">
@@ -88,8 +91,9 @@ function ActivityTracker() {
         
         <div className="blocker-header">
            <img src="s_logo.png" style={{width: "90px", height: "90px", marginTop: "10px"}} alt="logo" />
-          <h1 className="blocker-title">Distraction Blocker</h1>
-          <p className="blocker-subtitle">Keep this tab open and stay focused with activity tracking</p>
+          <h1 className="blocker-title">Activity Tracker</h1>
+          <p className="blocker-subtitle">Keep this tab open and stay focused with activity tracking. Keep track of mouse movements and keypresses, and recieve alerts when inactive for too long.</p>
+          <p className="blocker-subtitle">Note: Tracking only works when using the browser. No information about user activity is stored, only detected.</p>
         </div>
 
         {error && (

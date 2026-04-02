@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-function DashBoard() {
+function DashBoard({refreshUser}) {
 
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
@@ -93,24 +93,34 @@ function DashBoard() {
 
   };
 
-  const handleSetting = () => {
-    navigate("/settings")
+  
+
+  const handleVideo = () => {
+    navigate("/video")
   };
 
-  const handleHome = () => {
-    navigate("/")
-  };
-  const handleTracker = () => {
-    navigate("/activity")
-  };
-  const handleShop = () => {
-    navigate("/shop")
-  };
   const handleIdea = () => {
     navigate("/idea")
   };
-  const handleMood = () => {
-    navigate("/mood")
+
+  const handleFriends = () => {
+    navigate("/friends")
+  };
+  const handleChat = () => {
+    navigate("/chat")
+  };
+  const handleBlock = () => {
+    navigate("/settings")
+  };
+  const handleProfile = () => {
+    navigate("/profile")
+  };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    refreshUser();
+    navigate("/");
   };
 
   if (!user) return null;
@@ -124,17 +134,17 @@ function DashBoard() {
             src={user.profilePic || "home.jpg"}
             alt="User"
             className="profile-img"
+            onClick={handleProfile}
           />
           <h2 className="profile-name">{user.userName}</h2>
         </div>
         <ul className="menu">
-          <li onClick={handleStartFocus}>Focus Mode</li>
-          <li onClick={handleTracker}>Activity Tracker</li>
-          <li onClick={handleShop}>Pet Shop</li>
           <li onClick={handleIdea}>Idea Parking Lot</li>
-          <li onClick={handleMood}>Mood Journal</li>
-          <li onClick={handleSetting}>Settings</li>
-          <li onClick={handleHome}>Home</li>
+          <li onClick={handleBlock}>Blocked Sites</li>
+          <li onClick={handleFriends}>Friends</li>
+          <li onClick={handleChat}>Chat</li>
+          <li onClick={handleVideo}>BD Video Call</li>
+          <li onClick={handleLogout}>Log Out</li>
         </ul>
         <img src="s_logo.png" style={{width: "90px", height: "90px", marginTop: "10px"}} alt="logo" />
       </div>

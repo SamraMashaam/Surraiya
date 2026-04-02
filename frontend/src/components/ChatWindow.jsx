@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { format, isToday, isYesterday } from 'date-fns';
 import { MessageSquareMore, Users } from 'lucide-react';
 import { color } from 'framer-motion';
-
+import { Video, Trash2 } from 'lucide-react';
 
 export default function ChatWindow({
   conversation,
@@ -13,10 +13,13 @@ export default function ChatWindow({
   typingUsers,
   getConversationName,
   user,
+  blockedConversations,
+  onDeleteConversation,
 }) {
   const [input, setInput] = useState('');
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Auto scroll to bottom when messages change
   useEffect(() => {
@@ -39,6 +42,11 @@ export default function ChatWindow({
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const handleDeleteConfirmed = async () => {
+    await onDeleteConversation(conversation._id);
+    setShowDeleteConfirm(false);
   };
 
   const handleInputChange = (e) => {
@@ -119,6 +127,15 @@ export default function ChatWindow({
                 : 'Direct Message'}
             </div>
           </div>
+        </div>
+        <div style={styles.headerRight}>
+          <button
+            style={styles.deleteButton}
+            onClick={() => setShowDeleteConfirm(true)}
+            title='Delete conversation'
+          >
+            <Trash2 size={16} />
+          </button>
         </div>
       </div>
 
@@ -212,34 +229,74 @@ export default function ChatWindow({
       </div>
 
       {/* Input */}
-      <div style={styles.inputBar}>
-        <input
-          ref={inputRef}
-          style={styles.input}
-          type='text'
-          placeholder={`Message ${conversationName}...`}
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          maxLength={2000}
-        />
-        <button
-          style={{
-            ...styles.sendButton,
-            ...(input.trim() ? styles.sendButtonActive : {}),
-          }}
-          onClick={handleSend}
-          disabled={!input.trim()}
-        >
-          Send
-        </button>
+      {blockedConversations[conversation?._id] ? (
+        <div style={styles.blockedBar}>
+          {blockedConversations[conversation._id]}
+        </div>
+      ) : (
+        <div style={styles.inputBar}>
+          <input
+            ref={inputRef}
+            style={styles.input}
+            type='text'
+            placeholder={`Message ${conversationName}...`}
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            maxLength={2000}
+          />
+          <button
+            style={{
+              ...styles.sendButton,
+              ...(input.trim() ? styles.sendButtonActive : {}),
+            }}
+            onClick={handleSend}
+            disabled={!input.trim()}
+          >
+            Send
+          </button>
+        </div>
+      )}
+    {showDeleteConfirm && (
+      <div style={styles.backdrop}>
+        <div style={styles.confirmModal}>
+          <h3 style={styles.confirmTitle}>Delete Conversation</h3>
+          <p style={styles.confirmDesc}>
+            Are you sure you want to delete this conversation? This cannot be undone.
+          </p>
+          <div style={styles.confirmButtons}>
+            <button
+              style={styles.cancelButton}
+              onClick={() => setShowDeleteConfirm(false)}
+            >
+              Cancel
+            </button>
+            <button
+              style={styles.confirmDeleteButton}
+              onClick={handleDeleteConfirmed}
+            >
+              Yes, Delete Forever
+            </button>
+          </div>
+        </div>
       </div>
-
+    )}
     </div>
   );
 }
 
 const styles = {
+  blockedBar: {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  padding: '14px 20px',
+  backgroundColor: '#13131f',
+  borderTop: '1px solid #2a2a4a',
+  color: '#9ca3af',
+  fontSize: '0.875rem',
+  flexShrink: 0,
+},
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -443,4 +500,74 @@ const styles = {
     color: '#f1ebd2',
     cursor: 'pointer',
   },
+  headerRight: {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+},
+deleteButton: {
+  backgroundColor: 'transparent',
+  border: '1px solid #2a2a4a',
+  borderRadius: '8px',
+  padding: '7px 10px',
+  color: '#6b7280',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+backdrop: {
+  position: 'fixed',
+  inset: 0,
+  backgroundColor: 'rgba(0,0,0,0.7)',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  zIndex: 1000,
+},
+confirmModal: {
+  backgroundColor: '#13131f',
+  border: '1px solid #2a2a4a',
+  borderRadius: '16px',
+  padding: '28px',
+  width: '100%',
+  maxWidth: '400px',
+  boxSizing: 'border-box',
+},
+confirmTitle: {
+  color: '#fff',
+  fontSize: '1.1rem',
+  fontWeight: 'bold',
+  margin: '0 0 12px 0',
+},
+confirmDesc: {
+  color: '#9ca3af',
+  fontSize: '0.875rem',
+  lineHeight: '1.5',
+  margin: '0 0 24px 0',
+},
+confirmButtons: {
+  display: 'flex',
+  gap: '10px',
+  justifyContent: 'flex-end',
+},
+cancelButton: {
+  backgroundColor: 'transparent',
+  border: '1px solid #2a2a4a',
+  borderRadius: '8px',
+  padding: '8px 20px',
+  color: '#9ca3af',
+  cursor: 'pointer',
+  fontSize: '0.875rem',
+},
+confirmDeleteButton: {
+  backgroundColor: '#dc2626',
+  border: 'none',
+  borderRadius: '8px',
+  padding: '8px 20px',
+  color: '#fff',
+  cursor: 'pointer',
+  fontSize: '0.875rem',
+  fontWeight: '600',
+},
 };

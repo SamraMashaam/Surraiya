@@ -3,16 +3,19 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Styles/Login.css";
 import axios from "axios";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
-function Login() {
-      useEffect(() => {
-      document.title = "Login";
-    }, []);
+function Login({refreshUser}) {
+  useEffect(() => {
+    document.title = "Login";
+  }, []);
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     password: ""
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,13 +28,15 @@ function Login() {
       const res = await axios.post("http://localhost:5000/api/auth/login", formData);
       const { token, user } = res.data;
 
-      // Store token + user info locally
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       window.postMessage({
         type: "USER_ID",
         userId: user.id || user._id
       });
+      if (refreshUser) {
+        await refreshUser();
+      }
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
@@ -59,25 +64,50 @@ function Login() {
 
           <div className="form-group">
             <label className="form-label">Password</label>
-            <input
-              name="password"
-              type="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={handleChange}
-              className="form-input"
-            />
+            <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                className="form-input"
+                style={{ paddingRight: "2.5rem" }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                style={{
+                  position: "absolute",
+                  right: "0.75rem",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  color: "#e9d5da",
+                }}
+              >
+                {showPassword
+                  ? <AiOutlineEyeInvisible size={20} />
+                  : <AiOutlineEye size={20} />
+                }
+              </button>
+            </div>
           </div>
 
           <button type="submit" className="login-btn">
             Login
           </button>
         </form>
-        <p style={{fontSize: "0.9rem", color: "#f1dbaa", marginTop: "1rem"}}>Don't have an account? <a href="/register" style={{color: "#e9d5da"}}>Sign up today</a></p>
+        <p style={{ fontSize: "0.9rem", color: "#f1dbaa", marginTop: "1rem" }}>
+          Don't have an account? <a href="/register" style={{ color: "#e9d5da" }}>Sign up today</a>
+        </p>
       </div>
 
       {/* RIGHT IMAGE SECTION */}
-      <div className="login-right" style={{ backgroundImage: "url('/login.png')" }}>
+      <div className="login-right" style={{ backgroundImage: "url('/login.jpg')" }}>
         <div className="overlay"></div>
       </div>
     </div>

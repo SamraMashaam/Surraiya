@@ -7,6 +7,7 @@ export default function VirtualPet({ pet, user }) {
   console.log("VirtualPet received pet:", pet);
   const [petTypes, setPetTypes] = useState(null);
   const [sparkle, setSparkle] = useState(false);
+  const [petVisible, setPetVisible] = useState(true);
   
   // Draggable state
   const [isDraggable, setIsDraggable] = useState(false);
@@ -53,6 +54,13 @@ export default function VirtualPet({ pet, user }) {
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+  const navLinkStyle = {
+    color: "#c9b8e8",
+    textDecoration: "none",
+    fontSize: "14px",
+    fontWeight: "500",
+  };
+  
 
   // Add/remove event listeners for dragging
   useEffect(() => {
@@ -67,11 +75,65 @@ export default function VirtualPet({ pet, user }) {
   }, [isDragging, dragOffset]);
 
   if (!petTypes) return null;
-  
+  if(!user) return(
+    <>
+      <nav style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "55px",
+        background: "#1e1b2e",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 24px",
+        boxSizing: "border-box",
+        zIndex: 1001,
+        boxShadow: "0 2px 10px rgba(0,0,0,0.3)"
+      }}>
+        <div style={{ display: "flex", gap: "20px" }}>
+          <a href="/" style={navLinkStyle}>Home</a>
+          <a href="/login" style={navLinkStyle}>Login</a>
+          <a href="/register" style={navLinkStyle}>Sign Up</a>
+          <a href="/mira" style={navLinkStyle}>Mira</a>
+        </div>
+      </nav>
+    </>
+  );
   if (!pet) return (
-    <div className="no-pet-message">
-      You don't have a pet yet. Go to the shop to choose one!
-    </div>
+    <>
+      <nav style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "55px",
+        background: "#1e1b2e",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 24px",
+        boxSizing: "border-box",
+        zIndex: 1001,
+        boxShadow: "0 2px 10px rgba(0,0,0,0.3)"
+      }}>
+        <div style={{ display: "flex", gap: "20px" }}>
+          <a href="/" style={navLinkStyle}>Home</a>
+          <a href="/dashboard" style={navLinkStyle}>Dashboard</a>
+          <a href="/profile" style={navLinkStyle}>Profile</a>
+          <a href="/shop" style={navLinkStyle}>Pet Shop</a>
+          <a href="/focus" style={navLinkStyle}>Focus Mode</a>
+          <a href="/activity" style={navLinkStyle}>Activity Tracker</a>
+          <a href="/mood" style={navLinkStyle}>Mood Journal</a>
+          <a href="/mira" style={navLinkStyle}>Mira</a>
+          <a href="/help" style={navLinkStyle}>Suraiyya Focus Module</a>
+        </div>
+      </nav>
+      <div className="no-pet-message">
+        You don't have a pet yet. Go to the shop to choose one for free!
+      </div>
+    </>
   );
 
   const typeMeta = petTypes[pet.petType];
@@ -107,33 +169,87 @@ export default function VirtualPet({ pet, user }) {
     ));
   }
 
+
   return (
     <>
-      {/* Toggle drag mode button */}
-      <button 
-        className="pet-drag-toggle"
-        onClick={() => setIsDraggable(!isDraggable)}
-        style={{
-          position: "fixed",
-          top: 20,             
-          left: "50%",        
-          transform: "translateX(-50%)",
-          zIndex: 1001,
-          padding: "10px 16px",
-          background: isDraggable ? "#2e2952" : "#827397",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "600",
-          fontSize: "14px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-          transition: "background 0.3s ease"
-        }}
-      >
-        {isDraggable ?  <><LockOpen size={15}/>  Drag Pet</> : <><Lock size={15}/>  Pet Locked</>}
-      </button>
+      <nav style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "55px",
+        background: "#1e1b2e",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "0 24px",
+        boxSizing: "border-box",
+        zIndex: 1001,
+        boxShadow: "0 2px 10px rgba(0,0,0,0.3)"
+      }}>
+        {/* Left: links */}
+        <div style={{ display: "flex", gap: "20px" }}>
+          <a href="/" style={navLinkStyle}>Home</a>
+          <a href="/dashboard" style={navLinkStyle}>Dashboard</a>
+          <a href="/profile" style={navLinkStyle}>Profile</a>
+          <a href="/shop" style={navLinkStyle}>Pet Shop</a>
+          <a href="/focus" style={navLinkStyle}>Focus Mode</a>
+          <a href="/activity" style={navLinkStyle}>Activity Tracker</a>
+          <a href="/mood" style={navLinkStyle}>Mood Journal</a>
+          <a href="/mira" style={navLinkStyle}>Mira</a>
+          <a href="/help" style={navLinkStyle}>Suraiyya Focus Module</a>
+        </div>
 
+        {/* Right side buttons */}
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <button
+            onClick={() => {
+              setPetVisible(!petVisible);
+              if (petVisible) setIsDraggable(false); // lock it when sending away
+            }}
+            style={{
+              background: petVisible ? "#2e2952" : "#827397",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600",
+              fontSize: "14px",
+              padding: "6px 14px",
+              transition: "background 0.3s ease"
+            }}
+          >
+            {petVisible ? "Send Pet Away" : "Bring Pet Back"}
+          </button>
+
+          <button
+            className="pet-drag-toggle"
+            onClick={() => setIsDraggable(!isDraggable)}
+            style={{
+              background: isDraggable ? "#2e2952" : "#827397",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontWeight: "600",
+              fontSize: "14px",
+              padding: "6px 14px",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              transition: "background 0.3s ease"
+            }}
+          >
+            {isDraggable ? <><LockOpen size={15}/> Drag Pet</> : <><Lock size={15}/> Pet Locked</>}
+          </button>
+        </div>
+      </nav>
+
+      {petVisible && (
+    <div 
+      className="virtual-pet-wrapper" 
+      onMouseDown={handleMouseDown}
+    >
       <div 
         className="virtual-pet-wrapper" 
         style={{ 
@@ -200,6 +316,7 @@ export default function VirtualPet({ pet, user }) {
           {renderAccessory("tail")}
         </div>
       </div>
+    </div>)}
     </>
   );
 }

@@ -14,6 +14,7 @@
   align-items: center;
   padding: 2rem;
   text-align: center;
+  border-right: 2px solid #cab2eb;
 }
 
 .login-title {
@@ -89,6 +90,7 @@
 .login-right {
   position: relative;
   width: 50%;
+  height: 100vh;
   background-size: cover;
   background-position: center;
   display: flex;
@@ -96,11 +98,10 @@
   justify-content: center;
 }
 
-.overlay {
+.overlay-login {
   position: absolute;
   inset: 0;
-  background-color: rgba(46, 41, 82);
-  opacity: 15%;
+  background-color: rgba(24, 16, 75, 0.25);
 }
 
 /* RESPONSIVE */

@@ -436,12 +436,19 @@ const handleSessionEnd = async () => {
     }
   }
 
+  const handleSettings = () =>{
+    navigate("/settings");
+  };
+
   return (
     <div className="page-wrapper">
       {/* LEFT SIDE - Timer */}
       <div className="focus-container">
         <h1 className="focus-title">Focus Mode</h1>
         <h3>Complete Focus Sessions to earn coins!</h3>
+          <button className="setting-btn" onClick={(handleSettings)}>
+            Block Distracting Sites
+          </button>
         <div className="settings-cardf">
           <label className="settings-label">Session Length:</label>
           <select value={workLength} onChange={handleWorkLengthChange} className="settings-select">
