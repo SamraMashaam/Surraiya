@@ -156,9 +156,19 @@ body {
 }
 
 h3 {
-  color: #f1dbaa;
-  font-size: 15px;
+  color: #e9d5da;
+  font-size: 14px;
+  margin-top: 0px;
 }
+
+p {
+  color: #e9d5da;
+  font-size: 14px;
+  margin-top: 0px;
+  padding: 0px;
+  margin-bottom: auto;
+}
+
 body {
   background-color: #2e2952; /* matches your gradient's top color */
 }

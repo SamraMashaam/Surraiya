@@ -1,12 +1,11 @@
 /* global chrome, browser */
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
 import "./Styles/FocusMode.css";
 import { useNavigate } from "react-router-dom";
 
 function FocusMode() {
-    useEffect(() => {
+  useEffect(() => {
     document.title = "Focus Mode";
   }, []);
   
@@ -33,9 +32,6 @@ function FocusMode() {
   const [pausedTime, setPausedTime] = useState(null);
   const storedU = localStorage.getItem("user");
   const [user, setUser] = useState(storedU || null);
-  // Use stored activeSessionId if present, otherwise create a new one
-  const storedActiveId = localStorage.getItem("activeSessionId");
-  const [sessionId, setSessionId] = useState(storedActiveId || uuidv4());
 
   const timerRef = useRef(null);
   const notificationsSent = useRef({ fifty: false, ninety: false });
@@ -54,14 +50,12 @@ function FocusMode() {
   }, []);
 
   useEffect(() => {
-
-    // Also broadcast on page for content-script bridge
+    // Broadcast on page for content-script bridge
     window.postMessage(
       { type: "FOCUS_MODE", mode },
       window.location.origin
     );
   }, [mode]);
-
 
   // --- Persist state ---
   useEffect(() => {
@@ -113,78 +107,79 @@ function FocusMode() {
 
   // --- DB sync every minute ---
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning || mode !== "work") return; // Only track work sessions
+    
     const interval = setInterval(async () => {
-      const elapsed = (Date.now() - startTime.getTime()) / 1000;
-      await saveSessionToDB(elapsed);
-    }, 60000);
+      await updateSessionInDB();
+    }, 60000); // Every 60 seconds
+    
     return () => clearInterval(interval);
-  }, [isRunning, startTime]);
+  }, [isRunning, mode]);
 
-  const saveSessionToDB = async (durationSeconds, isFinal = false) => {
+  // NEW: Start session in DB
+  const startSessionInDB = async () => {
     if (!user) return;
     const resolvedUserId = user.id || user._id || user.userId;
 
     if (!resolvedUserId) {
-      console.error("saveSessionToDB: could not resolve userId from user object:", user);
+      console.error("startSessionInDB: could not resolve userId from user object:", user);
       return;
     }
+
     try {
-      const data = {
-        userId: resolvedUserId,
-        endTime: new Date(),
-        isActive: !isFinal,
-      };
-
-      // canonical id to use for this session (prefer stored one)
-      const existingId = localStorage.getItem("activeSessionId");
-
-      if (!existingId) {
-        // No existing session in storage -> create a new DB entry using current sessionId
-        // Ensure sessionId state is set (in case it wasn't)
-        const idToCreate = uuidv4();
-        setSessionId(idToCreate);
-
-        const createData = {
-          sessionId: idToCreate,
-          userId: resolvedUserId,
-          startTime: startTime ? new Date(startTime) : new Date(),
-          endTime: data.endTime,
-          isActive: !isFinal,
-          duration: Math.round(durationSeconds / 60),
-        };
-
-        await axios.post("http://localhost:5000/api/focus", createData);
-        localStorage.setItem("activeSessionId", idToCreate);
-        console.log("Created new session:", idToCreate);
-        const fcount = 1; 
-        const res1 = await axios.put(`http://localhost:5000/api/users/${user.id}/FSessionCount`, {fcount});
-        console.log("FCount update: ", res1.data.user);
-       
-      } else {
-        // Update the existing session id (use the canonical existingId)
-        const r2 = await axios.put(`http://localhost:5000/api/focus/${existingId}`, data);
-        console.log("Updated session:", existingId);
-        console.log("Content:", r2.data);
-        // make sure component state matches storage
-        if (existingId !== sessionId) setSessionId(existingId);
-      }
-      const amount = (mode === "work") ? 1 : 0; 
-      console.log("amount: ", amount);
-      const res = await axios.put(`http://localhost:5000/api/users/${user.id}/currency`, {amount});
-      console.log("Currency update: ", res.data.user);
-
-      let stored = JSON.parse(localStorage.getItem("user"));
-
-      stored.currency = res.data.user.currency;
-
-      localStorage.setItem("user", JSON.stringify(stored));
-      console.log("Local Currency:", stored.currency);
-          } catch (err) {
-      console.error("DB sync error:", err);
+      const res = await axios.post(`http://localhost:5000/api/focus/user/${resolvedUserId}/start`);
+      console.log("Session started in DB:", res.data);
+    } catch (err) {
+      console.error("Error starting session:", err);
     }
   };
 
+  // NEW: Update session in DB (called every minute)
+  const updateSessionInDB = async () => {
+    if (!user) return;
+    const resolvedUserId = user.id || user._id || user.userId;
+
+    if (!resolvedUserId) {
+      console.error("updateSessionInDB: could not resolve userId");
+      return;
+    }
+
+    try {
+      const res = await axios.put(`http://localhost:5000/api/focus/user/${resolvedUserId}/update`);
+      console.log("Session updated (duration +1):", res.data);
+
+      // Update currency (1 coin per minute of work)
+      if (mode === "work") {
+        const amount = 1;
+        const currencyRes = await axios.put(`http://localhost:5000/api/users/${resolvedUserId}/currency`, { amount });
+        console.log("Currency update:", currencyRes.data.user);
+
+        let stored = JSON.parse(localStorage.getItem("user"));
+        stored.currency = currencyRes.data.user.currency;
+        localStorage.setItem("user", JSON.stringify(stored));
+      }
+    } catch (err) {
+      console.error("DB update error:", err);
+    }
+  };
+
+  // NEW: End session in DB
+  const endSessionInDB = async () => {
+    if (!user) return;
+    const resolvedUserId = user.id || user._id || user.userId;
+
+    if (!resolvedUserId) {
+      console.error("endSessionInDB: could not resolve userId");
+      return;
+    }
+
+    try {
+      const res = await axios.put(`http://localhost:5000/api/focus/user/${resolvedUserId}/end`);
+      console.log("Session ended in DB:", res.data);
+    } catch (err) {
+      console.error("Error ending session:", err);
+    }
+  };
 
   const sendNotification = (msg) => {
     if (Notification.permission === "granted") {
@@ -222,105 +217,109 @@ function FocusMode() {
     }
   };
 
-const handleSessionEnd = async () => {
-  await saveSessionToDB(duration, true);
-  
-  setIsRunning(false);
-
-  if (mode === "work") {
-    const newCycle = cycleCount + 1;
-    setCycleCount(newCycle);
-
-    let nextMode, nextDuration;
-    if (newCycle % 4 === 0) {
-      nextMode = "longBreak";
-      nextDuration = longBreakLength * 60;
-      sendNotification("Work complete! Time for a long break.");
-    } else {
-      nextMode = "shortBreak";
-      nextDuration = shortBreakLength * 60;
-      sendNotification("Work complete! Time for a short break.");
-    }
-
-    setMode(nextMode);
-    setDuration(nextDuration);
-    setTimeLeft(nextDuration);
+  const handleSessionEnd = async () => {
+    await endSessionInDB(); // Mark session as inactive
     
-    // AUTO-START THE BREAK TIMER
-    const now = new Date();
-    setStartTime(now);
-    setIsRunning(true);
-    notificationsSent.current = { fifty: false, ninety: false }; // Reset notification flags
-    
-  } else {
-    // After finishing break
-    if (mode === "longBreak") {
-      // After long break, complete the cycle
-      setIsRunning(false);
-      setCycleCount(0);
-      setStartTime(null);
-      setMode("off");
-      sendNotification("All cycles complete, Great job!"); 
-      localStorage.removeItem("activeSessionId");
-    } else {
-      // After short break, go back to work
-      setMode("work");
-      setDuration(workLength * 60);
-      setTimeLeft(workLength * 60);
-      sendNotification("Break over! Back to work.");
+    setIsRunning(false);
+
+    if (mode === "work") {
+      const newCycle = cycleCount + 1;
+      setCycleCount(newCycle);
+
+      let nextMode, nextDuration;
+      if (newCycle % 4 === 0) {
+        nextMode = "longBreak";
+        nextDuration = longBreakLength * 60;
+        sendNotification("Work complete! Time for a long break.");
+      } else {
+        nextMode = "shortBreak";
+        nextDuration = shortBreakLength * 60;
+        sendNotification("Work complete! Time for a short break.");
+      }
+      setMode(nextMode);
+      setDuration(nextDuration);
+      setTimeLeft(nextDuration);
       
-      // AUTO-START THE NEXT WORK TIMER
+      // Auto-start the break timer
       const now = new Date();
       setStartTime(now);
       setIsRunning(true);
-      notificationsSent.current = { fifty: false, ninety: false }; // Reset notification flags
+      await startSessionInDB();
+      
+    } else {
+      // Break ended, auto-start next work session
+      sendNotification("Break complete! Starting next focus session.");
+      setMode("work");
+      setDuration(workLength * 60);
+      setTimeLeft(workLength * 60);
+      notificationsSent.current = { fifty: false, ninety: false };
+      
+      // Auto-start the work timer
+      const now = new Date();
+      setStartTime(now);
+      setIsRunning(true);
+      await startSessionInDB();
     }
-  }
-};
+  };
 
-  const handleStartPause = () => {
+  const handleStartPause = async () => {
     if (isRunning) {
-      // --- Pause timer ---
+      // PAUSE
       clearInterval(timerRef.current);
       setIsRunning(false);
       setPausedTime(timeLeft);
+      
+      // End session in DB when paused
+      await endSessionInDB();
       return;
     }
+
+    // --- START or RESUME ---
+    const now = new Date();
+    
     // Starting fresh → ensure mode becomes work
     if (mode === "off") {
       setMode("work");
       setDuration(workLength * 60);
       setTimeLeft(workLength * 60);
-    }
-    // --- Resume timer ---
-    const now = new Date();
-    if (pausedTime !== null) {
-      const newStartTime = new Date(now.getTime() - (duration - pausedTime) * 1000);
+      setStartTime(now);
+      notificationsSent.current = { fifty: false, ninety: false };
+      
+      // Start new session in DB
+      await startSessionInDB();
+    } else if (pausedTime !== null) {
+      // RESUME from pause
+      const elapsed = duration - pausedTime; 
+      const newStartTime = new Date(now.getTime() - elapsed * 1000);
       setStartTime(newStartTime);
       setPausedTime(null);
+      
+      // Restart session in DB
+      await startSessionInDB();
     } else {
+      // Just starting the timer
       setStartTime(now);
+      
+      // Start session in DB
+      await startSessionInDB();
     }
+    
     setIsRunning(true);
-    notificationsSent.current = { fifty: false, ninety: false };
   };
 
-
   const handleReset = async () => {
-    clearInterval(timerRef.current);
-    if (startTime) {
-      const durationSec = (Date.now() - startTime.getTime()) / 1000;
-      await saveSessionToDB(durationSec, true);
-    }
-    localStorage.removeItem("activeSessionId");
     setIsRunning(false);
+    clearInterval(timerRef.current);
     setMode("off");
     setCycleCount(0);
-    setPausedTime(null);
-    setStartTime(null);
     setDuration(workLength * 60);
     setTimeLeft(workLength * 60);
+    setStartTime(null);
+    setPausedTime(null);
     notificationsSent.current = { fifty: false, ninety: false };
+    
+    // End session in DB
+    await endSessionInDB();
   };
 
   const handleWorkLengthChange = (e) => {
@@ -372,7 +371,6 @@ const handleSessionEnd = async () => {
     loadIdeas();
   }, [user1?.id]); 
 
-
   async function addIdea() {
     if (newIdea.trim() === "") return;
 
@@ -384,7 +382,6 @@ const handleSessionEnd = async () => {
 
       setIdeas(prev => [res.data.task, ...prev]);
       setNewIdea("");
-
     } catch (err) {
       console.error(err);
     }
@@ -392,30 +389,28 @@ const handleSessionEnd = async () => {
 
   async function deleteIdea(id) {
     try {
-        await axios.delete(`http://localhost:5000/api/tasks/${id}`);
-        setIdeas(prev => prev.filter(i => i._id !== id));
-        const amount = 5;
-        console.log("amount: ", amount)
-        const res = await axios.put(`http://localhost:5000/api/users/${user1.id}/currency`, {amount});
-        console.log("task Currency update: ", res.data.user);
-      
-        let stored = JSON.parse(localStorage.getItem("user"));
+      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+      setIdeas(prev => prev.filter(i => i._id !== id));
+      const amount = 5;
+      console.log("amount: ", amount)
+      const res = await axios.put(`http://localhost:5000/api/users/${user1.id}/currency`, {amount});
+      console.log("task Currency update: ", res.data.user);
     
-        stored.currency = res.data.user.currency;
-      
-        localStorage.setItem("user", JSON.stringify(stored));
-        console.log("Local task Currency:", stored.currency);
+      let stored = JSON.parse(localStorage.getItem("user"));
+  
+      stored.currency = res.data.user.currency;
+    
+      localStorage.setItem("user", JSON.stringify(stored));
+      console.log("Local task Currency:", stored.currency);
     } catch (err) {
       console.error(err);
     }
   }
 
-
   function startEditing(idea) {
     setEditingId(idea._id);
     setEditingText(idea.text);
   }
-
 
   async function saveEdit() {
     try {
@@ -430,13 +425,12 @@ const handleSessionEnd = async () => {
 
       setEditingId(null);
       setEditingText("");
-
     } catch (err) {
       console.error(err);
     }
   }
 
-  const handleSettings = () =>{
+  const handleSettings = () => {
     navigate("/settings");
   };
 
@@ -445,10 +439,11 @@ const handleSessionEnd = async () => {
       {/* LEFT SIDE - Timer */}
       <div className="focus-container">
         <h1 className="focus-title">Focus Mode</h1>
-        <h3>Complete Focus Sessions to earn coins!</h3>
-          <button className="setting-btn" onClick={(handleSettings)}>
-            Block Distracting Sites
-          </button>
+        <p>Keep this tab open while you work</p>
+        <p>Complete Focus Sessions to earn coins!</p>
+        <button className="setting-btn" onClick={(handleSettings)}>
+          Block Distracting Sites
+        </button>
         <div className="settings-cardf">
           <label className="settings-label">Session Length:</label>
           <select value={workLength} onChange={handleWorkLengthChange} className="settings-select">

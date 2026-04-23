@@ -70,7 +70,7 @@ export default function VideoCall({ user }) {
         </div>
 
         <div style={styles.divider}>
-          <span style={styles.dividerText}>or</span>
+          <span style={styles.dividerText}> </span>
         </div>
 
         {/* Join room */}
@@ -108,25 +108,25 @@ const styles = {
   callContainer: {
     display: 'flex',
     flexDirection: 'column',
-    width: '100vw',
+    width: '98.7vw',
     height: '100vh',
-    backgroundColor: '#0f0f1a',
+    backgroundColor: '#150f1a',
     overflow: 'hidden',
-    position: 'fixed', // add this — locks it to viewport, no scroll possible
-    top: 0,
-    left: 0,
+    
   },
+  gridWrapper: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+
+  // ── Lobby layout ──
   lobby: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100vw',
+    width: '98.7vw',
     height: '100vh',
     backgroundColor: '#2e2952',
-    overflow: 'hidden',
-    position: 'fixed', // add this
-    top: 0,
-    left: 0,
   },
   card: {
     backgroundColor: '#13131f',

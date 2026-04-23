@@ -122,6 +122,7 @@ function DashBoard({refreshUser}) {
     refreshUser();
     navigate("/");
   };
+ 
 
   if (!user) return null;
 
@@ -174,7 +175,6 @@ function DashBoard({refreshUser}) {
                 <CartesianGrid strokeDasharray="3 3" stroke="#f1dbaa" />
                 <XAxis dataKey="day" tick={{ fill: "#f1dbaa" }} />
                 <YAxis domain={[0, 5]} tick={{ fill: "#f1dbaa" }} />
-                <Tooltip />
                 <Line
                   type="monotone"
                   dataKey="mood"

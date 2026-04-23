@@ -123,16 +123,13 @@ export default function VirtualPet({ pet, user }) {
           <a href="/dashboard" style={navLinkStyle}>Dashboard</a>
           <a href="/profile" style={navLinkStyle}>Profile</a>
           <a href="/shop" style={navLinkStyle}>Pet Shop</a>
-          <a href="/focus" style={navLinkStyle}>Focus Mode</a>
-          <a href="/activity" style={navLinkStyle}>Activity Tracker</a>
+          <a href="/focus" target="_blank" rel="noopener noreferrer" style={navLinkStyle}>Focus Mode</a>
+          <a href="/activity" target="_blank" rel="noopener noreferrer" style={navLinkStyle}>Activity Tracker</a>
           <a href="/mood" style={navLinkStyle}>Mood Journal</a>
           <a href="/mira" style={navLinkStyle}>Mira</a>
           <a href="/help" style={navLinkStyle}>Suraiyya Focus Module</a>
         </div>
       </nav>
-      <div className="no-pet-message">
-        You don't have a pet yet. Go to the shop to choose one for free!
-      </div>
     </>
   );
 
@@ -193,8 +190,8 @@ export default function VirtualPet({ pet, user }) {
           <a href="/dashboard" style={navLinkStyle}>Dashboard</a>
           <a href="/profile" style={navLinkStyle}>Profile</a>
           <a href="/shop" style={navLinkStyle}>Pet Shop</a>
-          <a href="/focus" style={navLinkStyle}>Focus Mode</a>
-          <a href="/activity" style={navLinkStyle}>Activity Tracker</a>
+          <a href="/focus" target="_blank" rel="noopener noreferrer" style={navLinkStyle}>Focus Mode</a>
+          <a href="/activity" target="_blank" rel="noopener noreferrer" style={navLinkStyle}>Activity Tracker</a>
           <a href="/mood" style={navLinkStyle}>Mood Journal</a>
           <a href="/mira" style={navLinkStyle}>Mira</a>
           <a href="/help" style={navLinkStyle}>Suraiyya Focus Module</a>
