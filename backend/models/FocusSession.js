@@ -1,13 +1,37 @@
 import mongoose from "mongoose";
 
-const focusSessionSchema = new mongoose.Schema({
-  sessionId: { type: String, required: true, unique: true },
-  userId: { type: String, required: true }, // can be linked to userId in User model
-  startTime: { type: Date, required: true },
-  endTime: { type: Date },
-  isActive: { type: Boolean, default: false },
-  duration: { type: Number, default: 0 }, // in minutes or seconds
-}, { timestamps: true });
+const focusSessionSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: String,
+      required: true,
+      unique: true, // One session document per user
+      index: true,
+    },
+    totalDuration: {
+      type: Number,
+      default: 0,
+      required: true,
+      // Total focus time in MINUTES
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+    currentStartTime: {
+      type: Date,
+      default: null,
+    },
+    currentEndTime: {
+      type: Date,
+      default: null,
+    },
+  },
+  {
+    timestamps: true, // Adds createdAt and updatedAt
+  }
+);
 
 const FocusSession = mongoose.model("FocusSession", focusSessionSchema);
+
 export default FocusSession;

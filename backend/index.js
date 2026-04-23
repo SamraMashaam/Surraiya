@@ -5,7 +5,6 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import focusRoutes from "./routes/focusRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-import sessionRoutes from "./routes/session.js";
 import petRoutes from "./routes/petRoutes.js";
 import shopRoutes from "./routes/shopRoutes.js"
 import ideaRoutes from "./routes/ideaRoutes.js";
@@ -35,7 +34,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/focus", focusRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/blocklist", blocklistRoutes);
-app.use("/api/session", sessionRoutes);
 app.use("/api/pets", petRoutes);
 app.use("/api/shop", shopRoutes);
 app.use("/api/ideas", ideaRoutes);

@@ -132,21 +132,26 @@ def entry_helper(entry) -> dict:
         "all_scores": entry["all_scores"]
     }
 
-def generate_chatbot_response(message: str, system_prompt: str) -> str:
-    print(f"  Formatting prompt...")
-    formatted_prompt = f"""<|begin_of_text|><|start_header_id|>system<|end_header_id|>
-
-{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>
-
-{message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
-
-"""
+def generate_chatbot_response(message: str, system_prompt: str, conversation_history: List[dict] = None) -> str:
     
-    print(f"  Tokenizing...")
-    inputs = chatbot_tokenizer(formatted_prompt, return_tensors="pt").to(chatbot_model.device)
+    conversation = f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|>"
+    
+    if conversation_history:
+        print(f"  Including {len(conversation_history)} previous messages for context")
+        for msg in conversation_history:
+            role = msg['role']
+            content = msg['content']
+            conversation += f"<|start_header_id|>{role}<|end_header_id|>\n\n{content}<|eot_id|>"
+    
+    conversation += f"<|start_header_id|>user<|end_header_id|>\n\n{message}<|eot_id|>"
+    conversation += f"<|start_header_id|>assistant<|end_header_id|>\n\n"
+    
+    
+    print(f"  Tokenizing")
+    inputs = chatbot_tokenizer(conversation, return_tensors="pt").to(chatbot_model.device)
     print(f"  Input tokens: {inputs['input_ids'].shape[1]}")
     
-    print(f"  Generating (this may take 10-30 seconds)...")
+    print(f"  Generating (it'll take a while)")
     with torch.no_grad():
         outputs = chatbot_model.generate(
             **inputs,
@@ -158,21 +163,19 @@ def generate_chatbot_response(message: str, system_prompt: str) -> str:
             pad_token_id=chatbot_tokenizer.pad_token_id,
         )
     
-    print(f"  Decoding...")
+    print(f"  Decoding")
     response = chatbot_tokenizer.decode(outputs[0], skip_special_tokens=True)
     
-    print(f"  Extracting response...")
+    print(f"  Extracting response")
     if "assistant" in response:
         response = response.split("assistant")[-1].strip()
     
-    print(f"  Done! Response length: {len(response)} chars")
+    print(f"  Response length: {len(response)} chars")
     return response
 
 @app.get("/api/chat/{user_id}/history", response_model=ConversationHistory)
 async def get_chat_history(user_id: str, limit: int = 100):
-    """
-    Get conversation history for a user
-    """
+    
     messages = []
     async for message in chat_collection.find(
         {"user_id": user_id}
@@ -210,13 +213,27 @@ async def delete_chat_message(message_id: str):
 
 @app.post("/api/chat", response_model=ChatMessageResponse)
 async def chat(request: ChatRequest):
-    """
-    Chat with therapy bot and save to database
-    """
-    print(f"\n{'='*80}")
+    
     print(f"Received chat request from user: {request.user_id}")
     
     try:
+        history = []
+        async for message in chat_collection.find(
+            {"user_id": request.user_id or "anonymous"}
+        ).sort("timestamp", -1).limit(6):  # Last 6 messages (3 exchanges)
+            history.append(message)
+        
+        # Reverse to get chronological order (oldest first)
+        history.reverse()
+        
+        # Format history for the model
+        conversation_history = [
+            {"role": msg["role"], "content": msg["content"]}
+            for msg in history
+        ]
+        
+        print(f"  Found {len(conversation_history)} recent messages for context")
+        
         # Save user message to database
         user_message_doc = {
             "user_id": request.user_id or "anonymous",
@@ -226,14 +243,16 @@ async def chat(request: ChatRequest):
             "created_at": datetime.now(UTC)
         }
         await chat_collection.insert_one(user_message_doc)
-        print(f"✓ User message saved")
+        print(f"User message saved")
         
-        # Generate bot response
-        print("Generating response...")
-        response = generate_chatbot_response(request.message, request.system_prompt)
-        print(f"✓ Response generated: {response[:100]}...")
+        print("Generating response with context...")
+        response = generate_chatbot_response(
+            request.message, 
+            request.system_prompt,
+            conversation_history  
+        )
+        print(f"Response generated: {response[:100]}...")
         
-        # Save bot message to database
         bot_message_doc = {
             "user_id": request.user_id or "anonymous",
             "role": "assistant",
@@ -243,7 +262,7 @@ async def chat(request: ChatRequest):
         }
         result = await chat_collection.insert_one(bot_message_doc)
         bot_message_doc["_id"] = result.inserted_id
-        print(f"✓ Bot message saved")
+        print(f"Bot message saved")
         
         return chat_message_helper(bot_message_doc)
         
@@ -273,33 +292,6 @@ async def health():
             "therapy_chatbot": "loaded"
         }
     }
-
-@app.post("/api/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    """
-    Chat with the chatbot
-    """
-    print(f"\n{'='*80}")
-    print(f"Received chat request: {request.message[:50]}...")
-    
-    try:
-        print("Generating response...")
-        response = generate_chatbot_response(request.message, request.system_prompt)
-        print(f"Response generated: {response[:100]}...")
-        
-        result = ChatResponse(
-            response=response,
-            timestamp=datetime.now(UTC)
-        )
-        
-        print("Sending response to frontend")
-        return result
-        
-    except Exception as e:
-        print(f"ERROR: {str(e)}")
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
 
 @app.post("/api/entries", response_model=JournalEntryResponse)
 async def create_entry(entry: JournalEntry):
