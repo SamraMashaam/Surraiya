@@ -1,6 +1,6 @@
 .profile-page {
   padding: 2rem;
-  color: #fff;
+  color: #e9d5da;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
 .profile-header h2 {
   margin: 0 0 0 20px;
   font-size: 2rem;
-  color: #a8b2d1;
+  color: #f1dbaa;
 }
 .profile-card {
   width: 100%;
@@ -39,8 +39,8 @@
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #64ffda;
-  box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+  border: 4px solid #f1dbaa;
+  box-shadow: 0 0 20px rgba(241, 219, 170, 0.3);
 }
 .change-picture-btn {
   position: absolute;
@@ -49,8 +49,8 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: #64ffda;
-  border: 2px solid #0a192f;
+  background: #f1dbaa;
+  border: 2px solid #2e2952;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -61,7 +61,7 @@
 }
 .change-picture-btn:hover {
   transform: scale(1.1);
-  background: #52e4b8;
+  background: #e9d5da;
 }
 .profile-details {
   width: 100%;
@@ -70,17 +70,17 @@
   display: flex;
   justify-content: space-between;
   padding: 1rem 0;
-  border-bottom: 1px solid #233554;
+  border-bottom: 1px solid #827397;
 }
 .detail-row:last-of-type {
   border-bottom: none;
 }
 .label {
-  color: #8892b0;
+  color: #e9d5da;
   font-weight: bold;
 }
 .value {
-  color: #ccd6f6;
+  color: #f1dbaa;
   font-size: 1.1rem;
 }
 .profile-actions {
@@ -89,9 +89,9 @@
   justify-content: center;
 }
 .action-btn {
-  background: #64ffda;
-  color: #0a192f;
-  border: none;
+  background: #827397;
+  color: #f1dbaa;
+  border: 1px solid #f1dbaa;
   padding: 0.75rem 2rem;
   border-radius: 4px;
   font-weight: bold;
@@ -104,8 +104,8 @@
 }
 .back-btn {
   background: transparent;
-  border: 1px solid #64ffda;
-  color: #64ffda;
+  border: 1px solid #f1dbaa;
+  color: #f1dbaa;
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
@@ -113,7 +113,7 @@
   font-size: 0.9rem;
 }
 .back-btn:hover {
-  background: rgba(100, 255, 218, 0.1);
+  background: rgba(241, 219, 170, 0.1);
 }
 .message {
   padding: 0.75rem;
@@ -128,16 +128,16 @@
   color: #ff6b81;
 }
 .message.success {
-  background: rgba(100, 255, 218, 0.2);
-  border: 1px solid #64ffda;
-  color: #64ffda;
+  background: rgba(241, 219, 170, 0.15);
+  border: 1px solid #f1dbaa;
+  color: #f1dbaa;
 }
 .edit-options {
   margin-top: 1rem;
   width: 100%;
 }
 .edit-mode-selector h3 {
-  color: #ccd6f6;
+  color: #e9d5da;
   font-size: 1.1rem;
   margin-bottom: 1rem;
   text-align: center;
@@ -149,8 +149,9 @@
   flex-wrap: wrap;
 }
 .edit-type-btn {
-  background: #64ffda;
-  color: #0a192f;
+  background: #827397;
+  color: #f1dbaa;
+  border: 1px solid #f1dbaa;
   padding: 0.5rem 1.5rem;
   font-size: 0.9rem;
 }
@@ -160,13 +161,13 @@
 .edit-form {
   margin-top: 1.5rem;
   padding: 1.5rem;
-  background: rgba(10, 25, 47, 0.8);
+  background: #2e2952;
   border-radius: 8px;
-  border: 1px solid #233554;
+  border: 1px solid #827397;
   animation: slideDown 0.3s ease;
 }
 .edit-form h3 {
-  color: #64ffda;
+  color: #f1dbaa;
   margin-bottom: 1.5rem;
   text-align: center;
   font-size: 1.2rem;
@@ -176,23 +177,24 @@
 }
 .form-group1 label {
   display: block;
-  color: #8892b0;
+  color: #e9d5da;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
 .form-group1 input {
   width: 100%;
   padding: 0.75rem;
-  background: #0a192f;
-  border: 1px solid #233554;
+  background: #2e2952;
+  border: 1px solid #827397;
   border-radius: 4px;
-  color: #ccd6f6;
+  color: #e9d5da;
   font-size: 1rem;
   transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 .form-group1 input:focus {
   outline: none;
-  border-color: #64ffda;
+  border-color: #f1dbaa;
 }
 .form-group1 input:disabled {
   opacity: 0.6;
@@ -205,10 +207,13 @@
   margin-top: 1.5rem;
 }
 .submit-btn1 {
-  background: #64ffda;
-  color: #0a192f;
+  background: #827397;
+  color: #f1dbaa;
+  border: 1px solid #f1dbaa;
   padding: 0.75rem 1.5rem;
   font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 .submit-btn1:disabled {
   opacity: 0.6;
@@ -220,14 +225,19 @@
   color: #ff4757;
   padding: 0.75rem 1.5rem;
   font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 .cancel-btn1:hover {
   background: rgba(255, 71, 87, 0.1);
 }
 .edit-btn1 {
-  background: #64ffda;
-  color: #0a192f;
+  background: #827397;
+  color: #f1dbaa;
+  border: 1px solid #f1dbaa;
   margin-right: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 /* Image Upload Styles */
@@ -249,11 +259,11 @@
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #64ffda;
-  box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+  border: 3px solid #f1dbaa;
+  box-shadow: 0 0 20px rgba(241, 219, 170, 0.3);
 }
 .preview-text {
-  color: #8892b0;
+  color: #e9d5da;
   font-size: 0.9rem;
   margin: 0;
 }
@@ -261,13 +271,13 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  border: 3px dashed #233554;
+  border: 3px dashed #827397;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  color: #8892b0;
+  color: #e9d5da;
 }
 .upload-placeholder p:first-child {
   font-size: 3rem;
@@ -278,20 +288,21 @@
   margin: 0;
 }
 .file-input-label {
-  background: #64ffda;
-  color: #0a192f;
+  background: #827397;
+  color: #f1dbaa;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
   transition: opacity 0.2s;
   display: inline-block;
+  border: 1px solid #f1dbaa;
 }
 .file-input-label:hover {
   opacity: 0.8;
 }
 .file-info {
-  color: #8892b0;
+  color: #e9d5da;
   font-size: 0.85rem;
   margin: 0;
   text-align: center;
