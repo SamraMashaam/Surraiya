@@ -144,7 +144,7 @@ function DashBoard({refreshUser}) {
           <li onClick={handleBlock}>Blocked Sites</li>
           <li onClick={handleFriends}>Friends</li>
           <li onClick={handleChat}>Chat</li>
-          <li onClick={handleVideo}>BD Video Call</li>
+          <li onClick={handleVideo}>Body Doubling</li>
           <li onClick={handleLogout}>Log Out</li>
         </ul>
         <img src="s_logo.png" style={{width: "90px", height: "90px", marginTop: "10px"}} alt="logo" />

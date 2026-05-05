@@ -42,19 +42,24 @@ export default function MoodPage() {
   };
 
   const fetchMonthlyStats = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${ANALYSIS_API_URL}/entries/${USER_ID}/monthly?year=${currentYear}&month=${currentMonth}`
-      );
+  setLoading(true);
+  try {
+    const response = await fetch(
+      `${ANALYSIS_API_URL}/entries/${USER_ID}/monthly?year=${currentYear}&month=${currentMonth}`
+    );
+    if (!response.ok) {
+      setMonthlyStats(null);
+    } else {
       const data = await response.json();
       setMonthlyStats(data);
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-      setMonthlyStats(null);
     }
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    setMonthlyStats(null);
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   return (
     <div className="mood-page">
@@ -175,24 +180,22 @@ function NewEntryForm({ userId, onEntryCreated, navigate }) {
         entry_id: result.id,
         emotion: result.emotion,
         content: result.entryContent,  
-        analysis: data.analysis,
-        timestamp: new Date().toISOString()
+        analysis: data.analysis
       }));
 
       console.log('Stored context:', localStorage.getItem('chatbot_context')); // Debug
 
       // Navigate to chatbot page
-      navigate('/chat');
+      navigate('/mira');
       
     } catch (err) {
       console.error('Error getting chatbot insights:', err);
       // Even if API fails, navigate to chatbot with basic context
       localStorage.setItem('chatbot_context', JSON.stringify({
         emotion: result.emotion,
-        content: result.entryContent, 
-        timestamp: new Date().toISOString()
+        content: result.entryContent 
       }));
-      navigate('/chat');
+      navigate('/mira');
     } finally {
       setLoadingInsight(false);
     }
@@ -432,7 +435,7 @@ function MonthlyStats({ stats, loading }) {
       <div className="breakdown-card">
         <h3 className="breakdown-title">Emotion Breakdown</h3>
         <div className="breakdown-rows">
-          {Object.entries(stats.emotion_breakdown)
+          {Object.entries(stats.emotion_breakdown || {})
             .sort((a, b) => b[1].count - a[1].count)
             .map(([emotion, data]) => (
               <div key={emotion}>

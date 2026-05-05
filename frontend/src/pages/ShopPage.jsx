@@ -106,14 +106,16 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
         const updatedUser = { 
           ...prev, 
           currency: data.currency, 
-          petId: data.pet._id 
+          petId: data.pet._id,
+          ownedPets: [...(prev.ownedPets || []), petSprite] // Add the newly bought pet
         };
 
         // update localStorage
         localStorage.setItem("user", JSON.stringify({
           ...JSON.parse(localStorage.getItem("user")), 
           petID: updatedUser.petId,
-          currency: updatedUser.currency
+          currency: updatedUser.currency,
+          ownedPets: updatedUser.ownedPets
         }));
 
         return updatedUser;
@@ -191,6 +193,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
       const data2 = res2.data;
       if (data2.error) return alert(data2.error);
 
+      // Update pet state with the equipped accessory data
       setGlobalPet(data2.pet);
     } catch (err) {
       console.error(err);

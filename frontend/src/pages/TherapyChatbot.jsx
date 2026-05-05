@@ -9,24 +9,13 @@ const ChatMessage = ({ message, isUser }) => (
         {isUser ? 'You' : 'Mira'}
       </div>
       <div className="message-content">{message.content}</div>
-      <div className="message-time">
-        {new Date(message.timestamp).toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit'
-        })}
-      </div>
     </div>
   </div>
 );
 
 const TherapyChatbot = () => {
-  const [userId] = useState(() => {
-    const stored = localStorage.getItem('chat_user_id');
-    if (stored) return stored;
-    const newId = `user_${Date.now()}`;
-    localStorage.setItem('chat_user_id', newId);
-    return newId;
-  });
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+const userId = storedUser ? storedUser.id : null;
 
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -74,15 +63,13 @@ const TherapyChatbot = () => {
           const formattedMessages = data.messages.map(msg => ({
             content: msg.content,
             isUser: msg.role === 'user',
-            timestamp: msg.timestamp,
             id: msg.id
           }));
           setMessages(formattedMessages);
         } else {
           setMessages([{
             content: "Hello! I'm Mira, here to help you with productivity tips and support. What would you like to talk about today?",
-            isUser: false,
-            timestamp: new Date().toISOString()
+            isUser: false
           }]);
         }
       }
@@ -90,8 +77,7 @@ const TherapyChatbot = () => {
       console.error('Error loading history:', error);
       setMessages([{
         content: "Hello! I'm Mira, here to help you with productivity tips and support. What would you like to talk about today?",
-        isUser: false,
-        timestamp: new Date().toISOString()
+        isUser: false
       }]);
     } finally {
       setLoadingHistory(false);
@@ -111,8 +97,7 @@ const TherapyChatbot = () => {
       if (response.ok) {
         setMessages([{
           content: "Chat history cleared. How can I help you today?",
-          isUser: false,
-          timestamp: new Date().toISOString()
+          isUser: false
         }]);
       }
     } catch (error) {
@@ -135,8 +120,7 @@ const TherapyChatbot = () => {
 
     const userMessage = {
       content: customMessage || inputMessage, 
-      isUser: true,
-      timestamp: new Date().toISOString()
+      isUser: true
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -171,7 +155,6 @@ const TherapyChatbot = () => {
       const botMessage = {
         content: data.content,
         isUser: false,
-        timestamp: data.timestamp,
         id: data.id
       };
 
@@ -188,8 +171,7 @@ const TherapyChatbot = () => {
 
       const errorMessage = {
         content: "I'm having trouble connecting right now. Please try again later.",
-        isUser: false,
-        timestamp: new Date().toISOString()
+        isUser: false
       };
 
       setMessages(prev => [...prev, errorMessage]);
