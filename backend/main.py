@@ -82,7 +82,6 @@ class JournalEntryResponse(BaseModel):
     date: datetime
     emotion: str
     confidence: float
-    all_scores: dict
 
 class MonthlyStats(BaseModel):
     month: str
@@ -118,7 +117,6 @@ def analyze_emotion(text: str) -> dict:
     return {
         'emotion': top_emotion['label'],
         'confidence': top_emotion['score'],
-        'all_scores': {r['label']: round(r['score'], 3) for r in results_sorted}
     }
 
 def entry_helper(entry) -> dict:
@@ -129,7 +127,6 @@ def entry_helper(entry) -> dict:
         "date": entry["date"],
         "emotion": entry["emotion"],
         "confidence": entry["confidence"],
-        "all_scores": entry["all_scores"]
     }
 
 def generate_chatbot_response(message: str, system_prompt: str, conversation_history: List[dict] = None) -> str:
@@ -239,9 +236,7 @@ async def chat(request: ChatRequest):
             "user_id": request.user_id or "anonymous",
             "role": "user",
             "content": request.message,
-            "timestamp": datetime.now(UTC),
-            "created_at": datetime.now(UTC)
-        }
+            "timestamp": datetime.now(UTC)        }
         await chat_collection.insert_one(user_message_doc)
         print(f"User message saved")
         
@@ -257,8 +252,7 @@ async def chat(request: ChatRequest):
             "user_id": request.user_id or "anonymous",
             "role": "assistant",
             "content": response,
-            "timestamp": datetime.now(UTC),
-            "created_at": datetime.now(UTC)
+            "timestamp": datetime.now(UTC)
         }
         result = await chat_collection.insert_one(bot_message_doc)
         bot_message_doc["_id"] = result.inserted_id
@@ -303,8 +297,6 @@ async def create_entry(entry: JournalEntry):
         "date": entry.date or datetime.utcnow(),
         "emotion": sentiment['emotion'],
         "confidence": sentiment['confidence'],
-        "all_scores": sentiment['all_scores'],
-        "created_at": datetime.now(UTC)
     }
     
     result = await entries_collection.insert_one(entry_dict)
