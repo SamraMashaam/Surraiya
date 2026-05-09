@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { createProxyMiddleware } from "http-proxy-middleware";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import focusRoutes from "./routes/focusRoutes.js";
@@ -29,6 +30,30 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const analysisApiUrl = process.env.ANALYSIS_API_URL || "http://localhost:8000";
+const apiProxy = createProxyMiddleware({
+  target: analysisApiUrl,
+  changeOrigin: true,
+  pathFilter: (path) => {
+    if (path.startsWith('/api/entries')) return true;
+    if (path.startsWith('/api/chat')) {
+      if (path.startsWith('/api/chat/conversations')) return false;
+      if (path.startsWith('/api/chat/messages')) return false;
+      if (path.startsWith('/api/chat/users')) return false;
+      return true;
+    }
+    return false;
+  },
+  onError: (err, req, res) => {
+    console.error('Proxy error:', err.message);
+    res.status(502).json({
+      error: 'Analysis service unavailable',
+      message: 'The mood journal and chatbot services are currently offline. Please ensure the Python server is running on port 8000.'
+    });
+  }
+});
+app.use(apiProxy);
 
 app.use("/api/users", userRoutes);
 app.use("/api/focus", focusRoutes);
