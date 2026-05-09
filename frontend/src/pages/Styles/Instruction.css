@@ -1,28 +1,28 @@
 .inst-container {
-  min-height: 100vh;
-  background: linear-gradient(to bottom right, #2e2952, #827397);
+  min-height: calc(100vh - 55px);
+  background: #0D1117;
   padding: 40px 20px;
 }
 
 .inst-card {
   max-width: 900px;
   margin: 0 auto;
-  background: #4d4c7d;
+  background: #1A2332;
   padding: 40px;
   border-radius: 10px;
-  color: #e9d5da;
-  box-shadow: 0 10px 10px rgba(0,0,0,0.5);
-  border: 1px solid #827397;
+  color: #E5E7EB;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+  border: 1px solid #225E40;
 }
 
 .inst-header {
   margin-bottom: 30px;
-  color: #f1dbaa;
+  color: #7EE787;
 }
 
 .inst-desc {
   font-size: 18px;
-  color: #e9d5da;
+  color: #E5E7EB;
   margin-bottom: 40px;
   line-height: 1.6;
 }
@@ -31,9 +31,9 @@
   padding: 30px;
   border-radius: 8px;
   margin-bottom: 30px;
-  background: linear-gradient(to bottom, #2e2952, #4d4c7d);
-  color: #f1dbaa;
-  border: 1px solid #827397;
+  background: #1A2332;
+  color: #7EE787;
+  border: 1px solid #225E40;
 }
 
 .center {
@@ -43,32 +43,37 @@
 .primary-btn {
   padding: 15px 40px;
   font-size: 18px;
-  background: #2e2952;
-  color: #f1dbaa;
-  border: 1px solid #f1dbaa;
+  background: #1B7A3E;
+  color: #ffffff;
+  border: 1px solid #225E40;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease;
+}
+
+.primary-btn:hover {
+  background: #145A2E;
 }
 
 .primary-btn:disabled {
-  background: #4d4c7d;
-  color: #827397;
-  border-color: #827397;
+  background: #0F3D2E;
+  color: #6B7280;
+  border-color: #225E40;
   cursor: not-allowed;
 }
 
 .file-info {
   font-size: 14px;
   margin-top: 15px;
-  color: #e9d5da;
+  color: #E5E7EB;
 }
 
 .inst-list {
   padding-left: 25px;
   line-height: 2;
-  color: #e9d5da;
+  color: #E5E7EB;
 }
 
 .inst-section {
@@ -79,15 +84,15 @@
   display: flex;
   gap: 15px;
   padding: 20px;
-  background: #2e2952;
+  background: #1A2332;
   border-radius: 8px;
   margin-bottom: 15px;
-  border: 1px solid #827397;
+  border: 1px solid #225E40;
 }
 
 .step-number {
-  background: #827397;
-  color: #f1dbaa;
+  background: #225E40;
+  color: #7EE787;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -99,46 +104,56 @@
 }
 
 .code-box {
-  background: #2e2952;
-  color: #f1dbaa;
+  background: #1A2332;
+  color: #7EE787;
   padding: 2px 6px;
   border-radius: 3px;
-  border: 1px solid #827397;
+  border: 1px solid #225E40;
 }
 
 .copy-btn {
   margin-top: 10px;
   padding: 6px 12px;
-  background: #827397;
-  color: #f1dbaa;
+  background: #225E40;
+  color: #7EE787;
   border: none;
   border-radius: 4px;
   font-size: 13px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: #1B7A3E;
 }
 
 .copy-btn.copied {
-  background: #4d4c7d;
-  color: #e9d5da;
+  background: #1B7A3E;
+  color: #ffffff;
 }
 
 .footer-cta {
   margin-top: 40px;
   padding: 30px;
-  background: #2e2952;
-  color: white;
+  background: #1A2332;
+  color: #E5E7EB;
   border-radius: 8px;
   text-align: center;
-  border: 1px solid #827397;
+  border: 1px solid #225E40;
 }
 
 .white-btn {
   padding: 12px 30px;
   font-size: 18px;
-  background: #f1dbaa;
-  color: #2e2952;
+  background: #1B7A3E;
+  color: #ffffff;
   border: none;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.white-btn:hover {
+  background: #145A2E;
 }

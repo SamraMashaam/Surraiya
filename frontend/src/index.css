@@ -1,20 +1,41 @@
+:root {
+  /* Logo color scheme extraction */
+  --color-primary: #1b7d4a; /* Logo Green */
+  --color-primary-light: #80d4bd; /* Logo Mint */
+  --color-primary-dark: #155d38; /* Logo Dark Green */
+  --color-accent: #7dffcf; /* Logo Bright Mint */
+  
+  --color-bg-deep: #19242b; /* Darker tone for deep backgrounds */
+  --color-bg-primary: #21323a; /* Logo Dark Teal base */
+  --color-bg-card: #24353d; /* Logo Elevated Dark Teal */
+  --color-bg-elevated: #283a43; /* Lighter Elevated */
+  
+  --color-text-primary: #f7f7f7; /* Logo Off-white */
+  --color-text-secondary: rgba(247, 247, 247, 0.7);
+  --color-text-muted: rgba(247, 247, 247, 0.4);
+  
+  --color-border: rgba(125, 255, 207, 0.1);
+  --color-border-accent: rgba(125, 255, 207, 0.25);
+  
+  --color-success: #1b7d4a;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #80d4bd;
+  
+  --font-heading: 'Syne', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-deep);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-top: 55px;
 }
-
-* {
-  font-family: "Poppins", Verdana, Geneva, Tahoma, sans-serif;
- 
-}
-
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

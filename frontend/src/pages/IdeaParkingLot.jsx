@@ -12,19 +12,21 @@ export default function IdeaParkingLot() {
 
   // Load user from localStorage
   const user = JSON.parse(localStorage.getItem("user"));
-  useEffect(() => {
-      document.title = "Idea Parking Lot";
-    }, []);
+  const userId = user ? (user.id || user._id) : null;
 
   useEffect(() => {
-    if (!user) {
+    document.title = "Idea Parking Lot";
+  }, []);
+
+  useEffect(() => {
+    if (!userId) {
       navigate("/login");
       return;
     }
 
     async function loadIdeas() {
       try {
-        const res = await axios.get(`http://localhost:5000/api/ideas/${user.id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/ideas/${userId}`);
         setIdeas(res.data.ideas);
       } catch (err) {
         console.error(err);
@@ -32,15 +34,16 @@ export default function IdeaParkingLot() {
     }
 
     loadIdeas();
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
 
   async function addIdea() {
     if (newIdea.trim() === "") return;
 
     try {
-      const res = await axios.post("http://localhost:5000/api/ideas", {
-        userId: user.id,
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/ideas`, {
+        userId: userId,
         text: newIdea
       });
 
@@ -54,7 +57,7 @@ export default function IdeaParkingLot() {
 
   async function deleteIdea(id) {
     try {
-      await axios.delete(`http://localhost:5000/api/ideas/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/ideas/${id}`);
       setIdeas(prev => prev.filter(i => i._id !== id));
     } catch (err) {
       console.error(err);
@@ -71,7 +74,7 @@ export default function IdeaParkingLot() {
   async function saveEdit() {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/ideas/${editingId}`,
+        `${process.env.REACT_APP_API_URL}/api/ideas/${editingId}`,
         { text: editingText }
       );
 
@@ -109,13 +112,7 @@ export default function IdeaParkingLot() {
           <p className="empty-msg">No ideas yet. Start writing!</p>
         ) : (
           ideas.map(idea => (
-            <div style={{
-      background: '#111827',
-      borderRadius: '0.75rem',
-      padding: '2rem',
-      border: '2px solid #e9d5da',
-      color: 'white'
-    }} className="idea-item" key={idea._id}>
+            <div className="idea-item" key={idea._id}>
 
               {editingId === idea._id ? (
                 <>

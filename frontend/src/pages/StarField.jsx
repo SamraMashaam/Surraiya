@@ -38,14 +38,14 @@ function StarField() {
 
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(241, 219, 170, ${star.alpha})`;
+        ctx.fillStyle = `rgba(128, 212, 189, ${star.alpha})`;
         ctx.fill();
 
         // Occasional larger stars get a soft glow
         if (star.radius > 1.2) {
           ctx.beginPath();
           ctx.arc(star.x, star.y, star.radius * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(241, 219, 170, ${star.alpha * 0.15})`;
+          ctx.fillStyle = `rgba(128, 212, 189, ${star.alpha * 0.15})`;
           ctx.fill();
         }
       });
@@ -72,7 +72,7 @@ function StarField() {
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        zIndex: 0,
+        zIndex: -1,
       }}
     />
   );

@@ -22,7 +22,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${storedUser.id}`);
         const data = res.data;
         console.log("data: ", data);
         
@@ -44,7 +44,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
         // Update GLOBAL pet state
         if (data.petID) {
-          const petRes = await axios.get(`http://localhost:5000/api/pets/${data.petID._id}`);
+          const petRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/pets/${data.petID._id}`);
           console.log("Current pet: ", petRes.data);
           setGlobalPet(petRes.data);
         }
@@ -54,7 +54,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
     };
 
     fetchUser();
-  }, [navigate]);
+  }, [navigate, setGlobalPet, setGlobalUser]);
 
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
  
   const buyPet = async (petSprite) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/shop/buy/pet", {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/shop/buy/pet`, {
         userId: user._id,
         petType: petSprite.split("_")[0],
         baseSprite: petSprite
@@ -129,7 +129,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
 
   const updatePet = async (petSprite) => {
     try {
-      const res = await axios.post("http://localhost:5000/api/shop/equip/pet", {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/shop/equip/pet`, {
         userId: user._id,
         petType: petSprite.split("_")[0],
         baseSprite: petSprite
@@ -163,7 +163,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
   const buyAccessory = async (acc) => {
     try {
       const petId = resolvedPetId;
-      const res = await axios.post(`http://localhost:5000/api/shop/buy/accessory`, {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/shop/buy/accessory`, {
         userId: user._id,
         accessory: acc
       });
@@ -186,7 +186,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
       });
 
       // Now equip using the resolved petId
-      const res2 = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${petId}`, {
+      const res2 = await axios.post(`${process.env.REACT_APP_API_URL}/api/shop/equip/accessory/${petId}`, {
         userId: user._id,
         accessory: acc
       });
@@ -203,7 +203,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
   const equipAccessory = async (acc) => {
     try {
       const petId = resolvedPetId;
-      const res = await axios.post(`http://localhost:5000/api/shop/equip/accessory/${petId}`, {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/shop/equip/accessory/${petId}`, {
         userId: user._id,
         accessory: acc
       });
@@ -219,7 +219,7 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
   const unequipAccessory = async (acc) => {
     try {
       const petId = resolvedPetId;
-      const res = await axios.post(`http://localhost:5000/api/shop/unequip/accessory/${petId}`, {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/shop/unequip/accessory/${petId}`, {
         userId: user._id,
         accessory: acc
       });
@@ -238,7 +238,10 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
     const owned = user?.ownedPets?.includes(petSprite);
 
     return (
-      <div className="shop-item" key={petSprite}>
+      <div className="shop-item" key={petSprite} data-type="pet">
+        <div className="particle particle-1" />
+        <div className="particle particle-2" />
+        <div className="particle particle-3" />
         <img src={`/pets/${petSprite}`} alt={petSprite} />
 
         {isActivePet ? (
@@ -262,6 +265,9 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
     const equipped = pet?.equippedAccessories?.[node]?.includes(acc);
     return (
       <div className="shop-item" key={acc}>
+        <div className="particle particle-1" />
+        <div className="particle particle-2" />
+        <div className="particle particle-3" />
         <img src={`/pets/${acc}`} alt={acc} />
 
         {!userHasPet ? (
@@ -293,11 +299,13 @@ export default function ShopPage({ setPet: setGlobalPet, setUser: setGlobalUser,
         <span>{user.currency || 0}</span>
       </div>
 
-      <h2 className="section-title">Pets</h2>
-      <div className="shop-grid">{pets.map(renderPetItem)}</div>
+      <div className="shop-scroll-content">
+        <h2 className="section-title">Pets</h2>
+        <div className="shop-grid">{pets.map(renderPetItem)}</div>
 
-      <h2 className="section-title">Accessories</h2>
-      <div className="shop-grid">{accessories.map(renderAccessoryItem)}</div>
+        <h2 className="section-title">Accessories</h2>
+        <div className="shop-grid">{accessories.map(renderAccessoryItem)}</div>
+      </div>
     </div>
   );
 }

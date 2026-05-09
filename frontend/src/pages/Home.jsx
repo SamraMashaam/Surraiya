@@ -30,6 +30,16 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    const autoActivateTimer = setTimeout(() => {
+      setActivated(true);
+    }, 3500);
+
+    return () => {
+      clearTimeout(autoActivateTimer);
+    };
+  }, []);
+
+  useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -96,9 +106,9 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container" onClick={() => setActivated(true)}>
+    <main className="home-container" onClick={() => setActivated(true)}>
       {/* Floating Background Elements */}
-      <div className="floating-shapes">
+      <div className="floating-shapes" aria-hidden="true">
         <div className="shape shape-1"></div>
         <div className="shape shape-2"></div>
         <div className="shape shape-3"></div>
@@ -106,7 +116,7 @@ const Home = () => {
 
       {/* LOGIN / USERNAME DISPLAY */}
       {activated && (
-        <motion.div 
+        <motion.div
           className="auth-buttons"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -124,7 +134,7 @@ const Home = () => {
       )}
 
       {/* ANIMATED HEADER */}
-      <motion.div
+      <motion.header
         className="home-header"
         initial={
           !activated
@@ -133,24 +143,24 @@ const Home = () => {
         }
         animate={
           activated
-            ? { top: "0.01rem", left: "2rem", x: 0, y: 0, scale: 0.9 }
+            ? { top: "70px", left: "2rem", x: 0, y: 0, scale: 0.9 }
             : {}
         }
         transition={{ duration: 0.8, ease: "easeInOut" }}
       >
-        <motion.img 
-          src="s_logo.png" 
-          style={{width: "82px", height: "82px", marginTop: "10px"}} 
-          alt="logo"
+        <motion.img
+          src="s_logo.png"
+          style={{width: "82px", height: "82px", marginTop: "10px"}}
+          alt="Suraiyya - Productivity Companion Logo"
           animate={activated ? {} : { rotate: [0, 5, -5, 0] }}
-          transition={{ 
-            repeat: activated ? 0 : Infinity, 
+          transition={{
+            repeat: activated ? 0 : Infinity,
             duration: 3,
             ease: "easeInOut"
           }}
         />
         <h1 className="home-title">Suraiyya</h1>
-      </motion.div>
+      </motion.header>
 
       {/* MAIN CONTENT */}
       {activated && (
@@ -160,10 +170,12 @@ const Home = () => {
           transition={{ delay: 1 }}
           className="home-main"
         >
+
+
           {/* HERO SECTION 1 */}
-          <section className="hero-section">
+          <section className="hero-section" aria-label="Introduction">
             <div className="hero-grid">
-              <motion.div 
+              <motion.div
                 className="hero-text"
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -179,14 +191,14 @@ const Home = () => {
                   also taking care of your mental and emotional well-being.
                 </p>
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="hero-image"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.4 }}
               >
                 <div className="image-wrapper">
-                  <img src={"/home1.jpg"} alt="Startup Illustration" />
+                  <img src={"/home1.jpg"} alt="Person working productively at a desk" />
                   <div className="image-glow"></div>
                 </div>
               </motion.div>
@@ -194,7 +206,7 @@ const Home = () => {
           </section>
 
           {/* FEATURES GRID */}
-          <section className="features-section">
+          <section className="features-section" aria-label="Features">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -205,7 +217,7 @@ const Home = () => {
               <h2>Everything You Need</h2>
               <p>Comprehensive tools for a productive and balanced life</p>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="features-grid"
               variants={containerVariants}
               initial="hidden"
@@ -213,8 +225,8 @@ const Home = () => {
               viewport={{ once: true }}
             >
               {features.map((feature, index) => (
-                <motion.div 
-                  key={index} 
+                <motion.article
+                  key={index}
                   className="feature-card"
                   variants={itemVariants}
                   whileHover={{ y: -8, transition: { duration: 0.2 } }}
@@ -224,15 +236,15 @@ const Home = () => {
                   </div>
                   <h3>{feature.title}</h3>
                   <p>{feature.description}</p>
-                </motion.div>
+                </motion.article>
               ))}
             </motion.div>
           </section>
 
           {/* HERO SECTION 2 */}
-          <section className="info-section">
+          <section className="info-section" aria-label="About Suraiyya">
             <div className="info-grid">
-              <motion.div 
+              <motion.div
                 className="info-image"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -240,11 +252,11 @@ const Home = () => {
                 transition={{ duration: 0.6 }}
               >
                 <div className="image-wrapper">
-                  <img src={"/home2.jpg"} alt="Vision" />
+                  <img src={"/home2.jpg"} alt="Productivity and wellness workspace" />
                   <div className="image-glow"></div>
                 </div>
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="info-text"
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -279,8 +291,8 @@ const Home = () => {
           </section>
 
           {/* CALL TO ACTION */}
-          <section className="cta-section">
-            <motion.div 
+          <section className="cta-section" aria-label="Get Started">
+            <motion.div
               className="cta-content"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -292,8 +304,8 @@ const Home = () => {
                   <h2>Welcome back, {user.name}</h2>
                   <p>Continue your productivity journey today.</p>
                   <div className="cta-buttons">
-                    <motion.button 
-                      onClick={dashboardPage} 
+                    <motion.button
+                      onClick={dashboardPage}
                       className="cta-login"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -301,8 +313,8 @@ const Home = () => {
                       Go to Dashboard
                       <ArrowRight size={18} />
                     </motion.button>
-                    <motion.button 
-                      onClick={focusPage} 
+                    <motion.button
+                      onClick={focusPage}
                       className="cta-register"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -320,8 +332,8 @@ const Home = () => {
                     Get started today!
                   </p>
                   <div className="cta-buttons">
-                    <motion.button 
-                      onClick={loginPage} 
+                    <motion.button
+                      onClick={loginPage}
                       className="cta-login"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -329,8 +341,8 @@ const Home = () => {
                       Login
                       <ArrowRight size={18} />
                     </motion.button>
-                    <motion.button 
-                      onClick={registerPage} 
+                    <motion.button
+                      onClick={registerPage}
                       className="cta-register"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -345,7 +357,7 @@ const Home = () => {
           </section>
         </motion.div>
       )}
-    </div>
+    </main>
   );
 };
 

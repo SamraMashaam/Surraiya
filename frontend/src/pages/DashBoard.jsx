@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
 } from "recharts";
 
@@ -42,9 +41,9 @@ function DashBoard({refreshUser}) {
     // Fetch latest data from backend
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${storedUser.id}`);
         setUser(res.data);
-        const totalTime = await axios.get(`http://localhost:5000/api/focus/user/${storedUser.id}`);
+        const totalTime = await axios.get(`${process.env.REACT_APP_API_URL}/api/focus/user/${storedUser.id}`);
         setFocusTotal(totalTime.data.totalDuration);
         console.log("focustotal: ", totalTime);
         const userData = res.data;
@@ -79,19 +78,6 @@ function DashBoard({refreshUser}) {
     fetchUser();
   }, [navigate]);
 
-  const handleStartFocus = () => {
-    if ("Notification" in window && Notification.permission !== "granted") {
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          console.log("Notifications enabled");
-        } else {
-          console.log("Notifications denied");
-        }
-      });
-    }
-    window.open("/focus", "_blank");
-
-  };
 
   
 
@@ -152,45 +138,50 @@ function DashBoard({refreshUser}) {
 
       {/* Main Content */}
       <div className="main-content">
-        <h1 className="welcome">Welcome back, {user.userName}</h1>
-        <div className="stats-grid">
+        <h1 className="welcome">Welcome back, <span>{user.userName}</span></h1>
+        <div className="stats-row">
           <div className="stat-card">
             <h3>Focus Sessions</h3>
-            <p>{user.FSessionCount || 0}</p>
+            <p className="stat-value">{user.FSessionCount || 0}</p>
+            <p className="stat-detail">Completed sessions</p>
           </div>
           <div className="stat-card">
             <h3>Total Time</h3>
-            <p>
-              {Math.floor((focusTotal || 0) / 60)}h {(focusTotal || 0) % 60}m
+            <p className="stat-value">
+              {Math.floor((focusTotal || 0) / 60)}
+              <span className="stat-unit">h</span>
+              {(focusTotal || 0) % 60}
+              <span className="stat-unit">m</span>
             </p>
+            <p className="stat-detail">Time spent focused</p>
+          </div>
         </div>
 
-          <div className="mood-graph">
-            <h3 style={{ marginBottom: "15px", color: "#f1dbaa" }}>
-              Mood Tracker
-            </h3>
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart 
+        <div className="mood-graph">
+          <h3>Mood Tracker</h3>
+          <div className="chart-container">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
                 data={moodGraphData.length > 0 ? moodGraphData : fallbackData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1dbaa" />
-                <XAxis dataKey="day" tick={{ fill: "#f1dbaa" }} />
-                <YAxis domain={[0, 5]} tick={{ fill: "#f1dbaa" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <XAxis dataKey="day" tick={{ fill: "var(--color-text-secondary)", fontFamily: "var(--font-body)", fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis domain={[0, 5]} tick={{ fill: "var(--color-text-secondary)", fontFamily: "var(--font-body)", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Line
                   type="monotone"
                   dataKey="mood"
-                  stroke="#827397"
+                  stroke="var(--color-accent)"
                   strokeWidth={3}
-                  dot={{ r: 5, fill: "#f1dbaa" }}
-                  
+                  dot={{ r: 5, fill: "var(--color-bg-card)", stroke: "var(--color-accent)", strokeWidth: 2 }}
+                  activeDot={{ r: 7, fill: "var(--color-accent)" }}
                 />
               </LineChart>
             </ResponsiveContainer>
-            {/* Helper text if no data exists */}
-            {moodGraphData.length === 0 && (
-              <p style={{ textAlign: "center", color: "#f3e8a7", fontSize: "0.8rem", marginTop: "10px" }}>
-                No mood entries yet. Go to Mood Journal to start!
-              </p> )}
           </div>
+          {moodGraphData.length === 0 && (
+            <p className="empty-message">
+              No mood entries yet. Go to Mood Journal to start!
+            </p>
+          )}
         </div>
       </div>
     </div>

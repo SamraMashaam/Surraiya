@@ -22,7 +22,7 @@ export default function Task() {
 
     async function loadIdeas() {
       try {
-        const res = await axios.get(`http://localhost:5000/api/tasks/${user.id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/${user.id}`);
         setIdeas(res.data.tasks);
       } catch (err) {
         console.error(err);
@@ -37,7 +37,7 @@ export default function Task() {
     if (newIdea.trim() === "") return;
 
     try {
-      const res = await axios.post("http://localhost:5000/api/tasks", {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/tasks`, {
         userId: user.id,
         text: newIdea
       });
@@ -52,11 +52,11 @@ export default function Task() {
 
   async function deleteIdea(id) {
     try {
-        await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`);
         setIdeas(prev => prev.filter(i => i._id !== id));
         const amount = 5;
         console.log("amount: ", amount)
-        const res = await axios.put(`http://localhost:5000/api/users/${user.id}/currency`, {amount});
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${user.id}/currency`, {amount});
         console.log("task Currency update: ", res.data.user);
       
         let stored = JSON.parse(localStorage.getItem("user"));
@@ -80,7 +80,7 @@ export default function Task() {
   async function saveEdit() {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/tasks/${editingId}`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${editingId}`,
         { text: editingText }
       );
 

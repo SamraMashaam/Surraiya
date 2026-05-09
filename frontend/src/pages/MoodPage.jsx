@@ -3,8 +3,8 @@ import { Smile, Frown, Angry, Zap, AlertCircle, Minus, MessageCircle } from 'luc
 import { useNavigate } from "react-router-dom";
 import './Styles/MoodPage.css';
 
-const ANALYSIS_API_URL = 'http://localhost:8000/api';
-const NODE_API_URL = 'http://localhost:5000/api';
+const ANALYSIS_API_URL = `${process.env.REACT_APP_ANALYSIS_API_URL}/api`;
+const NODE_API_URL = `${process.env.REACT_APP_API_URL}/api`;
 
 export default function MoodPage() {
   const [view, setView] = useState('home');
@@ -14,7 +14,7 @@ export default function MoodPage() {
 
   const navigate = useNavigate();
   const storedUser = JSON.parse(localStorage.getItem("user"));
-  const USER_ID = storedUser ? storedUser.id : null;
+  const USER_ID = storedUser ? (storedUser.id || storedUser._id) : null;
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -27,6 +27,7 @@ export default function MoodPage() {
     }
     if (view === 'entries') fetchEntries();
     else if (view === 'stats') fetchMonthlyStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, navigate]);
 
   const fetchEntries = async () => {
@@ -110,7 +111,6 @@ function NewEntryForm({ userId, onEntryCreated, navigate }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState(null);
-  const [chatbotInsight, setChatbotInsight] = useState(null);
   const [loadingInsight, setLoadingInsight] = useState(false);
 
   const emojiMoods = [
@@ -231,7 +231,11 @@ function NewEntryForm({ userId, onEntryCreated, navigate }) {
         body: JSON.stringify({ user_id: userId, content: entryContent })
       });
 
-      if (!response.ok) throw new Error('Failed to create entry');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Server error:', response.status, errorData);
+        throw new Error(errorData.detail?.[0]?.msg || errorData.message || `Server error: ${response.status}`);
+      }
 
       const data = await response.json();
       const analysisData = data;
@@ -257,7 +261,7 @@ function NewEntryForm({ userId, onEntryCreated, navigate }) {
       setContent('');
       setSelectedEmoji(null);
     } catch (err) {
-      setError('Failed to save entry. Please try again.');
+      setError(err.message || 'Failed to save entry. Please try again.');
       console.error(err);
     }
     setLoading(false);
@@ -292,7 +296,7 @@ function NewEntryForm({ userId, onEntryCreated, navigate }) {
                   onClick={() => setSelectedEmoji(mood)}
                   className={`emoji-btn ${selectedEmoji?.emotion === mood.emotion ? 'selected' : ''}`}
                 >
-                  <Icon size={32} strokeWidth={1.5} color="#f1dbaa" />
+                  <Icon size={32} strokeWidth={1.5} color="#6EE7B7" />
                   <span className="emoji-btn-label">{mood.label}</span>
                 </button>
               );

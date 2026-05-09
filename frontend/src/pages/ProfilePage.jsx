@@ -97,7 +97,7 @@ const ProfilePage = ({ user, setUser, refreshUser }) => {
       const formData = new FormData();
       formData.append('profilePicture', selectedImage);
       
-      const url = `http://localhost:5000/api/users/${user._id}/profile-picture`;
+      const url = `${process.env.REACT_APP_API_URL}/api/users/${user._id}/profile-picture`;
       
       const response = await fetch(url, {
         method: "POST",
@@ -165,7 +165,7 @@ const ProfilePage = ({ user, setUser, refreshUser }) => {
     
     try {
       const token = getToken();
-      const url = `http://localhost:5000/api/users/${user._id}/username`;
+      const url = `${process.env.REACT_APP_API_URL}/api/users/${user._id}/username`;
       
       const response = await fetch(url, {
         method: "PUT",
@@ -232,7 +232,7 @@ const ProfilePage = ({ user, setUser, refreshUser }) => {
     
     try {
       const token = getToken();
-      const url = `http://localhost:5000/api/users/${user._id}/password`;
+      const url = `${process.env.REACT_APP_API_URL}/api/users/${user._id}/password`;
       
       const response = await fetch(url, {
         method: "PUT",
@@ -332,7 +332,7 @@ const ProfilePage = ({ user, setUser, refreshUser }) => {
               }}
               title="Change profile picture"
             >
-              <Camera size={20} color="#0a192f" strokeWidth={2.5} />
+              <Camera size={20} color="#151D28" strokeWidth={2.5} />
             </button>
           )}
         </div>
@@ -419,7 +419,7 @@ const ProfilePage = ({ user, setUser, refreshUser }) => {
                       </div>
                     ) : (
                       <div className="upload-placeholder">
-                        <Camera size={60} color="#987eb4"/>
+                        <Camera size={60} color="#6EE7B7"/>
                         <p>Select an image to upload</p>
                       </div>
                     )}

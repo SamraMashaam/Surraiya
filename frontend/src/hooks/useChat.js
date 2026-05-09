@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import socket from '../socket';
 
-const API_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL;
 
 export function useChat({ user }) {
   const [conversations, setConversations] = useState([]);
@@ -136,6 +136,7 @@ export function useChat({ user }) {
       socket.off('chat-conversation-restored');
       socket.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?._id]);
 
   // ─── Fetch all conversations ──────────────────────────────────────────────────

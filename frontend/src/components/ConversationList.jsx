@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageCirclePlus, Video } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 export default function ConversationList({
   conversations,
@@ -14,7 +13,6 @@ export default function ConversationList({
   user,
 }) {
   const [search, setSearch] = useState('');
-  const navigate = useNavigate();
 
   const filtered = conversations.filter((c) =>
     getConversationName(c).toLowerCase().includes(search.toLowerCase())
@@ -40,7 +38,7 @@ export default function ConversationList({
   const getInitial = (name) => name?.charAt(0).toUpperCase() || '?';
 
   const getAvatarColor = (name) => {
-    const colors = ['#4f46e5', '#7c3aed', '#db2777', '#059669', '#d97706', '#dc2626'];
+    const colors = ['#059669', '#10b981', '#34d399', '#0ea5e9', '#d97706', '#dc2626'];
     const index = name?.charCodeAt(0) % colors.length || 0;
     return colors[index];
   };
@@ -148,8 +146,8 @@ const styles = {
     width: '300px',
     minWidth: '300px',
     height: '100%',
-    backgroundColor: '#1b1830',
-    borderRight: '1px solid #2a2a4a',
+    backgroundColor: '#1A2332',
+    borderRight: '1px solid #2D3748',
     overflow: 'hidden',
   },
   header: {
@@ -157,7 +155,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '20px 16px 12px',
-    borderBottom: '1px solid #2a2a4a',
+    borderBottom: '1px solid #2D3748',
     flexShrink: 0,
   },
   title: {
@@ -177,13 +175,13 @@ const styles = {
   },
   searchWrapper: {
     padding: '12px 16px',
-    borderBottom: '1px solid #2a2a4a',
+    borderBottom: '1px solid #2D3748',
     flexShrink: 0,
   },
   searchInput: {
     width: '100%',
-    backgroundColor: '#1e1e3a',
-    border: '1px solid #2a2a4a',
+    backgroundColor: '#1A2332',
+    border: '1px solid #2D3748',
     borderRadius: '8px',
     padding: '8px 12px',
     color: '#fff',
@@ -207,12 +205,12 @@ const styles = {
     gap: '12px',
     padding: '12px 16px',
     cursor: 'pointer',
-    borderBottom: '1px solid #1a1a2e',
+    borderBottom: '1px solid #2D3748',
     transition: 'background-color 0.15s',
   },
   itemActive: {
-    backgroundColor: '#1e1e3a',
-    borderLeft: '3px solid #827397',
+    backgroundColor: '#1A2332',
+    borderLeft: '3px solid #6EE7B7',
   },
   avatar: {
     width: '44px',
@@ -267,8 +265,8 @@ const styles = {
     fontWeight: '500',
   },
   unreadBadge: {
-    backgroundColor: '#827397',
-    color: '#fff',
+    backgroundColor: '#6EE7B7',
+    color: '#151D28',
     fontSize: '0.7rem',
     fontWeight: 'bold',
     padding: '2px 7px',
@@ -277,10 +275,10 @@ const styles = {
     whiteSpace: 'nowrap',
   },
   videoButton: {
-    backgroundColor: '#827397',
+    backgroundColor: '#6EE7B7',
     border: 'none',
     padding: '8px 16px',
-    color: '#fff',
+    color: '#151D28',
     fontSize: '0.875rem',
     fontWeight: '600',
     cursor: 'pointer',

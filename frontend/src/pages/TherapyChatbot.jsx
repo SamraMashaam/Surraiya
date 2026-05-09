@@ -28,6 +28,7 @@ const userId = storedUser ? storedUser.id : null;
   useEffect(() => {
     loadChatHistory();
     checkForMoodContext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -54,7 +55,7 @@ const userId = storedUser ? storedUser.id : null;
 
   const loadChatHistory = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/chat/${userId}/history`);
+      const response = await fetch(`${process.env.REACT_APP_ANALYSIS_API_URL}/api/chat/${userId}/history`);
       
       if (response.ok) {
         const data = await response.json();
@@ -90,7 +91,7 @@ const userId = storedUser ? storedUser.id : null;
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/api/chat/${userId}/history`, {
+      const response = await fetch(`${process.env.REACT_APP_ANALYSIS_API_URL}/api/chat/${userId}/history`, {
         method: 'DELETE',
       });
 
@@ -134,7 +135,7 @@ const userId = storedUser ? storedUser.id : null;
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch(`${process.env.REACT_APP_ANALYSIS_API_URL}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

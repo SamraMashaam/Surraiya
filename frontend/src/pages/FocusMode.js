@@ -55,7 +55,6 @@ function FocusMode() {
     setIsRunning(false);
   };
 
-  // ✅ Timer effect only depends on isRunning
   useEffect(() => {
     if (!isRunning) return;
 
@@ -70,6 +69,7 @@ function FocusMode() {
     }, 1000);
 
     return () => clearInterval(timerRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRunning]);
 
   const handleStartPause = () => setIsRunning((prev) => !prev);
@@ -103,9 +103,9 @@ function FocusMode() {
   const progress = ((totalTime - timeLeft) / totalTime) * 100;
 
   const colors = {
-    work: "#a8dadc",
-    shortBreak: "#fbc4ab",
-    longBreak: "#cdb4db",
+    work: "#7dffcf",
+    shortBreak: "#fbbf24",
+    longBreak: "#a78bfa",
   };
 
   return (
@@ -137,7 +137,7 @@ function FocusMode() {
       <div
         className="timer-circle"
         style={{
-          background: `conic-gradient(${colors[mode]} ${progress}%, #f5f5f5 ${progress}%)`,
+          background: `conic-gradient(${colors[mode]} ${progress}%, rgba(36, 53, 61, 0.4) ${progress}%)`,
         }}
       >
         <span className="timer-text">{formatTime(timeLeft)}</span>

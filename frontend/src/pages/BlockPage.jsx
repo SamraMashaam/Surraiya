@@ -1,19 +1,33 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import "./Styles/BlockPage.css";
 
 export default function BlockPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [unblocking, setUnblocking] = useState(false);
-  
-  // Get the blocked site from URL params (we'll pass this from the extension)
+  const [user, setUser] = useState(null);
+
   const blockedSite = searchParams.get("site") || "this site";
-  
-  const USER_ID = "12345"; // user id is also here
-  const API_URL = `http://localhost:5000/api/blocklist/${USER_ID}`;
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
+
+  const API_URL = user
+    ? `${process.env.REACT_APP_API_URL}/api/blocklist/${user.id || user._id || user.userId}`
+    : null;
 
   const handleUnblock = async () => {
     if (!window.confirm(`Are you sure you want to unblock ${blockedSite}?`)) {
+      return;
+    }
+
+    if (!API_URL) {
+      alert("User session not found. Please log in.");
       return;
     }
 
@@ -25,13 +39,11 @@ export default function BlockPage() {
 
       if (res.ok) {
         alert(`${blockedSite} has been unblocked!`);
-        // Redirect back to the site they wanted to visit
         window.location.href = `https://${blockedSite}`;
       } else {
         alert("Failed to unblock site. Please try again.");
       }
     } catch (err) {
-      console.error("Error unblocking site:", err);
       alert("Failed to unblock site. Please try again.");
     }
     setUnblocking(false);
@@ -42,16 +54,39 @@ export default function BlockPage() {
   };
 
   return (
-    <div>
-      <div>
-        <h1>Remember to stay focused!</h1>
-        
-        <p><strong>{blockedSite}</strong> has been blocked for the duration of the focus session. You can do it!</p>
-        <p>If you need to use this site for your work, you can remove it from the blocklist. It will remain unblocked until you add it back.</p>
+    <div className="block-page">
+      <div className="block-card">
+        <svg
+          className="block-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+        </svg>
 
-        <div>
-          <button onClick={handleBackToDashboard}>Return to dashboard</button>
-          <button onClick={handleUnblock} disabled={unblocking}>
+        <h1 className="block-heading">Remember to stay focused!</h1>
+
+        <p className="block-text">
+          <strong className="block-site-name">{blockedSite}</strong> has been blocked for the duration of the focus session. You can do it!
+        </p>
+        <p className="block-text">
+          If you need to use this site for your work, you can remove it from the blocklist. It will remain unblocked until you add it back.
+        </p>
+
+        <div className="block-actions">
+          <button className="btn-secondary" onClick={handleBackToDashboard}>
+            Return to dashboard
+          </button>
+          <button
+            className="btn-primary"
+            onClick={handleUnblock}
+            disabled={unblocking}
+          >
             {unblocking ? "Unblocking..." : "Unblock site"}
           </button>
         </div>

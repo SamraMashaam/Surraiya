@@ -1,7 +1,7 @@
-/* global chrome, browser */
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./App.css";
 import DashBoard from "./pages/DashBoard";
 import FocusMode from "./pages/FocusMode";
 import Home from "./pages/Home";
@@ -20,11 +20,13 @@ import Chat from "./pages/Chat";
 import FriendsPage from "./pages/FriendsPage";
 import ProfilePage from "./pages/ProfilePage";
 import TherapyChatbot from "./pages/TherapyChatbot";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [pet, setPet] = useState(null);
   const [user, setUser] = useState(null);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [petVisible, setPetVisible] = useState(true);
+  const [isDraggable, setIsDraggable] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -51,7 +53,7 @@ function App() {
         return null;
       }
 
-      const userRes = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
+      const userRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${storedUser.id}`);
       const currentUser = userRes.data;
       setUser(currentUser);
 
@@ -62,7 +64,7 @@ function App() {
         return null;
       }
 
-      const petRes = await axios.get(`http://localhost:5000/api/pets/${currentUser.petID._id}`);
+      const petRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/pets/${currentUser.petID._id}`);
       console.log("Loaded pet:", petRes.data); 
       setPet(petRes.data);
     } catch (err) {
@@ -81,28 +83,45 @@ function App() {
 
   return (
     <>
-    <StarField />
-    <VirtualPet pet={pet} user={user}/>
-    <Router>
-      <Routes>
-        <Route path="/dashboard" element={<DashBoard refreshUser={refreshUser}/>} />
-        <Route path="/" element={<Home />} />
-        <Route path="/focus" element={<FocusMode />} />
-        <Route path="/Login" element={<Login refreshUser={refreshUser}/>} />
-        <Route path="/Register" element={<Register />} />
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/help" element={<InstructionsPage />} />
-        <Route path="/activity" element={<ActivityTracker />} />
-        <Route path="/shop" element={<ShopPage  pet={pet} setPet={setPet} user={user} setUser={setUser}  />} />
-        <Route path="/idea" element={<IdeaParkingLot />} />
-        <Route path="/mood" element={<MoodPage />} />
-        <Route path="/video" element={<VideoCall user={user} />} />
-        <Route path="/chat" element={<Chat user={user} />} />
-        <Route path="/friends" element={<FriendsPage user={user} />} />
-        <Route path="/profile" element={<ProfilePage user={user} setUser={setUser} refreshUser={refreshUser}/>} />
-        <Route path="/mira" element={<TherapyChatbot />} />
-      </Routes>
-    </Router>
+      <StarField />
+      <Navbar
+        user={user}
+        pet={pet}
+        petVisible={petVisible}
+        setPetVisible={setPetVisible}
+        isDraggable={isDraggable}
+        setIsDraggable={setIsDraggable}
+      />
+      <VirtualPet
+        pet={pet}
+        user={user}
+        petVisible={petVisible}
+        setPetVisible={setPetVisible}
+        isDraggable={isDraggable}
+        setIsDraggable={setIsDraggable}
+      />
+      <div className="app-content-wrapper">
+        <Router>
+          <Routes>
+            <Route path="/dashboard" element={<DashBoard refreshUser={refreshUser}/>} />
+            <Route path="/" element={<Home />} />
+            <Route path="/focus" element={<FocusMode />} />
+            <Route path="/Login" element={<Login refreshUser={refreshUser}/>} />
+            <Route path="/Register" element={<Register />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/help" element={<InstructionsPage />} />
+            <Route path="/activity" element={<ActivityTracker />} />
+            <Route path="/shop" element={<ShopPage  pet={pet} setPet={setPet} user={user} setUser={setUser}  />} />
+            <Route path="/idea" element={<IdeaParkingLot />} />
+            <Route path="/mood" element={<MoodPage />} />
+            <Route path="/video" element={<VideoCall user={user} />} />
+            <Route path="/chat" element={<Chat user={user} />} />
+            <Route path="/friends" element={<FriendsPage user={user} />} />
+            <Route path="/profile" element={<ProfilePage user={user} setUser={setUser} refreshUser={refreshUser}/>} />
+            <Route path="/mira" element={<TherapyChatbot />} />
+          </Routes>
+        </Router>
+      </div>
     </>
   );
 }

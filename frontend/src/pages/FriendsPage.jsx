@@ -20,11 +20,12 @@ const FriendsPage = ({ user }) => {
       fetchFriends();
       fetchBlockedUsers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const fetchFriends = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/users/${user._id}/friends`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${user._id}/friends`);
       setFriends(res.data);
     } catch (err) {
       console.error("Failed to fetch friends", err);
@@ -33,7 +34,7 @@ const FriendsPage = ({ user }) => {
 
   const fetchBlockedUsers = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/users/${user._id}/blocked`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${user._id}/blocked`);
       setBlockedUsers(res.data);
     } catch (err) {
       console.error("Failed to fetch blocked users", err);
@@ -48,7 +49,7 @@ const FriendsPage = ({ user }) => {
     if (!searchUsername.trim()) return;
 
     try {
-      const res = await axios.get(`http://localhost:5000/api/users/search/${searchUsername}`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/search/${searchUsername}`);
       if (res.data._id === user._id) {
         setErrorMsg("You cannot add yourself.");
         return;
@@ -67,7 +68,7 @@ const FriendsPage = ({ user }) => {
   const handleAddFriend = async () => {
     if (!searchResult) return;
     try {
-      await axios.post(`http://localhost:5000/api/users/${user._id}/friends/${searchResult._id}`);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/users/${user._id}/friends/${searchResult._id}`);
       setSuccessMsg("Friend added successfully!");
       setSearchResult(null);
       setSearchUsername("");
@@ -79,7 +80,7 @@ const FriendsPage = ({ user }) => {
 
   const handleBlockFriend = async (friendId) => {
     try {
-      await axios.post(`http://localhost:5000/api/users/${user._id}/block/${friendId}`);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/users/${user._id}/block/${friendId}`);
       setSuccessMsg("User blocked.");
       fetchFriends();
       fetchBlockedUsers();
@@ -90,7 +91,7 @@ const FriendsPage = ({ user }) => {
 
   const handleUnblockUser = async (blockedUserId) => {
     try {
-      await axios.put(`http://localhost:5000/api/users/${user._id}/unblock/${blockedUserId}`);
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${user._id}/unblock/${blockedUserId}`);
       setSuccessMsg("User unblocked.");
       fetchBlockedUsers();
     } catch (err) {

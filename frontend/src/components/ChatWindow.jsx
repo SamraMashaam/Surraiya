@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { format, isToday, isYesterday } from 'date-fns';
-import { MessageSquareMore, Users } from 'lucide-react';
-import { color } from 'framer-motion';
-import { Video, Trash2 } from 'lucide-react';
+import { MessageSquareMore, Users, Trash2 } from 'lucide-react';
 
 export default function ChatWindow({
   conversation,
@@ -86,7 +84,7 @@ export default function ChatWindow({
   const getInitial = (name) => name?.charAt(0).toUpperCase() || '?';
 
   const getAvatarColor = (name) => {
-    const colors = ['#4f46e5', '#7c3aed', '#db2777', '#059669', '#d97706', '#dc2626'];
+    const colors = ['#059669', '#10b981', '#34d399', '#0ea5e9', '#d97706', '#dc2626'];
     const index = name?.charCodeAt(0) % colors.length || 0;
     return colors[index];
   };
@@ -196,7 +194,10 @@ export default function ChatWindow({
                   ...styles.bubble,
                   ...(mine ? styles.bubbleMine : styles.bubbleTheirs),
                 }}>
-                  <span style={styles.bubbleText}>{message.content}</span>
+                  <span style={{
+                    ...styles.bubbleText,
+                    color: mine ? '#151D28' : '#F0FDF4',
+                  }}>{message.content}</span>
                   <span style={styles.bubbleTime}>
                     {getMessageTime(message.createdAt)}
                   </span>
@@ -291,8 +292,8 @@ const styles = {
   alignItems: 'center',
   justifyContent: 'center',
   padding: '14px 20px',
-  backgroundColor: '#13131f',
-  borderTop: '1px solid #2a2a4a',
+  backgroundColor: '#1A2332',
+  borderTop: '1px solid #2D3748',
   color: '#9ca3af',
   fontSize: '0.875rem',
   flexShrink: 0,
@@ -303,7 +304,7 @@ const styles = {
     flex: 1,
     height: '100%',
     overflow: 'hidden',
-    backgroundColor: '#282447',
+    backgroundColor: '#151D28',
   },
   emptyState: {
     flex: 1,
@@ -311,7 +312,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#282447',
+    backgroundColor: '#151D28',
   },
   emptyStateIcon: {
     fontSize: '3rem',
@@ -333,8 +334,8 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '14px 20px',
-    backgroundColor: '#1b1830',
-    borderBottom: '1px solid #2a2a4a',
+    backgroundColor: '#1A2332',
+    borderBottom: '1px solid #2D3748',
     flexShrink: 0,
   },
   headerLeft: {
@@ -349,12 +350,12 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#f1ebd2',
+    color: '#F0FDF4',
     fontWeight: 'bold',
     fontSize: '1rem',
   },
   headerName: {
-    color: '#f1ebd2',
+    color: '#F0FDF4',
     fontWeight: '600',
     fontSize: '1rem',
   },
@@ -383,9 +384,9 @@ const styles = {
     margin: '16px 0 8px',
   },
   dateDividerText: {
-    color: '#f1ebd2',
+    color: '#F0FDF4',
     fontSize: '0.75rem',
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#1A2332',
     padding: '3px 12px',
     borderRadius: '999px',
   },
@@ -409,7 +410,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#f1ebd2',
+    color: '#F0FDF4',
     fontSize: '0.75rem',
     fontWeight: 'bold',
   },
@@ -423,15 +424,15 @@ const styles = {
     flexWrap: 'wrap',
   },
   bubbleMine: {
-    backgroundColor: '#4f46e5',
+    backgroundColor: '#6EE7B7',
     borderBottomRightRadius: '4px',
   },
   bubbleTheirs: {
-    backgroundColor: '#1e1e3a',
+    backgroundColor: '#1A2332',
     borderBottomLeftRadius: '4px',
   },
   bubbleText: {
-    color: '#f1ebd2',
+    color: '#F0FDF4',
     fontSize: '0.925rem',
     lineHeight: '1.4',
     wordBreak: 'break-word',
@@ -446,7 +447,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    backgroundColor: '#1e1e3a',
+    backgroundColor: '#1A2332',
     padding: '8px 14px',
     borderRadius: '16px',
     borderBottomLeftRadius: '4px',
@@ -471,22 +472,22 @@ const styles = {
     display: 'flex',
     gap: '10px',
     padding: '14px 20px',
-    backgroundColor: '#1b1830',
-    borderTop: '1px solid #2a2a4a',
+    backgroundColor: '#1A2332',
+    borderTop: '1px solid #2D3748',
     flexShrink: 0,
   },
   input: {
     flex: 1,
-    backgroundColor: '#1e1e3a',
-    border: '1px solid #2a2a4a',
+    backgroundColor: '#1A2332',
+    border: '1px solid #2D3748',
     borderRadius: '10px',
     padding: '10px 14px',
-    color: '#f1ebd2',
+    color: '#F0FDF4',
     fontSize: '0.925rem',
     outline: 'none',
   },
   sendButton: {
-    backgroundColor: '#2a2a4a',
+    backgroundColor: '#2D3748',
     border: 'none',
     borderRadius: '10px',
     padding: '10px 20px',
@@ -496,8 +497,8 @@ const styles = {
     cursor: 'not-allowed',
   },
   sendButtonActive: {
-    backgroundColor: '#4f46e5',
-    color: '#f1ebd2',
+    backgroundColor: '#6EE7B7',
+    color: '#151D28',
     cursor: 'pointer',
   },
   headerRight: {
@@ -507,7 +508,7 @@ const styles = {
 },
 deleteButton: {
   backgroundColor: 'transparent',
-  border: '1px solid #2a2a4a',
+  border: '1px solid #2D3748',
   borderRadius: '8px',
   padding: '7px 10px',
   color: '#6b7280',
@@ -525,15 +526,15 @@ backdrop: {
   justifyContent: 'center',
   zIndex: 1000,
 },
-confirmModal: {
-  backgroundColor: '#13131f',
-  border: '1px solid #2a2a4a',
-  borderRadius: '16px',
-  padding: '28px',
-  width: '100%',
-  maxWidth: '400px',
-  boxSizing: 'border-box',
-},
+  confirmModal: {
+    backgroundColor: '#1A2332',
+    border: '1px solid #2D3748',
+    borderRadius: '16px',
+    padding: '28px',
+    width: '100%',
+    maxWidth: '400px',
+    boxSizing: 'border-box',
+  },
 confirmTitle: {
   color: '#fff',
   fontSize: '1.1rem',
@@ -551,15 +552,15 @@ confirmButtons: {
   gap: '10px',
   justifyContent: 'flex-end',
 },
-cancelButton: {
-  backgroundColor: 'transparent',
-  border: '1px solid #2a2a4a',
-  borderRadius: '8px',
-  padding: '8px 20px',
-  color: '#9ca3af',
-  cursor: 'pointer',
-  fontSize: '0.875rem',
-},
+  cancelButton: {
+    backgroundColor: 'transparent',
+    border: '1px solid #2D3748',
+    borderRadius: '8px',
+    padding: '8px 20px',
+    color: '#9ca3af',
+    cursor: 'pointer',
+    fontSize: '0.875rem',
+  },
 confirmDeleteButton: {
   backgroundColor: '#dc2626',
   border: 'none',

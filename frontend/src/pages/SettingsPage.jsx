@@ -11,7 +11,6 @@ export default function SettingsPage() {
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [API_URL, setAPI_URL] = useState(null);
 
     useEffect(() => {
@@ -27,16 +26,14 @@ export default function SettingsPage() {
 
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/users/${storedUser.id}`);
-        setUser(res.data);
-
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/${storedUser.id}`);
         const id = res.data.id || res.data._id || res.data.userId;
         window.postMessage({
           type: "USER_ID",
           userId: storedUser.id
         });
 
-        setAPI_URL(`http://localhost:5000/api/blocklist/${id}`);
+        setAPI_URL(`${process.env.REACT_APP_API_URL}/api/blocklist/${id}`);
       } catch (err) {
         console.error("Error fetching user:", err);
       }
@@ -47,6 +44,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (API_URL) fetchBlockedSites();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [API_URL]);
 
   const fetchBlockedSites = async () => {

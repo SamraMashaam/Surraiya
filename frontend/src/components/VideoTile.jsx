@@ -48,14 +48,14 @@ export default function VideoTile({ stream, userName, isMuted, isCameraOff, isLo
 const styles = {
   tile: {
     position: 'relative',
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#1A2332',
     borderRadius: '12px',
     overflow: 'hidden',
     aspectRatio: '16/9',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '1px solid #2a2a4a',
+    border: '1px solid #2D3748',
   },
   video: {
     width: '100%',
@@ -66,14 +66,14 @@ const styles = {
     width: '80px',
     height: '80px',
     borderRadius: '50%',
-    backgroundColor: '#827397',
+    backgroundColor: '#22A45A',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
     fontSize: '2rem',
-    color: '#fff',
+    color: '#F0FDF4',
     fontWeight: 'bold',
   },
   nameTag: {
@@ -81,7 +81,7 @@ const styles = {
     bottom: '10px',
     left: '10px',
     backgroundColor: 'rgba(0,0,0,0.6)',
-    color: '#fff',
+    color: '#F0FDF4',
     padding: '4px 10px',
     borderRadius: '6px',
     fontSize: '0.85rem',

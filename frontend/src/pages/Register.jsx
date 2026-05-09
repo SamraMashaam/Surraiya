@@ -20,7 +20,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
         name,
         email,
         password,
@@ -91,7 +91,7 @@ const Register = () => {
                     padding: 0,
                     display: "flex",
                     alignItems: "center",
-                    color: "#e9d5da",
+                    color: "#A0AEC0",
                   }}
                 >
                   {showPassword
@@ -106,8 +106,8 @@ const Register = () => {
               Register
             </button>
           </form>
-          <p style={{ fontSize: "0.9rem", color: "#f1dbaa", marginTop: "1rem", textAlign: "center" }}>
-            Already have an account? <a href="/login" style={{ color: "#e9d5da" }}>Sign in here</a>
+          <p style={{ fontSize: "0.9rem", color: "#A0AEC0", marginTop: "1rem", textAlign: "center" }}>
+            Already have an account? <a href="/login" style={{ color: "#6EE7B7" }}>Sign in here</a>
           </p>
         </div>
       </div>

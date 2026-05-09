@@ -3,7 +3,13 @@
 }
 
 * {
-  font-family: "Poppins", Verdana, Geneva, Tahoma, sans-serif;
+  font-family: var(--font-body);
+}
+
+.app-content-wrapper {
+  padding-top: 55px;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
 

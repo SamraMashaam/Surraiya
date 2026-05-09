@@ -25,7 +25,7 @@ function Login({refreshUser}) {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, formData);
       const { token, user } = res.data;
 
       localStorage.setItem("token", token);
@@ -86,7 +86,7 @@ function Login({refreshUser}) {
                   padding: 0,
                   display: "flex",
                   alignItems: "center",
-                  color: "#e9d5da",
+                  color: "#A0AEC0",
                 }}
               >
                 {showPassword
@@ -101,8 +101,8 @@ function Login({refreshUser}) {
             Login
           </button>
         </form>
-        <p style={{ fontSize: "0.9rem", color: "#f1dbaa", marginTop: "1rem" }}>
-          Don't have an account? <a href="/register" style={{ color: "#e9d5da" }}>Sign up today</a>
+        <p style={{ fontSize: "0.9rem", color: "#A0AEC0", marginTop: "1rem" }}>
+          Don't have an account? <a href="/register" style={{ color: "#6EE7B7" }}>Sign up today</a>
         </p>
       </div>
 

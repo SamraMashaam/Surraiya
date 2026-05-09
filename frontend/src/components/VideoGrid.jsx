@@ -38,7 +38,7 @@ function getGridStyle(count) {
     gap: '12px',
     padding: '12px',
     boxSizing: 'border-box',
-    backgroundColor: '#0f0f1a',
+    backgroundColor: '#0D1117',
   };
 
   if (count === 1) {

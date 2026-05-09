@@ -127,7 +127,7 @@ function FocusMode() {
     }
 
     try {
-      const res = await axios.post(`http://localhost:5000/api/focus/user/${resolvedUserId}/start`);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/focus/user/${resolvedUserId}/start`);
       console.log("Session started in DB:", res.data);
     } catch (err) {
       console.error("Error starting session:", err);
@@ -145,13 +145,13 @@ function FocusMode() {
     }
 
     try {
-      const res = await axios.put(`http://localhost:5000/api/focus/user/${resolvedUserId}/update`);
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/api/focus/user/${resolvedUserId}/update`);
       console.log("Session updated (duration +1):", res.data);
 
       // Update currency (1 coin per minute of work)
       if (mode === "work") {
         const amount = 1;
-        const currencyRes = await axios.put(`http://localhost:5000/api/users/${resolvedUserId}/currency`, { amount });
+        const currencyRes = await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${resolvedUserId}/currency`, { amount });
         console.log("Currency update:", currencyRes.data.user);
 
         let stored = JSON.parse(localStorage.getItem("user"));
@@ -174,7 +174,7 @@ function FocusMode() {
     }
 
     try {
-      const res = await axios.put(`http://localhost:5000/api/focus/user/${resolvedUserId}/end`);
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/api/focus/user/${resolvedUserId}/end`);
       console.log("Session ended in DB:", res.data);
     } catch (err) {
       console.error("Error ending session:", err);
@@ -344,10 +344,10 @@ function FocusMode() {
   };
 
   const colors = {
-    off: "#e78888ff",
-    work: "#a8dadc",
-    shortBreak: "#abb3fbff",
-    longBreak: "#c9b4dbff",
+    off: "#EF4444",
+    work: "#6EE7B7",
+    shortBreak: "#A7F3D0",
+    longBreak: "#1B7A3E",
   };
 
   const progress = ((duration - timeLeft) / duration) * 100;
@@ -361,7 +361,7 @@ function FocusMode() {
 
     async function loadIdeas() {
       try {
-        const res = await axios.get(`http://localhost:5000/api/tasks/${user1.id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/${user1.id}`);
         setIdeas(res.data.tasks);
       } catch (err) {
         console.error(err);
@@ -375,7 +375,7 @@ function FocusMode() {
     if (newIdea.trim() === "") return;
 
     try {
-      const res = await axios.post("http://localhost:5000/api/tasks", {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/tasks`, {
         userId: user1.id,
         text: newIdea
       });
@@ -389,11 +389,11 @@ function FocusMode() {
 
   async function deleteIdea(id) {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`);
       setIdeas(prev => prev.filter(i => i._id !== id));
       const amount = 5;
       console.log("amount: ", amount)
-      const res = await axios.put(`http://localhost:5000/api/users/${user1.id}/currency`, {amount});
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${user1.id}/currency`, {amount});
       console.log("task Currency update: ", res.data.user);
     
       let stored = JSON.parse(localStorage.getItem("user"));
@@ -415,7 +415,7 @@ function FocusMode() {
   async function saveEdit() {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/tasks/${editingId}`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${editingId}`,
         { text: editingText }
       );
 

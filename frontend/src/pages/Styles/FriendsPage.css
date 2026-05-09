@@ -1,8 +1,9 @@
 .friends-page {
   padding: 2rem;
-  color: #fff;
-  min-height: 100vh;
-  margin-top: 50px;
+  color: #F0FDF4;
+  min-height: calc(100vh - 55px);
+  font-family: 'Outfit', sans-serif;
+  background-color: #0D1117;
 }
 
 .friends-header {
@@ -14,20 +15,25 @@
 .friends-header h2 {
   margin: 0 0 0 20px;
   font-size: 2rem;
-  color: #a8b2d1;
+  color: #F0FDF4;
+  font-family: 'Syne', sans-serif;
 }
 
 .back-btn {
   background: transparent;
-  color: #c4abe7;
-  border: 1px solid #c4abe7;
+  color: #A0AEC0;
+  border: 1px solid #2D3748;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  font-family: 'Outfit', sans-serif;
 }
+
 .back-btn:hover {
-  background: rgba(176, 107, 255, 0.1);
+  background: rgba(34, 94, 64, 0.2);
+  color: #6EE7B7;
+  border-color: #225E40;
 }
 
 .friends-content {
@@ -37,19 +43,20 @@
 }
 
 .card {
-  background: rgba(17, 34, 64, 0.8);
-  border-radius: 10px;
+  background: #1A2332;
+  border-radius: 0.75rem;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid #225E40;
 }
 
 .card h3 {
   margin-top: 0;
-  color: #ccd6f6;
-  border-bottom: 1px solid #233554;
+  color: #6EE7B7;
+  border-bottom: 1px solid #225E40;
   padding-bottom: 0.5rem;
   margin-bottom: 1rem;
+  font-family: 'Syne', sans-serif;
 }
 
 .search-form {
@@ -61,31 +68,47 @@
 .search-form input {
   flex: 1;
   padding: 0.75rem;
-  border-radius: 4px;
-  border: 1px solid #233554;
-  background: #0a192f;
-  color: #ccd6f6;
+  border-radius: 0.5rem;
+  border: 1px solid #2D3748;
+  background: #1A2332;
+  color: #F0FDF4;
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.search-form input:focus {
+  box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.3);
+  border-color: #6EE7B7;
+}
+
+.search-form input::placeholder {
+  color: #A0AEC0;
 }
 
 .search-btn {
-  background: transparent;
-  color: #c4abe7;
-  border: 1px solid #c4abe7;
+  background: #1B7A3E;
+  color: #F0FDF4;
+  border: none;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
+
 .search-btn:hover {
-  background: rgba(176, 107, 255, 0.1);
-  color: #c4abe7;
+  background: #22A45A;
 }
 
 .error-msg {
   color: #ff6b6b;
   margin-bottom: 1rem;
 }
+
 .success-msg {
-  color: #64ffda;
+  color: #6EE7B7;
   margin-bottom: 1rem;
 }
 
@@ -93,9 +116,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #233554;
+  background: #151D28;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
+  border: 1px solid #2D3748;
 }
 
 .user-info {
@@ -109,22 +133,24 @@
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid #225E40;
 }
 
 .add-btn {
-  background: transparent;
-  color: #64ffda;
-  border: 1px solid #64ffda;
+  background: #1B7A3E;
+  color: #F0FDF4;
+  border: none;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
 
 .add-btn:hover {
-  background: rgba(107, 255, 218, 0.1);
-  color: #64ffda;
+  background: #22A45A;
 }
-
 
 .friends-list ul {
   list-style: none;
@@ -137,8 +163,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  border-bottom: 1px solid #233554;
+  border-bottom: 1px solid #225E40;
 }
+
 .friend-item:last-child {
   border-bottom: none;
 }
@@ -148,29 +175,38 @@
   color: #ff6b6b;
   border: 1px solid #ff6b6b;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s ease;
 }
+
 .block-btn:hover {
-  background: rgba(255, 107, 107, 0.1);
-  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.15);
 }
 
 .no-friends {
-  color: #8892b0;
+  color: #A0AEC0;
   font-style: italic;
 }
 
 .unblock-btn {
   background: transparent;
-  color: #64ffda;
-  border: 1px solid #64ffda;
+  color: #6EE7B7;
+  border: 1px solid #6EE7B7;
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 0.5rem;
   cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s ease;
 }
 
 .unblock-btn:hover {
-  background: rgba(107, 255, 218, 0.1);
-  color: #64ffda;
+  background: rgba(110, 231, 183, 0.15);
+}
+
+@media (max-width: 768px) {
+  .friends-content {
+    grid-template-columns: 1fr;
+  }
 }
